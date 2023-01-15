@@ -7,6 +7,7 @@ export const workoutRouter = router({
       z.object({
         title: z.string(),
         description: z.string(),
+        userId: z.string(),
         intensity: z.enum(['HARD', 'MEDIUM', 'EASY']),
       })
     )
@@ -16,7 +17,8 @@ export const workoutRouter = router({
           data: {
             title: input.title,
             description: input.description,
-            intensity: input.intensity
+            intensity: input.intensity,
+            userId: input.userId,
           },
         });
       } catch (error) {
@@ -24,21 +26,22 @@ export const workoutRouter = router({
       }
     }),
 
-    // Later we can change this to publicProcedure to see other user's workouts
-    getAllWorkouts: protectedProcedure.query(async ({ ctx }) => {
-        try {
-          return await ctx.prisma.workout.findMany({
-            select: {
-              title: true,
-              description: true,
-              intensity: true,
-            },
-            orderBy: {
-              createdAt: "desc",
-            },
-          });
-        } catch (error) {
-          console.log("error", error);
-        }
-      }),
+  // Later we can change this to publicProcedure to see other user's workouts
+  getAllWorkouts: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      return await ctx.prisma.workout.findMany({
+        select: {
+          title: true,
+          description: true,
+          intensity: true,
+          userId: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
+  }),
 });

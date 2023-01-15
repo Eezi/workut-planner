@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { type NextPage } from "next";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
+import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
 
 const AllWorkouts: NextPage = () => {
@@ -9,13 +10,14 @@ const AllWorkouts: NextPage = () => {
   const [description, setDescription] = useState("");
   const router = useRouter();
   const utils = trpc.useContext();
+  const { data: sessionData } = useSession();
   const postWorkout  = trpc.workout.postWorkout.useMutation({
     onMutate: () => {
       utils.workout.getAllWorkouts.cancel();
       const optimisticUpdate = utils.workout.getAllWorkouts.getData();
 
       if (optimisticUpdate) {
-        utils.workout.getAllWorkouts.setData(optimisticUpdate);
+        utils.workout.getAllWorkouts.setData('getAllWorkouts', optimisticUpdate);
       }
     },    
     onSettled: () => {
@@ -42,7 +44,8 @@ const AllWorkouts: NextPage = () => {
               postWorkout.mutate({
                 title,
                 description,
-                intensity: 'MEDIUM'
+                intensity: 'MEDIUM',
+                userId: sessionData?.user?.id
               });
               setTitle("");
               setDescription("");
