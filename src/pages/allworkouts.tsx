@@ -2,9 +2,18 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import { WorkoutCard } from '../components/workoutCard';
+import { useEffect } from 'react';
+import { useSession } from "next-auth/react";
+import { useRouter } from 'next/router';
 
 const AllWorkouts: NextPage = () => {
   const { data: workouts, isLoading } = trpc.workout.getAllWorkouts.useQuery();
+  const { data: sessionData } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!sessionData) router.push('/');
+  });
 
   if (isLoading) return <div>Fetching messages...</div>;
 

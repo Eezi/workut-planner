@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { type NextPage } from "next";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
@@ -23,6 +23,10 @@ const AllWorkouts: NextPage = () => {
     onSettled: () => {
         utils.workout.getAllWorkouts.invalidate();
     },
+  });
+
+  useEffect(() => {
+    if (!sessionData) router.push('/');
   });
 
   return (

@@ -30,6 +30,7 @@ export const workoutRouter = router({
   getAllWorkouts: protectedProcedure.query(async ({ ctx }) => {
     try {
       return await ctx.prisma.workout.findMany({
+        where: { userId: ctx.session.user.id },
         select: {
           title: true,
           description: true,
