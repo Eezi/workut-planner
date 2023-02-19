@@ -32,6 +32,8 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string(),
+  NEXT_PUBLIC_SUPABASE_API_KEY: z.string(),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
 });
 
 /**
@@ -42,4 +44,6 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  NEXT_PUBLIC_SUPABASE_API_KEY: process.env.SUPABASE_API_KEY,
+  NEXT_PUBLIC_SUPABASE_URL: process.env.SUPABASE_URL,
 };

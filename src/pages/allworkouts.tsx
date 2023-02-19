@@ -1,10 +1,10 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
-import { WorkoutCard } from '../components/workoutCard';
-import { useEffect } from 'react';
+import { WorkoutCard } from "../components/workoutCard";
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 const AllWorkouts: NextPage = () => {
   const { data: workouts, isLoading } = trpc.workout.getAllWorkouts.useQuery();
@@ -12,10 +12,8 @@ const AllWorkouts: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!sessionData) router.push('/');
+    if (!sessionData) router.push("/");
   });
-
-  if (isLoading) return <div>Fetching messages...</div>;
 
   return (
     <>
@@ -25,18 +23,20 @@ const AllWorkouts: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="container flex flex-col items-center gap-12 px-4 py-16 ">
-          <h4 className="text-2xl font-extrabold tracking-tight text-white sm:text-[3rem]">
-            All Workouts
-          </h4>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            {workouts?.map((workout, index) => {
-              return (
-                <WorkoutCard key={workout.title} {...workout} />
-              );
-            })}
+        {isLoading ? (
+          <div>Fetching workouts...</div>
+        ) : (
+          <div className="container flex flex-col items-center gap-12 px-4 py-16 ">
+            <h4 className="text-2xl font-extrabold tracking-tight text-white sm:text-[3rem]">
+              All Workouts
+            </h4>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
+              {workouts?.map((workout, index) => {
+                return <WorkoutCard key={workout.title} {...workout} />;
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </>
   );

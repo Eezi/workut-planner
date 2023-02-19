@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { supabase } from '../../../utils/supabaseClient';
 
 export const workoutRouter = router({
   postWorkout: protectedProcedure
@@ -28,6 +29,8 @@ export const workoutRouter = router({
 
   // Later we can change this to publicProcedure to see other user's workouts
   getAllWorkouts: protectedProcedure.query(async ({ ctx }) => {
+    const { data, error } = await supabase.from("workouts").select();
+    console.log('DATA', data)
     try {
       return await ctx.prisma.workout.findMany({
         where: { userId: ctx.session.user.id },
