@@ -74,6 +74,15 @@ model Workout {
     intensity     Intensity
 }
 
+model WorkoutSession {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    userId    String
+    workoutId String
+    date      DateTime
+    done      Boolean  @default(false)
+}
+
 enum Intensity {
   HARD
   MEDIUM

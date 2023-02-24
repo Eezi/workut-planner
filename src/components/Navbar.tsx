@@ -5,13 +5,12 @@ const LoggedInNav = () => {
   const { data: sessionData } = useSession();
   if (!sessionData) return null;
 
-  console.log("seessiondata", sessionData);
   return (
     <ul className="menu menu-horizontal px-1">
-      <li>
+      <li className="font-semibold">
         <Link href="/allworkouts">Workouts</Link>
       </li>
-      <li>
+      <li className="font-semibold">
         <Link href="/create-workout">Create Workout</Link>
       </li>
         <div className="dropdown-end dropdown">
@@ -35,7 +34,7 @@ const LoggedInNav = () => {
 
 export const Navbar = () => {
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-neutral-focus ">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn text-xl normal-case">
           Workout App
