@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 
-export const DateInput = () => {
-  const [value, setValue] = useState(new Date());
+export const DateInput = ({ setDate, date }) => {
 
   const handleValueChange = (newValue) => {
-    console.log("newValue:", newValue);
-    setValue(newValue);
+    console.log('new VALUIE', newValue)
+    setDate(newValue);
   };
 
   return (
@@ -14,7 +13,7 @@ export const DateInput = () => {
       <Datepicker
         useRange={false}
         asSingle={true}
-        value={value}
+        value={date}
         onChange={handleValueChange}
       />
     </div>

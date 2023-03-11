@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { router, protectedProcedure } from "../trpc";
 
 export const workoutRouter = router({
   postWorkout: protectedProcedure
@@ -36,6 +36,7 @@ export const workoutRouter = router({
           description: true,
           intensity: true,
           userId: true,
+          id: true,
         },
         orderBy: {
           createdAt: "desc",

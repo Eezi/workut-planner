@@ -12,7 +12,7 @@ const bgs = new Map([
   ["EASY", "bg-green-100"],
 ]);
 
-export const WorkoutCard = ({ title, description, intensity }) => {
+export const WorkoutCard = ({ title, description, intensity, id }) => {
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <div className="card-body">
@@ -28,7 +28,7 @@ export const WorkoutCard = ({ title, description, intensity }) => {
         </div>
         <p>{description}</p>
         <div className="card-actions justify-end">
-          <AddSessionModal />
+          <AddSessionModal workoutId={id}  />
         </div>
       </div>
     </div>
