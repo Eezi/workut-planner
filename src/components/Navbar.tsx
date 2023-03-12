@@ -23,7 +23,7 @@ const LoggedInNav = () => {
       <div className="dropdown-end dropdown">
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
           <div className="w-10 rounded-full">
-            <img alt="user-image" src={sessionData?.user?.image} />
+            <img alt="user-image" src={sessionData?.user?.image || ''} />
           </div>
         </label>
         <ul
@@ -31,7 +31,7 @@ const LoggedInNav = () => {
           className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
         >
           <li>
-            <a onClick={signOut}>Logout</a>
+            <a onClick={() => signOut()}>Logout</a>
           </li>
         </ul>
       </div>

@@ -13,10 +13,10 @@ export const AddSessionModal = ({ workoutId }: { workoutId: string }) => {
       const optimisticUpdate = utils.workoutSession.getAllWorkoutSessions.getData();
 
       if (optimisticUpdate) {
-        utils.workoutSession.getAllWorkoutSessions.setData(
+        /*utils.workoutSession.getAllWorkoutSessions.setData(
           "getAllWorkoutSessions",
           optimisticUpdate
-        );
+        );*/
       }
     },
     onSettled: () => {
@@ -24,11 +24,10 @@ export const AddSessionModal = ({ workoutId }: { workoutId: string }) => {
     },
   });
 
-console.log('DAGTE', date)
   const handleSubmit = () => {
     postWorkoutSession.mutate({
       workoutId,
-      userId: sessionData?.user?.id,
+      userId: sessionData?.user?.id || '',
       date,
       done: false,
     });

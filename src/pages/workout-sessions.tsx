@@ -4,7 +4,7 @@ import { trpc } from "../utils/trpc";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 
 const WorkoutSessions: NextPage = () => {
   const { data: sessions, isLoading } =
@@ -38,7 +38,7 @@ const WorkoutSessions: NextPage = () => {
     if (!sessionData) router.push("/");
   });
 
-  const handleMarkDone = (sessionId, checked) => {
+  const handleMarkDone = (sessionId: string, checked: boolean) => {
     console.log('sessionId', sessionId, 'checked', checked)
     markSessionDone.mutate({
       id: sessionId,
@@ -62,7 +62,7 @@ const WorkoutSessions: NextPage = () => {
               All Workout Sessions
             </h4>
             <div className="grid grid-cols-1 gap-4 md:gap-8">
-              {sessions.map(({ date, workout, done, id }) => (
+              {sessions?.map(({ date, workout, done, id }) => (
                 <div
                   key={id}
                   className="flex rounded-xl items-center bg-base-100 gap-4 p-5 min-w-full"

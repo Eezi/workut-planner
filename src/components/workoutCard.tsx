@@ -1,4 +1,5 @@
 import { AddSessionModal } from "./AddSessionModal";
+import { Workout } from "../types/workout";
 
 const colors = new Map([
   ["HARD", "text-red-900"],
@@ -12,7 +13,7 @@ const bgs = new Map([
   ["EASY", "bg-green-100"],
 ]);
 
-export const WorkoutCard = ({ title, description, intensity, id }) => {
+export const WorkoutCard = ({ title, description, intensity, id }: Workout) => {
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <div className="card-body">

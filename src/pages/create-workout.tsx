@@ -19,10 +19,10 @@ const AllWorkouts: NextPage = () => {
       const optimisticUpdate = utils.workout.getAllWorkouts.getData();
 
       if (optimisticUpdate) {
-        utils.workout.getAllWorkouts.setData(
+        /*utils.workout.getAllWorkouts.setData(
           "getAllWorkouts",
           optimisticUpdate
-        );
+        );*/
       }
     },
     onSettled: () => {
@@ -39,7 +39,7 @@ const AllWorkouts: NextPage = () => {
       title,
       description,
       intensity: intensity,
-      userId: sessionData?.user.id,
+      userId: sessionData?.user?.id || '',
     });
     setTitle("");
     setDescription("");
