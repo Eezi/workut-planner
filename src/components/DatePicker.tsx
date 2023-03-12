@@ -1,11 +1,16 @@
 import React from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 
-export const DateInput = ({ setDate, date }) => {
+interface Props {
+    setDate: (newDate: Date) => void;
+    date: Date;
+  }
 
-  const handleValueChange = (newValue) => {
-    console.log('new VALUIE', newValue)
-    setDate(newValue);
+export const DateInput = ({ setDate, date }: Props) => {
+
+  const handleValueChange = (newValue: { startDate: string, endDate: string }) => {
+    const newDate = new Date(newValue.startDate);
+    setDate(newDate);
   };
 
   return (
@@ -13,7 +18,7 @@ export const DateInput = ({ setDate, date }) => {
       <Datepicker
         useRange={false}
         asSingle={true}
-        value={date}
+        value={{ startDate: date, endDate: date}}
         onChange={handleValueChange}
       />
     </div>

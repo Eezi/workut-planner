@@ -73,6 +73,7 @@ model Workout {
     title      String
     description   String   @db.VarChar(100)
     intensity     Intensity
+    sessions WorkoutSession[]
 }
 
 model WorkoutSession {
@@ -82,6 +83,8 @@ model WorkoutSession {
     workoutId String
     date      DateTime
     done      Boolean  @default(false)
+    doneAt    DateTime?
+    workout   Workout  @relation(fields: [workoutId], references: [id])
 }
 
 enum Intensity {
