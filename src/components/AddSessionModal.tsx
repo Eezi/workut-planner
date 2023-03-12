@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DateInput } from './Datepicker'
+import { DateInput } from './DateInput'
 import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 
