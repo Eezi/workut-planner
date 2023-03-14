@@ -12,7 +12,6 @@ const WorkoutSessions: NextPage = () => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const utils = trpc.useContext();
-  console.log("sessions", sessions);
 
   useEffect(() => {
     if (!sessionData) router.push("/");
@@ -25,7 +24,7 @@ const WorkoutSessions: NextPage = () => {
 
       if (optimisticUpdate) {
         utils.workoutSession.getAllWorkoutSessions.setData(
-          () => {},
+          undefined,
           optimisticUpdate
         );
       }
@@ -45,11 +44,11 @@ const WorkoutSessions: NextPage = () => {
       done: checked,
     });
   };
-  
+
   const allSessions = sessions?.sort((a, b) => {
     if (a.done === true) return 1;
-    return Number(new Date(a.date)) - Number(new Date(b.date))
-  } )
+    return Number(new Date(a.date)) - Number(new Date(b.date));
+  });
   return (
     <>
       <Head>
@@ -69,18 +68,22 @@ const WorkoutSessions: NextPage = () => {
               {allSessions?.map(({ date, workout, done, id }) => (
                 <div
                   key={id}
-                  className="flex rounded-xl items-center bg-base-100 gap-4 p-5 min-w-full"
+                  className="flex min-w-full items-center gap-4 rounded-xl bg-base-100 p-5"
                 >
                   <div>
                     <input
                       type="checkbox"
                       className="checkbox-secondary checkbox"
                       defaultChecked={done}
-                      onChange={({ target }) => handleMarkDone(id, target.checked)}
+                      onChange={({ target }) =>
+                        handleMarkDone(id, target.checked)
+                      }
                     />
                   </div>
                   <div className="ml-3 flex flex-col">
-                    <span className="label-text text-xl text-white">{workout.title}</span>
+                    <span className="label-text text-xl text-white">
+                      {workout.title}
+                    </span>
                     <span className="text-gray-400">
                       {dayjs(date).format("dddd")} -{" "}
                       {dayjs(date).format("DD.MM.YYYY")}
