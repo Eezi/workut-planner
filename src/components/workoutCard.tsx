@@ -15,9 +15,9 @@ const bgs = new Map([
 
 export const WorkoutCard = ({ title, description, intensity, id }: Workout) => {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card bg-base-100 shadow-xl">
       <div className="card-body">
-        <div className="flex justify-between">
+        <div className="flex flex-col gap-2">
           <h2 className="card-title">{title}</h2>
           <div
             className={`badge ${colors.get(intensity)} ${bgs.get(

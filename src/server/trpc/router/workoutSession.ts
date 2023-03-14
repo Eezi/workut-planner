@@ -61,7 +61,7 @@ export const workoutSessionRouter = router({
           workout: true,
         },
         orderBy: {
-          date: "asc",
+          done: "asc"
         },
       });
     } catch (error) {

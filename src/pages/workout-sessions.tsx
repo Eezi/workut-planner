@@ -11,6 +11,7 @@ const WorkoutSessions: NextPage = () => {
     trpc.workoutSession.getAllWorkoutSessions.useQuery();
   const { data: sessionData } = useSession();
   const router = useRouter();
+  const utils = trpc.useContext();
   console.log("sessions", sessions);
 
   useEffect(() => {
@@ -18,20 +19,20 @@ const WorkoutSessions: NextPage = () => {
   });
 
   const markSessionDone = trpc.workoutSession.markSessionDone.useMutation({
-    /*onMutate: () => {
-      utils.workout.getAllWorkouts.cancel();
-      const optimisticUpdate = utils.workout.getAllWorkouts.getData();
+    onMutate: () => {
+      utils.workoutSession.getAllWorkoutSessions.cancel();
+      const optimisticUpdate = utils.workoutSession.getAllWorkoutSessions.getData();
 
       if (optimisticUpdate) {
-        utils.workout.getAllWorkouts.setData(
-          "getAllWorkouts",
+        utils.workoutSession.getAllWorkoutSessions.setData(
+          () => {},
           optimisticUpdate
         );
       }
     },
     onSettled: () => {
-      utils.workout.getAllWorkouts.invalidate();
-    },*/
+      utils.workoutSession.getAllWorkoutSessions.invalidate();
+    },
   });
 
   useEffect(() => {
@@ -39,13 +40,16 @@ const WorkoutSessions: NextPage = () => {
   });
 
   const handleMarkDone = (sessionId: string, checked: boolean) => {
-    console.log('sessionId', sessionId, 'checked', checked)
     markSessionDone.mutate({
       id: sessionId,
       done: checked,
     });
   };
-
+  
+  const allSessions = sessions?.sort((a, b) => {
+    if (a.done === true) return 1;
+    return Number(new Date(a.date)) - Number(new Date(b.date))
+  } )
   return (
     <>
       <Head>
@@ -62,7 +66,7 @@ const WorkoutSessions: NextPage = () => {
               All Workout Sessions
             </h4>
             <div className="grid grid-cols-1 gap-4 md:gap-8">
-              {sessions?.map(({ date, workout, done, id }) => (
+              {allSessions?.map(({ date, workout, done, id }) => (
                 <div
                   key={id}
                   className="flex rounded-xl items-center bg-base-100 gap-4 p-5 min-w-full"
