@@ -4,17 +4,14 @@ import { signOut, useSession } from "next-auth/react";
 const LoggedInNav = () => {
   const { data: sessionData } = useSession();
   if (!sessionData) return null;
-  const mobileView = window.screen.width <= 650;
 
   return (
   <>
-    {!mobileView && (
-      <div className="invisible md:visible flex gap-7 font-semibold">
+      <div className="invisible md:visible flex md:gap-7 gap-0 font-semibold">
         <Link href="/workout-sessions">Sessions</Link>
         <Link href="/allworkouts">Workouts</Link>
         <Link href="/create-workout">Create Workout</Link>
       </div>
-    )}
       <div className="dropdown-end dropdown">
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
           <div className="w-10 rounded-full">
@@ -36,7 +33,7 @@ const LoggedInNav = () => {
 
 export const Navbar = () => {
   return (
-    <div className="navbar bg-neutral-focus ">
+    <div className="navbar bg-neutral-focus">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn text-xl normal-case">
           Workout App
