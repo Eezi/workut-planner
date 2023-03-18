@@ -52,9 +52,10 @@ const AllWorkouts: NextPage = () => {
         <title>Create Workouts</title>
         <meta name="description" content="Create new workout" />
         <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <h5 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+        <h5 className="text-4xl md:text-5xl font-extrabold text-center tracking-tight text-white ">
           Create new workout
         </h5>
         <div className="container flex flex-col items-center gap-8 justify-center py-16 text-white">
