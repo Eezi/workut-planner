@@ -4,6 +4,7 @@ import { trpc } from "../utils/trpc";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { IntesityBadge } from '../components/workoutCard';
 import dayjs from "dayjs";
 
 const WorkoutSessions: NextPage = () => {
@@ -16,6 +17,7 @@ const WorkoutSessions: NextPage = () => {
   useEffect(() => {
     if (!sessionData) router.push("/");
   });
+  console.log('DATA', sessions)
 
   const markSessionDone = trpc.workoutSession.markSessionDone.useMutation({
     onMutate: () => {
@@ -84,6 +86,9 @@ const WorkoutSessions: NextPage = () => {
                     <span className="label-text text-xl text-white">
                       {workout.title}
                     </span>
+                    <div className="my-1">
+                    <IntesityBadge intensity={workout.intensity} />
+                    </div>
                     <span className="text-gray-400">
                       {dayjs(date).format("dddd")} -{" "}
                       {dayjs(date).format("DD.MM.YYYY")}

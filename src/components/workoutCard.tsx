@@ -1,5 +1,5 @@
 import { AddSessionModal } from "./AddSessionModal";
-import { Workout } from "../types/workout";
+import { Workout, Intensity } from "../types/workout";
 
 const colors = new Map([
   ["HARD", "text-red-900"],
@@ -12,6 +12,20 @@ const bgs = new Map([
   ["MEDIUM", "bg-amber-100"],
   ["EASY", "bg-green-100"],
 ]);
+
+interface Props {
+  intensity: Intensity;
+}
+
+export const IntesityBadge = ({ intensity }: Props) => (
+  <div
+    className={`badge ${colors.get(intensity)} ${bgs.get(
+      intensity
+    )} p-3 font-semibold`}
+  >
+    {intensity}
+  </div>
+);
 
 export const WorkoutCard = ({ title, description, intensity, id }: Workout) => {
   return (
@@ -29,7 +43,7 @@ export const WorkoutCard = ({ title, description, intensity, id }: Workout) => {
         </div>
         <p>{description}</p>
         <div className="card-actions justify-end">
-          <AddSessionModal workoutId={id}  />
+          <AddSessionModal workoutId={id} />
         </div>
       </div>
     </div>
