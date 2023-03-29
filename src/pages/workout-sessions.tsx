@@ -4,11 +4,11 @@ import { trpc } from "../utils/trpc";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { IntesityBadge } from '../components/workoutCard';
+import { IntesityBadge } from "../components/workoutCard";
 import dayjs from "dayjs";
 
 const WorkoutSessions: NextPage = () => {
-  const { data: sessions, isLoading } =
+  const { data: sessions, isLoading, refetch } =
     trpc.workoutSession.getAllWorkoutSessions.useQuery();
   const { data: sessionData } = useSession();
   const router = useRouter();
@@ -17,23 +17,11 @@ const WorkoutSessions: NextPage = () => {
   useEffect(() => {
     if (!sessionData) router.push("/");
   });
-  console.log('DATA', sessions)
 
   const markSessionDone = trpc.workoutSession.markSessionDone.useMutation({
-    onMutate: () => {
-      utils.workoutSession.getAllWorkoutSessions.cancel();
-      const optimisticUpdate = utils.workoutSession.getAllWorkoutSessions.getData();
-
-      if (optimisticUpdate) {
-        utils.workoutSession.getAllWorkoutSessions.setData(
-          undefined,
-          optimisticUpdate
-        );
-      }
-    },
-    onSettled: () => {
-      utils.workoutSession.getAllWorkoutSessions.invalidate();
-    },
+    onSuccess: () => {
+      refetch()
+    }
   });
 
   useEffect(() => {
@@ -84,10 +72,10 @@ const WorkoutSessions: NextPage = () => {
                   </div>
                   <div className="ml-3 flex flex-col">
                     <span className="label-text text-xl text-white">
-                      {workout.title}
+                      {workout?.title}
                     </span>
                     <div className="my-1">
-                    <IntesityBadge intensity={workout.intensity} />
+                      <IntesityBadge intensity={workout?.intensity} />
                     </div>
                     <span className="text-gray-400">
                       {dayjs(date).format("dddd")} -{" "}

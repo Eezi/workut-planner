@@ -32,7 +32,6 @@ export const workoutSessionRouter = router({
       z.object({
         id: z.string(),
         done: z.boolean(),
-
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -61,7 +60,7 @@ export const workoutSessionRouter = router({
           workout: true,
         },
         orderBy: {
-          done: "asc"
+          done: "asc",
         },
       });
     } catch (error) {
