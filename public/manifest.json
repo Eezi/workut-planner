@@ -1,0 +1,23 @@
+{
+"theme_color": "#15162c",
+"background_color":  "#f69435",
+"display": "standalone",
+"scope": "/",
+"start_url": "/",
+"name": "workout_app",
+"short_name": "wa",
+"icons": [
+    {
+      "src": "maskable_x48.png",
+      "sizes": "48x48",      
+      "type": "image/x-icon",
+      "purpose": "maskable"
+    },
+    {
+      "src": "maskable_icon_x555.png",
+      "sizes": "555x555",      
+      "type": "image/x-icon",
+      "purpose": "maskable"
+    }
+ ]
+}

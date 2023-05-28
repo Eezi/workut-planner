@@ -51,6 +51,24 @@ export const workoutSessionRouter = router({
       }
     }),
 
+  removeSession: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.workoutSession.delete({
+          where: {
+            id: input.id,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+
   // Later we can change this to publicProcedure to see other user's workouts
   getAllWorkoutSessions: protectedProcedure.query(async ({ ctx }) => {
     try {

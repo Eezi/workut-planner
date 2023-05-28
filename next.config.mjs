@@ -5,6 +5,10 @@
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
+import withPWA from 'next-pwa'
+ 
+//const isProduction = process.env.NODE_ENV === 'production';
+
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
@@ -12,6 +16,14 @@ const config = {
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
-  },
-};
-export default config;
+  },};
+
+const nextConfig = withPWA({
+  dest: 'public',
+  //disable: !isProduction,
+  //runtimeCaching
+})(
+  config
+);
+
+export default nextConfig;
