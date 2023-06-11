@@ -1,24 +1,54 @@
-import React from "react";
-import Datepicker from "react-tailwindcss-datepicker";
-import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
+import React, { useState } from "react";
+//import Datepicker from "react-tailwindcss-datepicker";
+//import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
+import Datepicker from "tailwind-datepicker-react"
 
 interface Props {
-  setDate: (newDate: DateValueType) => void;
-  date: DateValueType;
+  setDate: (newDate: Date) => void;
+  date: Date;
+}
+
+const options = {
+	title: "Demo Title",
+	autoHide: true,
+	todayBtn: true,
+	clearBtn: true,
+	maxDate: new Date("2030-01-01"),
+	minDate: new Date("1950-01-01"),
+	theme: {
+		background: "bg-gray-700 dark:bg-gray-800",
+		todayBtn: "",
+		clearBtn: "",
+		icons: "",
+		text: "",
+		//disabledText: "bg-red-500",
+		input: "",
+		inputIcon: "",
+		selected: "",
+	},
+	icons: {
+		// () => ReactElement | JSX.Element
+		//prev: () => <span>Previous</span>,
+		//next: () => <span>Next</span>,
+	},
+	datepickerClassNames: "top-12",
+	defaultDate: new Date(),
+	language: "en",
 }
 
 export const DateInput = ({ setDate, date }: Props) => {
-  const handleValueChange = (newValue: DateValueType) => {
-    setDate(newValue);
-  };
+  const [show, setShow] = useState<boolean>(false);
+
+  const handleChange = (selectedDate: Date) => {
+    setDate(selectedDate);
+	}
+	const handleClose = (state: boolean) => {
+		setShow(state)
+	}
 
   return (
     <div>
-      <Datepicker
-        asSingle={true}
-        value={date}
-        onChange={handleValueChange}
-      />
+			<Datepicker options={options} onChange={handleChange} show={show} setShow={handleClose} />
     </div>
   );
 };

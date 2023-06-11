@@ -54,6 +54,7 @@ const WorkoutSessions: NextPage = () => {
     if (a.done === true) return 1;
     return Number(new Date(a.date)) - Number(new Date(b.date));
   });
+  console.log('SESSIONS', allSessions)
   return (
     <>
       <PageHead title="Sessions" />

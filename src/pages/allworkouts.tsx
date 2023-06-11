@@ -18,7 +18,7 @@ const AllWorkouts: NextPage = () => {
   return (
     <>
       <PageHead title="All Workouts" />
-      <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <main className="flex min-h-screen flex-col items-center bg-main">
         {isLoading ? (
           <div>Fetching workouts...</div>
         ) : (
@@ -26,7 +26,7 @@ const AllWorkouts: NextPage = () => {
             <h4 className="text-2xl font-extrabold tracking-tight text-white sm:text-[3rem]">
               All Workouts
             </h4>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
+            <div className="grid grid-flow-row gap-8 text-neutral-600 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {workouts?.map((workout) => {
                 return <WorkoutCard key={workout.title} {...workout} />;
               })}

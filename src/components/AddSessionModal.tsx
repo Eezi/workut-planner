@@ -2,13 +2,10 @@ import { useState } from "react";
 import { DateInput } from "./DateInput";
 import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
-import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 
 export const AddSessionModal = ({ workoutId }: { workoutId: string }) => {
-  const [date, setDate] = useState<DateValueType>({
-    startDate: null,
-    endDate: null,
-  });
+  console.log('IDDDDDDDDDDDDDDDd', workoutId)
+  const [date, setDate] = useState<Date>(new Date());
   const { data: sessionData } = useSession();
   const utils = trpc.useContext();
   const postWorkoutSession = trpc.workoutSession.postWorkoutSession.useMutation(
@@ -32,10 +29,12 @@ export const AddSessionModal = ({ workoutId }: { workoutId: string }) => {
   );
 
   const handleSubmit = () => {
+    console.log('workout id', workoutId)
+    // Bug: jostain syystä workout Id on aina ekan treenin id kun submittaa
     postWorkoutSession.mutate({
       workoutId,
       userId: sessionData?.user?.id || "",
-      date: date?.startDate ? new Date(date.startDate) : new Date(),
+      date: date ? new Date(date) : new Date(),
       done: false,
     });
   };
