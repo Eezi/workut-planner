@@ -10,6 +10,7 @@ const AllWorkouts: NextPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [intensity, setIntensity] = useState<Intensity>("MEDIUM");
+  const [errors, setErrors] = useState<{ title: string | null }>({ title: null });
   const router = useRouter();
   const utils = trpc.useContext();
   const { data: sessionData } = useSession();
@@ -35,6 +36,9 @@ const AllWorkouts: NextPage = () => {
   });
 
   const handleSubmit = () => {
+    if (!title) {
+      return setErrors({ title: 'Workout title is missing' });
+    }
     postWorkout.mutate({
       title,
       description,
@@ -54,16 +58,24 @@ const AllWorkouts: NextPage = () => {
           Create new workout
         </h5>
         <div className="container flex flex-col items-center gap-8 justify-center py-16 text-white">
+        <div className="text-center w-full">
           <input
             type="text"
             value={title}
             placeholder="Your workout name..."
+            required
             minLength={2}
             maxLength={100}
-            onChange={(event) => setTitle(event.target.value)}
+            onChange={(event) => {
+              setTitle(event.target.value)
+              setErrors({ title: null });
+            }}
             className="input-bordered input-primary input w-full max-w-xs"
           />
-
+          {errors.title && (
+            <span>{errors.title}</span>
+          )}
+        </div>
           <select
             onChange={(event) => setIntensity(event.target.value as Intensity)}
             className="select-primary select w-full max-w-xs"
