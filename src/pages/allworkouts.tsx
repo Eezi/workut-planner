@@ -26,9 +26,9 @@ const AllWorkouts: NextPage = () => {
             <h4 className="text-2xl font-extrabold tracking-tight text-white sm:text-[3rem]">
               All Workouts
             </h4>
-            <div className="grid grid-flow-row gap-8 text-neutral-600 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="flex flex-wrap justify-center gap-5">
               {workouts?.map((workout) => {
-                return <WorkoutCard key={workout.title} {...workout} />;
+                return <WorkoutCard key={workout.id} {...workout} />;
               })}
             </div>
           </div>

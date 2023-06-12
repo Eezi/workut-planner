@@ -30,7 +30,7 @@ export const IntesityBadge = ({ intensity }: Props) => (
 export const WorkoutCard = ({ title, description, intensity, id }: Workout) => {
   console.log('TITLE', title, 'ID', id)
   return (
-    <div className="card bg-grey shadow-xl">
+    <div className="w-full sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4 card bg-grey shadow-xl">
       <div className="card-body">
         <div className="flex flex-col gap-2">
           <h2 className="card-title text-white">{title}</h2>

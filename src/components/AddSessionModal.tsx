@@ -4,7 +4,7 @@ import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 
 export const AddSessionModal = ({ workoutId }: { workoutId: string }) => {
-  console.log('IDDDDDDDDDDDDDDDd', workoutId)
+  // Jostain syystä componentti saa aina ekan kortin id:n
   const [date, setDate] = useState<Date>(new Date());
   const { data: sessionData } = useSession();
   const utils = trpc.useContext();
