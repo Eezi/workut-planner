@@ -12,6 +12,7 @@ export const workoutSessionRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.warn('input', input)
       try {
         await ctx.prisma.workoutSession.create({
           data: {

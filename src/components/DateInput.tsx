@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-//import Datepicker from "react-tailwindcss-datepicker";
-//import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 import Datepicker from "tailwind-datepicker-react"
 
 interface Props {

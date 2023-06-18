@@ -4,5 +4,6 @@ export interface Workout {
     intensity: Intensity;
     title: string;
     id: string;
+    userId: string;
     description?: string;
 }

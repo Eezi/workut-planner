@@ -1,5 +1,8 @@
-import { AddSessionModal } from "./AddSessionModal";
-import { Workout, Intensity } from "../types/workout";
+import { useState } from "react";
+import { Modal } from "./AddSessionModal";
+import { Intensity, Workout } from "../types/workout";
+import { DateInput } from "./DateInput";
+import { trpc } from "../utils/trpc";
 
 const colors = new Map([
   ["HARD", "text-red-900"],
@@ -19,32 +22,102 @@ interface Props {
 
 export const IntesityBadge = ({ intensity }: Props) => (
   <div
-    className={`badge ${colors.get(intensity)} ${bgs.get(
-      intensity
-    )} p-3 font-semibold`}
+    className={`badge ${colors.get(intensity)} ${
+      bgs.get(
+        intensity,
+      )
+    } p-3 font-semibold`}
   >
     {intensity}
   </div>
 );
 
-export const WorkoutCard = ({ title, description, intensity, id }: Workout) => {
-  console.log('TITLE', title, 'ID', id)
+export const WorkoutCard = (
+  { title, description, intensity, id, userId }: Workout,
+) => {
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date>(new Date());
+
+  const utils = trpc.useContext();
+  const postWorkoutSession = trpc.workoutSession.postWorkoutSession.useMutation(
+    {
+      onMutate: () => {
+        utils.workoutSession.getAllWorkoutSessions.cancel();
+        const optimisticUpdate = utils.workoutSession.getAllWorkoutSessions
+          .getData();
+
+        if (optimisticUpdate) {
+          utils.workoutSession.getAllWorkoutSessions.setData(
+            undefined,
+            optimisticUpdate,
+          );
+        }
+      },
+      onSettled: () => {
+        utils.workoutSession.getAllWorkoutSessions.invalidate();
+      },
+    },
+  );
+
+  const handleSubmit = () => {
+    // Bug: jostain syystä workout Id on aina ekan treenin id kun submittaa
+    postWorkoutSession.mutate({
+      workoutId: id,
+      userId: userId,
+      date: new Date(),
+      done: false,
+    });
+    setOpen(false);
+  };
   return (
-    <div className="w-full sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4 card bg-grey shadow-xl">
+    <div
+      data-theme="forest"
+      className="w-full bg-grey sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4 card shadow-xl"
+    >
       <div className="card-body">
         <div className="flex flex-col gap-2">
           <h2 className="card-title text-white">{title}</h2>
           <div
-            className={`badge ${colors.get(intensity)} ${bgs.get(
-              intensity
-            )} p-3 font-semibold`}
+            className={`badge ${colors.get(intensity)} ${
+              bgs.get(
+                intensity,
+              )
+            } p-3 font-semibold`}
           >
             {intensity}
           </div>
         </div>
         <p>{description}</p>
+        <button className="btn btn-outline btn-sm mt-3" onClick={() => setOpen(true)}>
+          Create session
+        </button>
         <div className="card-actions justify-end">
-          <AddSessionModal workoutId={id} />
+          <Modal open={open} onClose={() => setOpen(false)}>
+            <div style={{ height: '38rem' }} className="modal-box flex flex-col justify-between">
+              <label
+                htmlFor="my-modal-6"
+                className="btn-sm btn-circle btn absolute right-2 top-2"
+                onClick={() => setOpen(false)}
+              >
+                ✕
+              </label>
+              <div>
+                <h3 className="mb-3 text-lg font-bold">
+                  Select day for your session
+                </h3>
+                <DateInput setDate={setDate} date={date} />
+              </div>
+              <div className="modal-action">
+                <label
+                  onClick={handleSubmit}
+                  htmlFor="my-modal-6"
+                  className="btn"
+                >
+                  Create session
+                </label>
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

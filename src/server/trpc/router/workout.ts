@@ -46,4 +46,22 @@ export const workoutRouter = router({
       console.log("error", error);
     }
   }),
+
+  removeWorkout: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.workout.delete({
+          where: {
+            id: input.id,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
 });
