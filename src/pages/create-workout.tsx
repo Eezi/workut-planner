@@ -53,7 +53,7 @@ const AllWorkouts: NextPage = () => {
   return (
     <>
       <PageHead title="Create Workout" />
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <main className="flex min-h-screen flex-col items-center justify-center" data-theme="forest">
         <h5 className="text-4xl md:text-5xl font-extrabold text-center tracking-tight text-white ">
           Create new workout
         </h5>
@@ -98,7 +98,7 @@ const AllWorkouts: NextPage = () => {
             onChange={(event) => setDescription(event.target.value)}
             className="textarea-primary textarea w-80"
           ></textarea>
-          <button onClick={handleSubmit} className="btn-accent btn">
+          <button onClick={handleSubmit} className="btn-success btn">
             Create
           </button>
         </div>
