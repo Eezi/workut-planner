@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { PageHead } from '../components/Head';
 
 const AllWorkouts: NextPage = () => {
-  const { data: workouts, isLoading } = trpc.workout.getAllWorkouts.useQuery();
+  const { data: workouts, isLoading, refetch } = trpc.workout.getAllWorkouts.useQuery();
   const { data: sessionData } = useSession();
   const router = useRouter();
 
@@ -28,7 +28,7 @@ const AllWorkouts: NextPage = () => {
             </h4>
             <div className="flex flex-wrap justify-center gap-5">
               {workouts?.map((workout) => {
-                return <WorkoutCard key={workout.id} {...workout} />;
+                return <WorkoutCard key={workout.id} {...workout} refetch={refetch} />;
               })}
             </div>
           </div>

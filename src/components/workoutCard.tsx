@@ -22,19 +22,22 @@ interface Props {
 
 export const IntesityBadge = ({ intensity }: Props) => (
   <div
-    className={`badge ${colors.get(intensity)} ${
-      bgs.get(
-        intensity,
-      )
-    } p-3 font-semibold`}
+    className={`badge ${colors.get(intensity)} ${bgs.get(
+      intensity
+    )} p-3 font-semibold`}
   >
     {intensity}
   </div>
 );
 
-export const WorkoutCard = (
-  { title, description, intensity, id, userId }: Workout,
-) => {
+export const WorkoutCard = ({
+  title,
+  description,
+  intensity,
+  id,
+  userId,
+  refetch,
+}: Workout & { refetch: () => void }) => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
 
@@ -43,21 +46,33 @@ export const WorkoutCard = (
     {
       onMutate: () => {
         utils.workoutSession.getAllWorkoutSessions.cancel();
-        const optimisticUpdate = utils.workoutSession.getAllWorkoutSessions
-          .getData();
+        const optimisticUpdate =
+          utils.workoutSession.getAllWorkoutSessions.getData();
 
         if (optimisticUpdate) {
           utils.workoutSession.getAllWorkoutSessions.setData(
             undefined,
-            optimisticUpdate,
+            optimisticUpdate
           );
         }
       },
       onSettled: () => {
         utils.workoutSession.getAllWorkoutSessions.invalidate();
       },
-    },
+    }
   );
+
+  const removeWorkout = trpc.workout.removeWorkout.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
+  const handleRemove = () => {
+    removeWorkout.mutate({
+      id,
+    });
+  };
 
   const handleSubmit = () => {
     // Bug: jostain syystä workout Id on aina ekan treenin id kun submittaa
@@ -72,28 +87,48 @@ export const WorkoutCard = (
   return (
     <div
       data-theme="forest"
-      className="w-full bg-grey sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4 card shadow-xl"
+      className="card w-full bg-grey shadow-xl sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4"
     >
       <div className="card-body">
         <div className="flex flex-col gap-2">
           <h2 className="card-title text-white">{title}</h2>
+          <button onClick={handleRemove} className="btn-outline btn-error btn-square btn-xs btn absolute right-2 top-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
           <div
-            className={`badge ${colors.get(intensity)} ${
-              bgs.get(
-                intensity,
-              )
-            } p-3 font-semibold`}
+            className={`badge ${colors.get(intensity)} ${bgs.get(
+              intensity
+            )} p-3 font-semibold`}
           >
             {intensity}
           </div>
         </div>
         <p>{description}</p>
-        <button className="btn btn-outline btn-sm mt-3" onClick={() => setOpen(true)}>
+        <button
+          className="btn-outline btn-sm btn mt-3"
+          onClick={() => setOpen(true)}
+        >
           Create session
         </button>
         <div className="card-actions justify-end">
           <Modal open={open} onClose={() => setOpen(false)}>
-            <div style={{ height: '38rem' }} className="modal-box flex flex-col justify-between">
+            <div
+              style={{ height: "38rem" }}
+              className="modal-box flex flex-col justify-between"
+            >
               <label
                 htmlFor="my-modal-6"
                 className="btn-sm btn-circle btn absolute right-2 top-2"
