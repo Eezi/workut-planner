@@ -17,14 +17,14 @@ const AllWorkouts: NextPage = () => {
   const postWorkout = trpc.workout.postWorkout.useMutation({
     onMutate: () => {
       utils.workout.getAllWorkouts.cancel();
-      const optimisticUpdate = utils.workout.getAllWorkouts.getData();
+      // const optimisticUpdate = utils.workout.getAllWorkouts.getData();
 
-      if (optimisticUpdate) {
+      //if (optimisticUpdate) {
         /*utils.workout.getAllWorkouts.setData(
           "getAllWorkouts",
           optimisticUpdate
         );*/
-      }
+      //}
     },
     onSettled: () => {
       utils.workout.getAllWorkouts.invalidate();

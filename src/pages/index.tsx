@@ -1,15 +1,12 @@
 import { type NextPage } from "next";
-//import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { PageHead } from '../components/Head'
 
-import { trpc } from "../utils/trpc";
-
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
   return (
-    <html data-theme="forest">
+    <div data-theme="forest">
       <PageHead title="Workout Plan" />
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
@@ -37,7 +34,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </main>
-    </html>
+    </div>
   );
 };
 
@@ -45,11 +42,6 @@ export default Home;
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <button

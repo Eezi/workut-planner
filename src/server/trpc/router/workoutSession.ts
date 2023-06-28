@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const workoutSessionRouter = router({
   postWorkoutSession: protectedProcedure
@@ -12,7 +12,7 @@ export const workoutSessionRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.warn('input', input)
+      console.warn("input", input);
       try {
         await ctx.prisma.workoutSession.create({
           data: {
@@ -63,6 +63,28 @@ export const workoutSessionRouter = router({
         await ctx.prisma.workoutSession.delete({
           where: {
             id: input.id,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+
+  editSession: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        date: z.date(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.workoutSession.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            date: input.date,
           },
         });
       } catch (error) {
