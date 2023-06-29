@@ -28,13 +28,22 @@ const DropDownDate = ({ date, handleEditSession, chatId }: Props) => {
   const handleClick = () => {
     setOpen(false);
   };
+
+  console.log('test',
+      cn({
+          dropdown: true,
+          "dropdown-open": open,
+          "sdsssdropdown-bottom": true,
+        })
+  )
   return (
     <>
       <div
         // add toggle dropdown-open
         className={cn({
-          dropdown: true,
+           "dropdown": true,
           "dropdown-open": open,
+          "sdsssdropdown-bottom": true,
         })}
         // add reference to the dropdown element
         ref={ref}
@@ -193,21 +202,21 @@ const WorkoutSessions: NextPage = () => {
                         </svg>
                       </button>
                     </div>
-                    <div className="my-1">
+                    <div className="mt-2 mb-3">
                       <IntesityBadge intensity={workout?.intensity} />
                     </div>
                     <div className="flex gap-2">
+                      <DropDownDate
+                        chatId={id}
+                        date={date}
+                        handleEditSession={handleEditSession}
+                      />
                       <div>
                         <span className="text-gray-400">
                           {dayjs(date).format("dddd")} -{" "}
                           {dayjs(date).format("DD.MM.YYYY")}
                         </span>
                       </div>
-                      <DropDownDate
-                        chatId={id}
-                        date={date}
-                        handleEditSession={handleEditSession}
-                      />
                     </div>
                   </div>
                 </div>

@@ -46,6 +46,11 @@ if (!self.define) {
     );
   };
 
+// fetch event
+self.addEventListener('fetch', (evt) => {
+
+});
+
   self.define = (depsNames, factory) => {
     const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
     if (registry[uri]) {
