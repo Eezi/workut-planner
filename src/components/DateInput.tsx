@@ -31,12 +31,12 @@ const options = {
     //prev: () => <span>Previous</span>,
     //next: () => <span>Next</span>,
   },
-  datepickerClassNames: "top-12",
+  datepickerClassNames: "top-12 text-sm",
   defaultDate: new Date(),
   language: "en",
 };
 
-export const DateInput = ({ setDate, date, readOnly }: Props) => {
+export const DateInput = ({ setDate, date }: Props) => {
   const [show, setShow] = useState<boolean>(false);
 
   const handleChange = (selectedDate: Date) => {
@@ -46,17 +46,8 @@ export const DateInput = ({ setDate, date, readOnly }: Props) => {
     setShow(state);
   };
 
-  console.log("readOnly", readOnly);
-  if (readOnly) {
-    return (
-      <span className="text-gray-400">
-        {dayjs(date).format("dddd")} - {dayjs(date).format("DD.MM.YYYY")}
-      </span>
-    );
-  }
-
   return (
-    <div>
+    <div className="relative max-w-sm">
       <Datepicker
         options={options}
         onChange={handleChange}
