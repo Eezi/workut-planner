@@ -4,19 +4,19 @@ import { trpc } from "../utils/trpc";
 import { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useOnClickOutside } from "usehooks-ts";
+//import { useOnClickOutside } from "usehooks-ts";
 import { IntesityBadge } from "../components/workoutCard";
 import { DateInput } from "../components/DateInput";
-import cn from "classnames";
-import dayjs from "dayjs";
+//import cn from "classnames";
+// import dayjs from "dayjs";
 
-interface Props {
+/*interface Props {
   date: Date;
   handleEditSession: (id: string, date: Date) => void;
   chatId: string;
-}
+}*/
 
-const DropDownDate = ({ date, handleEditSession, chatId }: Props) => {
+/*const DropDownDate = ({ date, handleEditSession, chatId }: Props) => {
   // add a state to toggle the dropdown
   const [open, setOpen] = useState<boolean>(false);
 
@@ -29,19 +29,12 @@ const DropDownDate = ({ date, handleEditSession, chatId }: Props) => {
     setOpen(false);
   };
 
-  console.log('test',
-      cn({
-          dropdown: true,
-          "dropdown-open": open,
-          "sdsssdropdown-bottom": true,
-        })
-  )
   return (
     <>
       <div
         // add toggle dropdown-open
         className={cn({
-           "dropdown": true,
+          dropdown: true,
           "dropdown-open": open,
           "sdsssdropdown-bottom": true,
         })}
@@ -59,9 +52,9 @@ const DropDownDate = ({ date, handleEditSession, chatId }: Props) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="#fff"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
           </svg>
@@ -88,7 +81,7 @@ const DropDownDate = ({ date, handleEditSession, chatId }: Props) => {
       </div>
     </>
   );
-};
+};*/
 
 const WorkoutSessions: NextPage = () => {
   const {
@@ -98,6 +91,7 @@ const WorkoutSessions: NextPage = () => {
   } = trpc.workoutSession.getAllWorkoutSessions.useQuery();
   const { data: sessionData } = useSession();
   const router = useRouter();
+  const [open, setOpen] = useState<boolean>(true);
 
   useEffect(() => {
     if (!sessionData) router.push("/");
@@ -206,17 +200,43 @@ const WorkoutSessions: NextPage = () => {
                       <IntesityBadge intensity={workout?.intensity} />
                     </div>
                     <div className="flex gap-2">
-                      <DropDownDate
+                      <button
+                        tabIndex={0}
+                        className="sdsssbtn btn-outline btn-square btn-xs btn"
+                        onClick={() => setOpen((prev) => !prev)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#fff"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
+                        </svg>
+                      </button>
+                      <DateInput
+                        date={date}
+                        readOnly={open}
+                        setDate={(date) => {
+                          handleEditSession(id, date);
+                          setOpen(true);
+                        }}
+                      />
+                      {/*<DropDownDate
                         chatId={id}
                         date={date}
                         handleEditSession={handleEditSession}
-                      />
-                      <div>
+                      />*/}
+                      {/*<div>
                         <span className="text-gray-400">
                           {dayjs(date).format("dddd")} -{" "}
                           {dayjs(date).format("DD.MM.YYYY")}
                         </span>
-                      </div>
+                      </div>*/}
                     </div>
                   </div>
                 </div>
