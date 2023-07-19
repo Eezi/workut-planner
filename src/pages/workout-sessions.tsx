@@ -160,7 +160,7 @@ const WorkoutSessions: NextPage = () => {
   });
 
   return (
-    <div data-theme="forest">
+    <div data-theme="forest" className="h-screen">
       <PageHead title="Sessions" />
       <main className="flex min-h-screen flex-col items-center">
         {isLoading ? (

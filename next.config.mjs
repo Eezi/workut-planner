@@ -12,6 +12,7 @@ import withPWA from 'next-pwa'
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  runtime: 'edge',
   swcMinify: true,
   i18n: {
     locales: ["en"],

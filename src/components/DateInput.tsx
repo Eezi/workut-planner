@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Datepicker from "tailwind-datepicker-react";
-import dayjs from "dayjs";
 
 interface Props {
   setDate: (newDate: Date) => void;
@@ -11,12 +10,13 @@ interface Props {
 const options = {
   title: "",
   autoHide: true,
-  todayBtn: true,
+  todayBtn: false,
   clearBtn: false,
   maxDate: new Date("2030-01-01"),
   minDate: new Date("1950-01-01"),
   theme: {
     background: "bg-gray-700 dark:bg-gray-800",
+    p: 0,
     todayBtn: "",
     clearBtn: "",
     icons: "",
