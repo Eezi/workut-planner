@@ -3,6 +3,8 @@ import { PageHead } from "../components/Head";
 import { trpc } from "../utils/trpc";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { Modal } from "../components/AddSessionModal";
+import { WorkoutModalContent } from "../components/Modal";
 import { useRouter } from "next/router";
 import { IntesityBadge } from "../components/workoutCard";
 import { DateInput } from "../components/DateInput";
@@ -17,6 +19,7 @@ const SessionCard = ({
   refetch,
 }: Session & { refetch: () => void }) => {
   const [open, setOpen] = useState<boolean>(true);
+  const [openWorkout, setOpenWorkout] = useState(false);
 
   const markSessionDone = trpc.workoutSession.markSessionDone.useMutation({
     onSuccess: () => {
@@ -56,11 +59,20 @@ const SessionCard = ({
     });
   };
 
+  const { title, description, intensity } = workout;
+
   return (
     <div
       key={id}
       className="flex min-w-full items-center gap-4 rounded-xl bg-grey p-5"
     >
+      <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
+        <WorkoutModalContent
+          title={title}
+          description={description}
+          intensity={intensity}
+        />
+      </Modal>
       <div>
         <input
           type="checkbox"
@@ -71,12 +83,34 @@ const SessionCard = ({
       </div>
       <div className="flex w-full flex-col">
         <div className="flex justify-between">
-          <span className="label-text text-xl text-white">
+          <span className="flex items-center gap-1 label-text text-xl text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 512 512"
+              onClick={() => setOpenWorkout(true)}
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-miterlimit="10"
+                stroke-width="32"
+                d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z"
+              />
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-miterlimit="10"
+                stroke-width="32"
+                d="M338.29 338.29L448 448"
+              />
+            </svg>
             {workout?.title}
           </span>
           <button
             onClick={() => handleRemove(id)}
-            className="btn-outline btn-square btn-xs btn"
+            className="btn-outline btn-xs btn-square btn"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -100,7 +134,7 @@ const SessionCard = ({
         <div className="flex gap-2">
           <button
             tabIndex={0}
-            className="sdsssbtn btn-outline btn-square btn-xs btn"
+            className="sdsssbtn btn-outline btn-xs btn-square btn"
             onClick={() => setOpen((prev) => !prev)}
           >
             <svg
@@ -160,7 +194,7 @@ const WorkoutSessions: NextPage = () => {
   });
 
   return (
-    <div data-theme="forest" className="h-screen">
+    <div data-theme="forest" className="h-full">
       <PageHead title="Sessions" />
       <main className="flex min-h-screen flex-col items-center">
         {isLoading ? (
