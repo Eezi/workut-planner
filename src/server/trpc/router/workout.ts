@@ -64,4 +64,48 @@ export const workoutRouter = router({
         console.log(error);
       }
     }),
+
+  workoutById: protectedProcedure
+  .input(
+    z.object({
+      id: z.string(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    try {
+        return await ctx.prisma.workout.findFirst({
+          where: {
+            id: input.id,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+
+  editWorkout: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        description: z.string(),
+        intensity: z.enum(['HARD', 'MEDIUM', 'EASY']),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.workout.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            title: input.title,
+            description: input.description,
+            intensity: input.intensity,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
 });

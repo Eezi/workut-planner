@@ -91,7 +91,7 @@ export const BottomNavBar = () => {
 
         <span className="btm-nav-label text-xs">Workouts</span>
       </Link>
-      <Link href="/create-workout">
+      <Link href="/create-workout/create">
 
         <svg
           xmlns="http://www.w3.org/2000/svg"
