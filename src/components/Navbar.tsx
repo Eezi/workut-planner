@@ -1,20 +1,21 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const LoggedInNav = () => {
   const { data: sessionData } = useSession();
   if (!sessionData) return null;
 
   return (
-  <>
+    <>
       <div className="invisible md:visible flex md:gap-7 gap-0 font-semibold">
         <Link href="/workout-sessions">Sessions</Link>
         <Link href="/allworkouts">Workouts</Link>
-        <Link  
-        href={{
-          pathname: '/create-workout/[slug]',
-          query: { slug: 'create' },
-        }} 
+        <Link
+          href={{
+            pathname: '/create-workout/[slug]',
+            query: { slug: 'create' },
+          }}
         >Create Workout</Link>
       </div>
       <div className="dropdown-end dropdown">
@@ -38,23 +39,28 @@ const LoggedInNav = () => {
 
 export const Navbar = () => {
   return (
-    <div data-theme="forest" className="navbar">
+    <div data-theme="night" className="navbar">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn text-xl normal-case">
           Workout App
         </Link>
       </div>
-        <LoggedInNav />
+      <LoggedInNav />
     </div>
   );
 };
 
 export const BottomNavBar = () => {
   const { data: sessionData } = useSession();
+  // Tämä pitäisi eristää omaksi componenteiksi jotta saadaan active className lisättyä kivasti
+  // className="active"
+  // const router = useRouter();
+
   if (!sessionData) return null;
+
   return (
-    <div data-theme="forest" className="btm-nav fixed bottom-0 md:invisible">
-      <Link href="/workout-sessions">
+    <div data-theme="night" className="btm-nav fixed bottom-0 md:invisible">
+      <Link href="/workout-sessions" >
 
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +78,7 @@ export const BottomNavBar = () => {
         </svg>
         <span className="btm-nav-label text-xs">Sessions</span>
       </Link>
-      <Link href="/allworkouts" className="active">
+      <Link href="/allworkouts">
 
         <svg
           xmlns="http://www.w3.org/2000/svg"

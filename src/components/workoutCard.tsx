@@ -88,10 +88,6 @@ export const WorkoutCard = ({
     setOpenWorkout(false);
   };
 
-  // Tee tällä oikeaan ylänurkkaan 3 pistettä icon button mistä aukeaa action valikko poista, esikatsele, muokkaa yms
-  /*
-   * */
-
   return (
     <>
       <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
@@ -102,8 +98,8 @@ export const WorkoutCard = ({
         />
       </Modal>
       <div
-        data-theme="forest"
-        className="card w-full bg-grey shadow-xl sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4"
+        data-theme="night"
+        className="card w-full bg-neutral shadow-xl sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4"
       >
         <div className="card-body">
           <div className="flex flex-col gap-2">

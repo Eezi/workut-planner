@@ -99,7 +99,7 @@ const AllWorkouts: NextPage = () => {
       <PageHead title="Create Workout" />
       <main
         className="flex min-h-screen flex-col items-center justify-center"
-        data-theme="forest"
+        data-theme="night"
       >
         <h5 className="text-center text-4xl font-extrabold tracking-tight text-white md:text-5xl ">
           Create new workout

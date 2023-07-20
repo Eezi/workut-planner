@@ -16,7 +16,7 @@ const AllWorkouts: NextPage = () => {
   });
 
   return (
-    <div data-theme="forest">
+    <div data-theme="night">
       <PageHead title="All Workouts" />
       <main className="flex min-h-screen flex-col items-center">
         {isLoading ? (

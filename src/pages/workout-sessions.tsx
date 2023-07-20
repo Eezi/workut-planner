@@ -64,7 +64,7 @@ const SessionCard = ({
   return (
     <div
       key={id}
-      className="flex min-w-full items-center gap-4 rounded-xl bg-grey p-5"
+      className="flex min-w-full items-center gap-4 rounded-xl bg-neutral p-5"
     >
       <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
         <WorkoutModalContent
@@ -194,7 +194,7 @@ const WorkoutSessions: NextPage = () => {
   });
 
   return (
-    <div data-theme="forest" className="h-full">
+    <div data-theme="night" className="h-full">
       <PageHead title="Sessions" />
       <main className="flex min-h-screen flex-col items-center">
         {isLoading ? (
