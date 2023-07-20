@@ -10,7 +10,12 @@ const LoggedInNav = () => {
       <div className="invisible md:visible flex md:gap-7 gap-0 font-semibold">
         <Link href="/workout-sessions">Sessions</Link>
         <Link href="/allworkouts">Workouts</Link>
-        <Link href="/create-workout">Create Workout</Link>
+        <Link  
+        href={{
+          pathname: '/create-workout/[slug]',
+          query: { slug: 'create' },
+        }} 
+        >Create Workout</Link>
       </div>
       <div className="dropdown-end dropdown">
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">

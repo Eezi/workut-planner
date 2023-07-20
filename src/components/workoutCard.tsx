@@ -4,6 +4,7 @@ import { Intensity, Workout } from "../types/workout";
 import { DateInput } from "./DateInput";
 import { trpc } from "../utils/trpc";
 import { WorkoutModalContent } from "./Modal";
+import Link from "next/link";
 
 const colors = new Map([
   ["HARD", "text-red-900"],
@@ -87,6 +88,10 @@ export const WorkoutCard = ({
     setOpenWorkout(false);
   };
 
+  // Tee tällä oikeaan ylänurkkaan 3 pistettä icon button mistä aukeaa action valikko poista, esikatsele, muokkaa yms
+  /*
+   * */
+
   return (
     <>
       <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
@@ -102,49 +107,111 @@ export const WorkoutCard = ({
       >
         <div className="card-body">
           <div className="flex flex-col gap-2">
-            <h2 className="flex gap-1 items-center card-title text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 512 512"
-              onClick={() => setOpenWorkout(true)}
-            >
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-miterlimit="10"
-                stroke-width="32"
-                d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z"
-              />
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="32"
-                d="M338.29 338.29L448 448"
-              />
-            </svg>
-              {title}</h2>
-            <button
-              onClick={handleRemove}
-              className="btn-outline btn-error btn-xs btn-square btn absolute right-2 top-2"
-            >
+            <h2 className="card-title flex items-center gap-1 text-white">
+              {title}
+            </h2>
+            <div className="dropdown-end dropdown absolute right-3 top-3">
               <svg
+                tabIndex={0}
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
+                width="27"
+                height="27"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
+                  fill="currentColor"
+                  d="M14 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm0 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm0 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"
                 />
               </svg>
-            </button>
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
+              >
+                <li onClick={() => setOpen(true)}>
+                  <a>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12 4a1 1 0 0 0-1 1v6H5a1 1 0 1 0 0 2h6v6a1 1 0 1 0 2 0v-6h6a1 1 0 1 0 0-2h-6V5a1 1 0 0 0-1-1Z"
+                      />
+                    </svg>
+                    Create session
+                  </a>
+                </li>
+                <li onClick={() => setOpenWorkout(true)}>
+                  <a>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 512 512"
+                    >
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-miterlimit="10"
+                        stroke-width="32"
+                        d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z"
+                      />
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-miterlimit="10"
+                        stroke-width="32"
+                        d="M338.29 338.29L448 448"
+                      />
+                    </svg>
+                    Details
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    href={{
+                      pathname: "/create-workout/[slug]",
+                      query: { slug: id },
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"
+                      />
+                    </svg>
+                    Edit
+                  </Link>
+                </li>
+                <li onClick={handleRemove}>
+                  <a>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                    >
+                      <g fill="currentColor">
+                        <path
+                          fill-rule="evenodd"
+                          d="M17 5V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7h1a1 1 0 1 0 0-2h-3Zm-2-1H9v1h6V4Zm2 3H7v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7Z"
+                          clip-rule="evenodd"
+                        />
+                        <path d="M9 9h2v8H9V9Zm4 0h2v8h-2V9Z" />
+                      </g>
+                    </svg>
+                    Remove
+                  </a>
+                </li>
+              </ul>
+            </div>
             <div
               className={`badge ${colors.get(intensity)} ${bgs.get(
                 intensity
@@ -153,15 +220,9 @@ export const WorkoutCard = ({
               {intensity}
             </div>
           </div>
-          <button
-            className="btn-outline btn-sm btn mt-3"
-            onClick={() => setOpen(true)}
-          >
-            Create session
-          </button>
           <div className="card-actions">
             <Modal open={open} onClose={() => setOpen(false)}>
-              <div style={{ height: '26rem' }}>
+              <div style={{ height: "26rem" }}>
                 <label
                   htmlFor="my-modal-6"
                   className="btn-sm btn-circle btn absolute right-2 top-2"

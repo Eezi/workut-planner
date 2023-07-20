@@ -110,7 +110,7 @@ const SessionCard = ({
           </span>
           <button
             onClick={() => handleRemove(id)}
-            className="btn-outline btn-xs btn-square btn"
+            className="btn-outline btn-error btn-xs btn-square btn"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

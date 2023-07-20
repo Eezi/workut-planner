@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { type NextPage } from "next";
-import { PageHead } from '../components/Head';
-import { trpc } from "../utils/trpc";
+import { PageHead } from '../../components/Head';
+import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Intensity } from "../types/workout";
+import { Intensity } from "../../types/workout";
 
 const AllWorkouts: NextPage = () => {
   const [title, setTitle] = useState("");
@@ -13,6 +13,8 @@ const AllWorkouts: NextPage = () => {
   const [errors, setErrors] = useState<{ title: string | null }>({ title: null });
   const router = useRouter();
   const utils = trpc.useContext();
+  // tässä haetaan workoutin tiedot ja asetataan defaultValue formiin ja submit nappi = "Update"
+  //const { slug } = useParams()
   const { data: sessionData } = useSession();
   const postWorkout = trpc.workout.postWorkout.useMutation({
     onMutate: () => {
@@ -29,10 +31,6 @@ const AllWorkouts: NextPage = () => {
     onSettled: () => {
       utils.workout.getAllWorkouts.invalidate();
     },
-  });
-
-  useEffect(() => {
-    if (!sessionData) router.push("/");
   });
 
   const handleSubmit = () => {
