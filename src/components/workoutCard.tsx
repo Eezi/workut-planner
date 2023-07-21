@@ -7,30 +7,46 @@ import { WorkoutModalContent } from "./Modal";
 import Link from "next/link";
 
 const colors = new Map([
+  ["HARD", "#ff4b3f"],
+  ["MEDIUM", "#ff9a14"],
+  ["EASY", "#5297ff"],
+]);
+
+const badgeColors = new Map([
   ["HARD", "text-red-900"],
   ["MEDIUM", "text-amber-900"],
-  ["EASY", "text-green-900"],
+  ["EASY", "text-blue-900"],
 ]);
 
 const bgs = new Map([
   ["HARD", "bg-red-100"],
   ["MEDIUM", "bg-amber-100"],
-  ["EASY", "bg-green-100"],
+  ["EASY", "bg-blue-100"],
 ]);
 
 interface Props {
   intensity: Intensity;
+  isSmall?: boolean;
 }
 
-export const IntesityBadge = ({ intensity }: Props) => (
-  <div
-    className={`badge ${colors.get(intensity)} ${bgs.get(
-      intensity
-    )} p-3 font-semibold`}
-  >
-    {intensity}
-  </div>
+export const IntesityBadge = ({ intensity, isSmall }: Props) => (
+  <>
+    {isSmall ? (
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="" opacity=".2" /><path fill={colors.get(intensity)} d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z" /></svg>
+      </div>
+    ) : (
+      <div
+        className={`badge ${badgeColors.get(intensity)} ${bgs.get(
+          intensity
+        )} p-3 font-semibold`}
+      >
+        {intensity}
+      </div>
+    )}
+  </>
 );
+
 
 export const WorkoutCard = ({
   title,
@@ -101,12 +117,13 @@ export const WorkoutCard = ({
         data-theme="night"
         className="card w-full bg-neutral shadow-xl sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4"
       >
-        <div className="card-body">
-          <div className="flex flex-col gap-2">
-            <h2 className="card-title flex items-center gap-1 text-white">
+        <div className="p-4">
+          <div className="flex gap-2">
+              <IntesityBadge isSmall intensity={intensity} />
+            <h2 className="md:text-xl font-semibold text-white">
               {title}
             </h2>
-            <div className="dropdown-end dropdown absolute right-3 top-3">
+            <div className="dropdown-end dropdown ml-auto">
               <svg
                 tabIndex={0}
                 xmlns="http://www.w3.org/2000/svg"
@@ -207,13 +224,6 @@ export const WorkoutCard = ({
                   </a>
                 </li>
               </ul>
-            </div>
-            <div
-              className={`badge ${colors.get(intensity)} ${bgs.get(
-                intensity
-              )} p-3 font-semibold`}
-            >
-              {intensity}
             </div>
           </div>
           <div className="card-actions">
