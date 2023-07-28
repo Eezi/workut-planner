@@ -112,7 +112,7 @@ const AllWorkouts: NextPage = () => {
               placeholder="Your workout name..."
               required
               minLength={2}
-              maxLength={100}
+              maxLength={200}
               onChange={(event) => {
                 setTitle(event.target.value);
                 setErrors({ title: null });
@@ -138,7 +138,7 @@ const AllWorkouts: NextPage = () => {
             value={description}
             rows={4}
             placeholder="Description..."
-            maxLength={100}
+            maxLength={1000}
             onChange={(event) => setDescription(event.target.value)}
             className="textarea-primary textarea w-80"
           ></textarea>

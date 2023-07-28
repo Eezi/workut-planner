@@ -16,31 +16,72 @@ const SessionCard = ({
   done,
   date,
   workout,
-  refetch,
-}: Session & { refetch: () => void }) => {
+}: Session) => {
   const [open, setOpen] = useState<boolean>(true);
   const [openWorkout, setOpenWorkout] = useState(false);
 
-  const markSessionDone = trpc.workoutSession.markSessionDone.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
-  });
+const utils = trpc.useContext();
+
+const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
+  onMutate: async (newEntry: any) => {
+    await utils.workoutSession.getAllWorkoutSessions.cancel();
+    utils.workoutSession.getAllWorkoutSessions.setData(undefined, (prevEntries: any) => {
+      if (prevEntries && newEntry) {
+        return prevEntries.map((item: Session) => {
+          if (item.id === newEntry.id) {
+            return {
+              ...item,
+              done: newEntry.done,
+            }
+          }
+          return item;
+        })
+      }
+    });
+  },
+  onSettled: async () => {
+    await utils.workoutSession.getAllWorkoutSessions.invalidate();
+  },
+});
 
   const editSession = trpc.workoutSession.editSession.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
+  onMutate: async (newEntry: any) => {
+    await utils.workoutSession.getAllWorkoutSessions.cancel();
+    utils.workoutSession.getAllWorkoutSessions.setData(undefined, (prevEntries: any) => {
+      if (prevEntries && newEntry) {
+        return prevEntries.map((item: Session) => {
+          if (item.id === newEntry.id) {
+            return {
+              ...item,
+              date: newEntry.date,
+            }
+          }
+          return item;
+        })
+      }
+    });
+  },
+  onSettled: async () => {
+    await utils.workoutSession.getAllWorkoutSessions.invalidate();
+  },
   });
 
   const removeSession = trpc.workoutSession.removeSession.useMutation({
-    onSuccess: () => {
-      refetch();
-    },
+  onMutate: async (newEntry: any) => {
+    await utils.workoutSession.getAllWorkoutSessions.cancel();
+    utils.workoutSession.getAllWorkoutSessions.setData(undefined, (prevEntries: any) => {
+      if (prevEntries) {
+        return prevEntries.filter(({ id }: Session) => id !== newEntry.id)    
+      }
+    });
+  },
+  onSettled: async () => {
+    await utils.workoutSession.getAllWorkoutSessions.invalidate();
+  },
   });
 
   const handleMarkDone = (sessionId: string, checked: boolean) => {
-    markSessionDone.mutate({
+    handleSessionkDone.mutate({
       id: sessionId,
       done: checked,
     });
@@ -93,16 +134,16 @@ const SessionCard = ({
               <path
                 fill="none"
                 stroke="currentColor"
-                stroke-miterlimit="10"
-                stroke-width="32"
+                strokeMiterlimit="10"
+                strokeWidth="32"
                 d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z"
               />
               <path
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="32"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="32"
                 d="M338.29 338.29L448 448"
               />
             </svg>
@@ -193,6 +234,7 @@ const WorkoutSessions: NextPage = () => {
     return Number(new Date(a.date)) - Number(new Date(b.date));
   });
 
+  console.log('all sess', allSessions)
   return (
     <div data-theme="night" className="h-full">
       <PageHead title="Sessions" />

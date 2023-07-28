@@ -166,16 +166,16 @@ export const WorkoutCard = ({
                       <path
                         fill="none"
                         stroke="currentColor"
-                        stroke-miterlimit="10"
-                        stroke-width="32"
+                        strokeMiterlimit="10"
+                        strokeWidth="32"
                         d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z"
                       />
                       <path
                         fill="none"
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-miterlimit="10"
-                        stroke-width="32"
+                        strokeLinecap="round"
+                        strokeMiterlimit="10"
+                        strokeWidth="32"
                         d="M338.29 338.29L448 448"
                       />
                     </svg>
@@ -213,9 +213,9 @@ export const WorkoutCard = ({
                     >
                       <g fill="currentColor">
                         <path
-                          fill-rule="evenodd"
+                          fillRule="evenodd"
                           d="M17 5V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7h1a1 1 0 1 0 0-2h-3Zm-2-1H9v1h6V4Zm2 3H7v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7Z"
-                          clip-rule="evenodd"
+                          clipRule="evenodd"
                         />
                         <path d="M9 9h2v8H9V9Zm4 0h2v8h-2V9Z" />
                       </g>
