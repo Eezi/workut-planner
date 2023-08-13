@@ -324,7 +324,6 @@ const WorkoutSessions: NextPage = () => {
   const {
     data: sessions,
     isLoading,
-    refetch,
   } = trpc.workoutSession.getAllWorkoutSessions.useQuery();
   // const { data: sessionData } = useSession();
   // const router = useRouter();
@@ -382,7 +381,7 @@ const WorkoutSessions: NextPage = () => {
             <Tabs setActiveTab={setActiveTab} activeTab={activeTab} />
             <div className="grid w-full grid-cols-1 gap-4 md:w-5/12 md:gap-8">
               {allSessions?.map((session) => (
-                <SessionCard key={session.id} refetch={refetch} {...session} />
+                <SessionCard key={session.id} {...session} />
               ))}
             </div>
           </div>
