@@ -97,7 +97,7 @@ export const WorkoutCard = ({
     postWorkoutSession.mutate({
       workoutId: id,
       userId: userId,
-      date: new Date(),
+      date: date,
       done: false,
     });
     setOpen(false);

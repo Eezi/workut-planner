@@ -14,7 +14,13 @@ module.exports = {
     },
   },
   daisyui: {
-    themes: ["light", "dark", "forest", "night", "synthwave"],
+    themes: ["light", "dark", "night",
+    {
+      nightblue: {
+        primary: "#111322",
+      }
+    }
+    ],
   },
   plugins: [require("daisyui")],
 };

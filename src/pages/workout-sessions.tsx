@@ -10,74 +10,171 @@ import { IntesityBadge } from "../components/workoutCard";
 import { DateInput } from "../components/DateInput";
 import dayjs from "dayjs";
 import { Session } from "../types/Session";
+import cn from "classnames";
 
-const SessionCard = ({
-  id,
-  done,
-  date,
-  workout,
-}: Session) => {
+const ActionList = ({
+  handleRemove,
+  handleOpen,
+  handleOpenWorkout,
+}: {
+  handleOpen: () => void;
+  handleRemove: () => void;
+  handleOpenWorkout: () => void;
+}) => {
+  return (
+    <div className="dropdown-end dropdown ml-auto">
+      <svg
+        tabIndex={0}
+        xmlns="http://www.w3.org/2000/svg"
+        width="27"
+        height="27"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="currentColor"
+          d="M14 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm0 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm0 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"
+        />
+      </svg>
+      <ul
+        tabIndex={0}
+        className="dropdown-content menu rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
+      >
+        <li onClick={handleOpenWorkout}>
+          <a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 512 512"
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                strokeMiterlimit="10"
+                strokeWidth="32"
+                d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z"
+              />
+              <path
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="32"
+                d="M338.29 338.29L448 448"
+              />
+            </svg>
+            Details
+          </a>
+        </li>
+        <li onClick={handleOpen}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="m14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"
+            />
+          </svg>
+          Edit Date
+        </li>
+        <li onClick={handleRemove}>
+          <a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+            >
+              <g fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M17 5V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7h1a1 1 0 1 0 0-2h-3Zm-2-1H9v1h6V4Zm2 3H7v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7Z"
+                  clipRule="evenodd"
+                />
+                <path d="M9 9h2v8H9V9Zm4 0h2v8h-2V9Z" />
+              </g>
+            </svg>
+            Remove
+          </a>
+        </li>
+      </ul>
+    </div>
+  );
+};
+
+const SessionCard = ({ id, done, date, workout }: Session) => {
   const [open, setOpen] = useState<boolean>(true);
   const [openWorkout, setOpenWorkout] = useState(false);
 
-const utils = trpc.useContext();
+  const utils = trpc.useContext();
 
-const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
-  onMutate: async (newEntry: any) => {
-    await utils.workoutSession.getAllWorkoutSessions.cancel();
-    utils.workoutSession.getAllWorkoutSessions.setData(undefined, (prevEntries: any) => {
-      if (prevEntries && newEntry) {
-        return prevEntries.map((item: Session) => {
-          if (item.id === newEntry.id) {
-            return {
-              ...item,
-              done: newEntry.done,
-            }
+  const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
+    onMutate: async (newEntry: any) => {
+      await utils.workoutSession.getAllWorkoutSessions.cancel();
+      utils.workoutSession.getAllWorkoutSessions.setData(
+        undefined,
+        (prevEntries: any) => {
+          if (prevEntries && newEntry) {
+            return prevEntries.map((item: Session) => {
+              if (item.id === newEntry.id) {
+                return {
+                  ...item,
+                  done: newEntry.done,
+                };
+              }
+              return item;
+            });
           }
-          return item;
-        })
-      }
-    });
-  },
-  onSettled: async () => {
-    await utils.workoutSession.getAllWorkoutSessions.invalidate();
-  },
-});
+        }
+      );
+    },
+    onSettled: async () => {
+      await utils.workoutSession.getAllWorkoutSessions.invalidate();
+    },
+  });
 
   const editSession = trpc.workoutSession.editSession.useMutation({
-  onMutate: async (newEntry: any) => {
-    await utils.workoutSession.getAllWorkoutSessions.cancel();
-    utils.workoutSession.getAllWorkoutSessions.setData(undefined, (prevEntries: any) => {
-      if (prevEntries && newEntry) {
-        return prevEntries.map((item: Session) => {
-          if (item.id === newEntry.id) {
-            return {
-              ...item,
-              date: newEntry.date,
-            }
+    onMutate: async (newEntry: any) => {
+      await utils.workoutSession.getAllWorkoutSessions.cancel();
+      utils.workoutSession.getAllWorkoutSessions.setData(
+        undefined,
+        (prevEntries: any) => {
+          if (prevEntries && newEntry) {
+            return prevEntries.map((item: Session) => {
+              if (item.id === newEntry.id) {
+                return {
+                  ...item,
+                  date: newEntry.date,
+                };
+              }
+              return item;
+            });
           }
-          return item;
-        })
-      }
-    });
-  },
-  onSettled: async () => {
-    await utils.workoutSession.getAllWorkoutSessions.invalidate();
-  },
+        }
+      );
+    },
+    onSettled: async () => {
+      await utils.workoutSession.getAllWorkoutSessions.invalidate();
+    },
   });
 
   const removeSession = trpc.workoutSession.removeSession.useMutation({
-  onMutate: async (newEntry: any) => {
-    await utils.workoutSession.getAllWorkoutSessions.cancel();
-    utils.workoutSession.getAllWorkoutSessions.setData(undefined, (prevEntries: any) => {
-      if (prevEntries) {
-        return prevEntries.filter(({ id }: Session) => id !== newEntry.id)    
-      }
-    });
-  },
-  onSettled: async () => {
-    await utils.workoutSession.getAllWorkoutSessions.invalidate();
-  },
+    onMutate: async (newEntry: any) => {
+      await utils.workoutSession.getAllWorkoutSessions.cancel();
+      utils.workoutSession.getAllWorkoutSessions.setData(
+        undefined,
+        (prevEntries: any) => {
+          if (prevEntries) {
+            return prevEntries.filter(({ id }: Session) => id !== newEntry.id);
+          }
+        }
+      );
+    },
+    onSettled: async () => {
+      await utils.workoutSession.getAllWorkoutSessions.invalidate();
+    },
   });
 
   const handleMarkDone = (sessionId: string, checked: boolean) => {
@@ -94,9 +191,9 @@ const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
     });
   };
 
-  const handleRemove = (sessionId: string) => {
+  const handleRemove = () => {
     removeSession.mutate({
-      id: sessionId,
+      id,
     });
   };
 
@@ -105,7 +202,8 @@ const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
   return (
     <div
       key={id}
-      className="flex min-w-full items-center gap-4 rounded-xl bg-neutral p-5"
+      className="flex min-w-full items-center gap-4 rounded-xl p-3"
+      style={{ border: "1px solid #2c2d3c" }}
     >
       <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
         <WorkoutModalContent
@@ -124,32 +222,14 @@ const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
       </div>
       <div className="flex w-full flex-col">
         <div className="flex justify-between">
-          <span className="flex items-center gap-1 label-text text-xl text-white">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 512 512"
-              onClick={() => setOpenWorkout(true)}
-            >
-              <path
-                fill="none"
-                stroke="currentColor"
-                strokeMiterlimit="10"
-                strokeWidth="32"
-                d="M221.09 64a157.09 157.09 0 1 0 157.09 157.09A157.1 157.1 0 0 0 221.09 64Z"
-              />
-              <path
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeMiterlimit="10"
-                strokeWidth="32"
-                d="M338.29 338.29L448 448"
-              />
-            </svg>
+          <div
+            onClick={() => setOpenWorkout(true)}
+            className="label-text flex flex-grow items-center gap-3 text-base font-semibold text-white md:text-lg"
+          >
+            <IntesityBadge isSmall intensity={workout?.intensity} />
             {workout?.title}
-          </span>
-          <button
+          </div>
+          {/*<button
             onClick={() => handleRemove(id)}
             className="btn-outline btn-error btn-xs btn-square btn"
           >
@@ -167,13 +247,15 @@ const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-          </button>
-        </div>
-        <div className="mt-2 mb-3">
-          <IntesityBadge intensity={workout?.intensity} />
+          </button>*/}
+          <ActionList
+            handleRemove={handleRemove}
+            handleOpenWorkout={() => setOpenWorkout(true)}
+            handleOpen={() => setOpen(false)}
+          />
         </div>
         <div className="flex gap-2">
-          <button
+          {/*<button
             tabIndex={0}
             className="sdsssbtn btn-outline btn-xs btn-square btn"
             onClick={() => setOpen((prev) => !prev)}
@@ -190,8 +272,8 @@ const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
             >
               <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
             </svg>
-          </button>
-          <span className="text-gray-400">
+          </button>*/}
+          <span className="text-sm text-gray-400">
             {dayjs(date).format("dddd")} - {dayjs(date).format("DD.MM.YYYY")}
           </span>
         </div>
@@ -212,29 +294,80 @@ const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
   );
 };
 
+const tabs = [
+  { label: 'All', key: 'all'},
+  { label: 'Today', key: 'today'},
+  { label: 'Week', key: 'week'},
+  { label: 'Hide Completed', key: 'hide'},
+]
+
+const Tabs = ({ setActiveTab, activeTab } : {
+      setActiveTab: (tab: string) => void;
+      activeTab: string
+    }) => {
+
+  const renderClass = (key: string) => {
+    if (key === activeTab) return 'tab tab-active'
+    return 'tab'
+  }
+
+  return (
+    <div className="tabs tabs-boxed">
+      {tabs.map(({ label, key }) => (
+        <a onClick={() => setActiveTab(key)} key={key} className={renderClass(key)}>{label}</a>
+        ))}
+    </div>
+  )
+}
+
 const WorkoutSessions: NextPage = () => {
   const {
     data: sessions,
     isLoading,
     refetch,
   } = trpc.workoutSession.getAllWorkoutSessions.useQuery();
-  const { data: sessionData } = useSession();
-  const router = useRouter();
+  // const { data: sessionData } = useSession();
+  // const router = useRouter();
+  const [activeTab, setActiveTab] = useState('all')
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!sessionData) router.push("/");
-  });
+  }, []);*/
 
-  useEffect(() => {
-    if (!sessionData) router.push("/");
-  });
 
-  const allSessions = sessions?.sort((a, b) => {
+
+  const handleFilteredSessions = () => {
+    if (activeTab === 'week') {
+
+  const thisWeek = sessions?.filter(({ date }) =>
+    dayjs(date).isSame(dayjs(), "week")
+  );
+  return thisWeek;
+
+    }
+    if (activeTab === 'today') {
+
+  const todaySessions = sessions?.filter(({ date }) =>
+    dayjs(date).isSame(dayjs(), "day")
+  );
+  return todaySessions;
+    }
+
+    if (activeTab === 'hide') {
+
+  const hideDones = sessions?.filter(({ done }) => done !== true);
+  return hideDones
+    }
+     return sessions;
+  }
+
+  const filteredSessions = handleFilteredSessions();
+
+  const allSessions = filteredSessions?.sort((a, b) => {
     if (a.done === true) return 1;
     return Number(new Date(a.date)) - Number(new Date(b.date));
   });
 
-  console.log('all sess', allSessions)
   return (
     <div data-theme="night" className="h-full">
       <PageHead title="Sessions" />
@@ -242,10 +375,11 @@ const WorkoutSessions: NextPage = () => {
         {isLoading ? (
           <div>Fetching sessions...</div>
         ) : (
-          <div className="container flex flex-col items-center gap-12 px-4 py-16 ">
-            <h4 className="text-2xl font-extrabold tracking-tight text-white sm:text-[3rem]">
+          <div className="container flex flex-col items-center gap-4 px-4 py-8">
+            <h4 className="text-xl font-extrabold tracking-tight text-white sm:text-[3rem]">
               All Workout Sessions
             </h4>
+            <Tabs setActiveTab={setActiveTab} activeTab={activeTab} />
             <div className="grid w-full grid-cols-1 gap-4 md:w-5/12 md:gap-8">
               {allSessions?.map((session) => (
                 <SessionCard key={session.id} refetch={refetch} {...session} />
