@@ -39,7 +39,7 @@ const LoggedInNav = () => {
 
 export const Navbar = () => {
   return (
-    <div data-theme="night" className="navbar">
+    <div data-theme="nightforest" className="navbar">
       <div className="flex-1">
         <Link href="/" className="btn-ghost btn text-xl normal-case">
           Workout App
@@ -59,7 +59,7 @@ export const BottomNavBar = () => {
   if (!sessionData) return null;
 
   return (
-    <div data-theme="night" className="btm-nav fixed bottom-0 md:invisible">
+    <div data-theme="nightforest" className="btm-nav fixed bottom-0 md:invisible">
       <Link href="/workout-sessions" >
 
         <svg

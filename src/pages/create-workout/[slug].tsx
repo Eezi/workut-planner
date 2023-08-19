@@ -99,7 +99,7 @@ const AllWorkouts: NextPage = () => {
       <PageHead title="Create Workout" />
       <main
         className="flex min-h-screen flex-col items-center justify-center"
-        data-theme="night"
+        data-theme="nightforest"
       >
         <h5 className="text-center text-4xl font-extrabold tracking-tight text-white md:text-5xl ">
           Create new workout
@@ -138,7 +138,6 @@ const AllWorkouts: NextPage = () => {
             value={description}
             rows={4}
             placeholder="Description..."
-            maxLength={1000}
             onChange={(event) => setDescription(event.target.value)}
             className="textarea-primary textarea w-80"
           ></textarea>

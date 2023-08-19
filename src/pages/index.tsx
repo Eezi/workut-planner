@@ -6,7 +6,7 @@ import { PageHead } from '../components/Head'
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
   return (
-    <div data-theme="night">
+    <div data-theme="nightforest">
       <PageHead title="Workout Plan" />
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">

@@ -71,7 +71,7 @@ model Workout {
     createdAt DateTime @default(now())
     userId    String
     title      String
-    description   String   @db.VarChar(1000)
+    description   String
     intensity     Intensity
     sessions WorkoutSession[]
 }

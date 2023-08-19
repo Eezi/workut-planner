@@ -368,7 +368,7 @@ const WorkoutSessions: NextPage = () => {
   });
 
   return (
-    <div data-theme="night" className="h-full">
+    <div data-theme="nightforest" className="h-full">
       <PageHead title="Sessions" />
       <main className="flex min-h-screen flex-col items-center">
         {isLoading ? (

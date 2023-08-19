@@ -114,13 +114,13 @@ export const WorkoutCard = ({
         />
       </Modal>
       <div
-        data-theme="night"
-        className="card w-full bg-neutral shadow-xl sm:w-1/2 md:w-2/3 lg:w-2/4 xl:w-1/4"
+        data-theme="nightforest"
+        className="w-full rounded-md card-border bg-neutral shadow-xl"
       >
         <div className="p-4">
           <div className="flex gap-2">
               <IntesityBadge isSmall intensity={intensity} />
-            <h2 className="md:text-xl font-semibold text-white">
+            <h2 className="md:text-xl text-white">
               {title}
             </h2>
             <div className="dropdown-end dropdown ml-auto">
