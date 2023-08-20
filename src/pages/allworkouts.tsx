@@ -22,11 +22,11 @@ const AllWorkouts: NextPage = () => {
         {isLoading ? (
           <div>Fetching workouts...</div>
         ) : (
-          <div className="container max-w-3xl md:px-4 px-6 py-16 ">
+          <div className="container max-w-3xl md:px-4 px-6 pt-16">
             <h4 className="text-xl font-extrabold mb-8 tracking-tight text-white sm:text-[3rem]">
               All Workouts
             </h4>
-            <div className="flex flex-col gap-5">
+            <div className="flex mb-16 flex-col gap-5">
               {workouts?.map((workout) => {
                 return <WorkoutCard key={workout.id} {...workout} refetch={refetch} />;
               })}

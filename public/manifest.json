@@ -3,9 +3,9 @@
 "scope": "/",
 "start_url": "/",
 "name": "workout_app",
-"short_name": "wa",
-"background_color": "#161f30",
-"theme_color": "#161f30",
+"short_name": "Workout Planner",
+"background_color": "#0c0c0c",
+"theme_color": "#0c0c0c",
 "icons": [
     {
       "src": "/icons/walogo_48.png",

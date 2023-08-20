@@ -350,7 +350,7 @@ const WorkoutSessions: NextPage = () => {
               All Workout Sessions
             </h4>
             <Tabs setActiveTab={setActiveTab} activeTab={activeTab} />
-            <div className="grid w-full grid-cols-1 gap-4 md:w-5/12 md:gap-8">
+            <div className="grid mb-16 w-full grid-cols-1 gap-4 md:w-5/12 md:gap-8">
               {allSessions?.map((session) => (
                 <SessionCard key={session.id} {...session} />
               ))}
