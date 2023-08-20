@@ -11,6 +11,7 @@ import { DateInput } from "../components/DateInput";
 import dayjs from "dayjs";
 import { Session } from "../types/Session";
 import cn from "classnames";
+import { sliceLongText } from '../utils/sliceLongText';
 
 const ActionList = ({
   handleRemove,
@@ -21,8 +22,13 @@ const ActionList = ({
   handleRemove: () => void;
   handleOpenWorkout: () => void;
 }) => {
+  const dropdownClassName = cn({
+    "dropdown": true,
+    "dropdown-left": true,
+    "dropdown-end": true,
+  });
   return (
-    <div className="dropdown-end dropdown ml-auto">
+    <div className={dropdownClassName}>
       <svg
         tabIndex={0}
         xmlns="http://www.w3.org/2000/svg"
@@ -66,18 +72,20 @@ const ActionList = ({
           </a>
         </li>
         <li onClick={handleOpen}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="currentColor"
-              d="m14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"
-            />
-          </svg>
-          Edit Date
+          <a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="m14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"
+              />
+            </svg>
+            Edit Date
+          </a>
         </li>
         <li onClick={handleRemove}>
           <a>
@@ -224,30 +232,11 @@ const SessionCard = ({ id, done, date, workout }: Session) => {
         <div className="flex justify-between">
           <div
             onClick={() => setOpenWorkout(true)}
-            className="label-text flex flex-grow items-center gap-3 text-base font-semibold text-white md:text-lg"
+            className="label-text flex flex-grow items-center gap-3 text-base text-white md:text-lg"
           >
             <IntesityBadge isSmall intensity={workout?.intensity} />
-            {workout?.title}
+            {sliceLongText(workout?.title)}
           </div>
-          {/*<button
-            onClick={() => handleRemove(id)}
-            className="btn-outline btn-error btn-xs btn-square btn"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>*/}
           <ActionList
             handleRemove={handleRemove}
             handleOpenWorkout={() => setOpenWorkout(true)}
@@ -255,24 +244,6 @@ const SessionCard = ({ id, done, date, workout }: Session) => {
           />
         </div>
         <div className="flex gap-2">
-          {/*<button
-            tabIndex={0}
-            className="sdsssbtn btn-outline btn-xs btn-square btn"
-            onClick={() => setOpen((prev) => !prev)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
-            </svg>
-          </button>*/}
           <span className="text-sm text-gray-400">
             {dayjs(date).format("dddd")} - {dayjs(date).format("DD.MM.YYYY")}
           </span>
@@ -295,16 +266,16 @@ const SessionCard = ({ id, done, date, workout }: Session) => {
 };
 
 const tabs = [
-  { label: 'All', key: 'all'},
-  { label: 'Today', key: 'today'},
-  { label: 'Week', key: 'week'},
-  { label: 'Hide Completed', key: 'hide'},
+  { label: 'All', key: 'all' },
+  { label: 'Today', key: 'today' },
+  { label: 'Week', key: 'week' },
+  { label: 'Hide Completed', key: 'hide' },
 ]
 
-const Tabs = ({ setActiveTab, activeTab } : {
-      setActiveTab: (tab: string) => void;
-      activeTab: string
-    }) => {
+const Tabs = ({ setActiveTab, activeTab }: {
+  setActiveTab: (tab: string) => void;
+  activeTab: string
+}) => {
 
   const renderClass = (key: string) => {
     if (key === activeTab) return 'tab tab-active'
@@ -315,7 +286,7 @@ const Tabs = ({ setActiveTab, activeTab } : {
     <div className="tabs tabs-boxed">
       {tabs.map(({ label, key }) => (
         <a onClick={() => setActiveTab(key)} key={key} className={renderClass(key)}>{label}</a>
-        ))}
+      ))}
     </div>
   )
 }
@@ -338,26 +309,26 @@ const WorkoutSessions: NextPage = () => {
   const handleFilteredSessions = () => {
     if (activeTab === 'week') {
 
-  const thisWeek = sessions?.filter(({ date }) =>
-    dayjs(date).isSame(dayjs(), "week")
-  );
-  return thisWeek;
+      const thisWeek = sessions?.filter(({ date }) =>
+        dayjs(date).isSame(dayjs(), "week")
+      );
+      return thisWeek;
 
     }
     if (activeTab === 'today') {
 
-  const todaySessions = sessions?.filter(({ date }) =>
-    dayjs(date).isSame(dayjs(), "day")
-  );
-  return todaySessions;
+      const todaySessions = sessions?.filter(({ date }) =>
+        dayjs(date).isSame(dayjs(), "day")
+      );
+      return todaySessions;
     }
 
     if (activeTab === 'hide') {
 
-  const hideDones = sessions?.filter(({ done }) => done !== true);
-  return hideDones
+      const hideDones = sessions?.filter(({ done }) => done !== true);
+      return hideDones
     }
-     return sessions;
+    return sessions;
   }
 
   const filteredSessions = handleFilteredSessions();

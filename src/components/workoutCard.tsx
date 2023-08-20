@@ -5,6 +5,8 @@ import { DateInput } from "./DateInput";
 import { trpc } from "../utils/trpc";
 import { WorkoutModalContent } from "./Modal";
 import Link from "next/link";
+import cn from "classnames";
+import { sliceLongText } from '../utils/sliceLongText';
 
 const colors = new Map([
   ["HARD", "#ff4b3f"],
@@ -33,7 +35,7 @@ export const IntesityBadge = ({ intensity, isSmall }: Props) => (
   <>
     {isSmall ? (
       <div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="" opacity=".2" /><path fill={colors.get(intensity)} d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z" /></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24"><path fill={colors.get(intensity)} fill-rule="evenodd" d="m6 15.235l6 3.333l6-3.333v-6.47l-6-3.333l-6 3.333v6.47ZM12 2L3 7v10l9 5l9-5V7l-9-5Z" clip-rule="evenodd"/></svg>
       </div>
     ) : (
       <div
@@ -104,6 +106,13 @@ export const WorkoutCard = ({
     setOpenWorkout(false);
   };
 
+  const dropdownClassName = cn({
+    "dropdown": true,
+    "dropdown-left": true,
+    "dropdown-end": true,
+    "ml-auto": true,
+  });
+
   return (
     <>
       <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
@@ -121,9 +130,9 @@ export const WorkoutCard = ({
           <div className="flex gap-2">
               <IntesityBadge isSmall intensity={intensity} />
             <h2 className="md:text-xl text-white">
-              {title}
+              {sliceLongText(title)}
             </h2>
-            <div className="dropdown-end dropdown ml-auto">
+            <div className={dropdownClassName}>
               <svg
                 tabIndex={0}
                 xmlns="http://www.w3.org/2000/svg"

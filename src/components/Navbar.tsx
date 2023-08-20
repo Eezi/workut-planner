@@ -58,6 +58,12 @@ export const BottomNavBar = () => {
 
   if (!sessionData) return null;
 
+  // VOisko tää layout issue johtua siitä että tätä käytetään väärässä paikassa
+  //
+  //const isDesktop = window.screen.width > 768;
+
+  //if (isDesktop) return null;
+
   return (
     <div data-theme="nightforest" className="btm-nav fixed bottom-0 md:invisible">
       <Link href="/workout-sessions" >
