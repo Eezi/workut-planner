@@ -346,7 +346,7 @@ const WorkoutSessions: NextPage = () => {
           <div>Fetching sessions...</div>
         ) : (
           <div className="container flex flex-col items-center gap-4 px-4 py-8">
-            <h4 className="text-xl font-extrabold tracking-tight text-white sm:text-[3rem]">
+            <h4 className="text-xl font-bold tracking-tight text-white sm:text-[3rem]">
               All Workout Sessions
             </h4>
             <Tabs setActiveTab={setActiveTab} activeTab={activeTab} />

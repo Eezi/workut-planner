@@ -101,9 +101,9 @@ const AllWorkouts: NextPage = () => {
         className="flex min-h-screen flex-col items-center justify-center"
         data-theme="nightforest"
       >
-        <h5 className="text-center text-4xl font-extrabold tracking-tight text-white md:text-5xl ">
+        <h4 className="text-center text-xl font-bold mb-8 tracking-tight text-white sm:text-[3rem]">
           Create new workout
-        </h5>
+        </h4>
         <div className="container flex flex-col items-center justify-center gap-8 py-16 text-white">
           <div className="w-full text-center">
             <input
