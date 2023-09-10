@@ -6,12 +6,12 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider     = "mysql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-  url      = env("DATABASE_URL")
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -67,24 +67,33 @@ model VerificationToken {
 }
 
 model Workout {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    userId    String
-    title      String
-    description   String
-    intensity     Intensity
-    sessions WorkoutSession[]
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  userId      String
+  title       String
+  description String
+  intensity   Intensity
+  sessions    WorkoutSession[]
 }
 
 model WorkoutSession {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    userId    String
-    workoutId String
-    date      DateTime
-    done      Boolean  @default(false)
-    doneAt    DateTime?
-    workout   Workout  @relation(fields: [workoutId], references: [id])
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  userId    String
+  workoutId String
+  date      DateTime
+  done      Boolean   @default(false)
+  doneAt    DateTime?
+  notes String?
+  workout   Workout   @relation(fields: [workoutId], references: [id])
+}
+
+model Label {
+  id             String  @id @default(cuid())
+  userId         String
+  isDefaultLabel Boolean @default(false)
+  label          String
+  key            String
 }
 
 enum Intensity {

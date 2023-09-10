@@ -74,6 +74,7 @@ export const workoutSessionRouter = router({
       z.object({
         id: z.string(),
         date: z.date(),
+        notes: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -84,6 +85,7 @@ export const workoutSessionRouter = router({
           },
           data: {
             date: input.date,
+            notes: input.notes,
           },
         });
       } catch (error) {
