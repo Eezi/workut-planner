@@ -1,9 +1,10 @@
 import { type NextPage } from "next";
 import { PageHead } from "../components/Head";
 import { trpc } from "../utils/trpc";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Modal } from "../components/AddSessionModal";
+import { Collapse } from '../components/Collapse';
 import { WorkoutModalContent } from "../components/Modal";
 import { useRouter } from "next/router";
 import { IntesityBadge } from "../components/workoutCard";
@@ -12,6 +13,25 @@ import dayjs from "dayjs";
 import { Session } from "../types/Session";
 import cn from "classnames";
 import { sliceLongText } from '../utils/sliceLongText';
+
+const SessionNotes = ({ sessionId, notes = "" }: { sessionId: string, notes: string }) => {
+  const handleSessionkDone = trpc.workoutSession.editSessionNotes.useMutation();
+
+  const handleEditNotes = (event: React.FocusEvent<HTMLTextAreaElement, Element>) => {
+    const { currentTarget: { value } } = event
+    console.log('value', value)
+    handleSessionkDone.mutate({
+      id: sessionId,
+      notes: value,
+    });
+  };
+
+  return (
+    <div className="w-full">
+      <textarea onBlur={handleEditNotes} defaultValue={notes} className="textarea textarea-primary w-full" placeholder="Notes"></textarea>
+    </div>
+  )
+}
 
 const ActionList = ({
   handleRemove,
@@ -112,7 +132,7 @@ const ActionList = ({
   );
 };
 
-const SessionCard = ({ id, done, date, workout }: Session) => {
+const SessionCard = ({ id, done, date, workout, notes }: Session) => {
   const [open, setOpen] = useState<boolean>(true);
   const [openWorkout, setOpenWorkout] = useState(false);
 
@@ -228,39 +248,42 @@ const SessionCard = ({ id, done, date, workout }: Session) => {
           onChange={({ target }) => handleMarkDone(id, target.checked)}
         />
       </div>
-      <div className="flex w-full flex-col">
-        <div className="flex justify-between">
-          <div
-            onClick={() => setOpenWorkout(true)}
-            className="label-text flex flex-grow items-center gap-3 text-base text-white md:text-lg"
-          >
-            <IntesityBadge isSmall intensity={workout?.intensity} />
-            {sliceLongText(workout?.title)}
-          </div>
-          <ActionList
-            handleRemove={handleRemove}
-            handleOpenWorkout={() => setOpenWorkout(true)}
-            handleOpen={() => setOpen(false)}
-          />
-        </div>
-        <div className="flex gap-2">
-          <span className="text-sm text-gray-400">
-            {dayjs(date).format("dddd")} - {dayjs(date).format("DD.MM.YYYY")}
-          </span>
-        </div>
-        {!open ? (
-          <div className="mt-3">
-            <DateInput
-              date={date}
-              readOnly={open}
-              setDate={(date) => {
-                handleEditSession(id, date);
-                setOpen(true);
-              }}
+
+        <div className="flex w-full flex-col">
+          <div className="flex justify-between">
+      <Collapse Content={<SessionNotes sessionId={id} notes={notes} />}>
+            <div
+              onClick={() => setOpenWorkout(true)}
+              className="label-text flex flex-grow items-center gap-3 text-base text-white md:text-lg"
+            >
+              <IntesityBadge isSmall intensity={workout?.intensity} />
+              {sliceLongText(workout?.title)}
+            </div>
+      </Collapse>
+            <ActionList
+              handleRemove={handleRemove}
+              handleOpenWorkout={() => setOpenWorkout(true)}
+              handleOpen={() => setOpen(false)}
             />
           </div>
-        ) : null}
-      </div>
+          <div className="flex gap-2">
+            <span className="text-sm text-gray-400">
+              {dayjs(date).format("dddd")} - {dayjs(date).format("DD.MM.YYYY")}
+            </span>
+          </div>
+          {!open ? (
+            <div className="mt-3">
+              <DateInput
+                date={date}
+                readOnly={open}
+                setDate={(date) => {
+                  handleEditSession(id, date);
+                  setOpen(true);
+                }}
+              />
+            </div>
+          ) : null}
+        </div>
     </div>
   );
 };

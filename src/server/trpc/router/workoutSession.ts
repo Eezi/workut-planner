@@ -51,6 +51,28 @@ export const workoutSessionRouter = router({
       }
     }),
 
+  editSessionNotes: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        notes: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.workoutSession.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            notes: input.notes,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+
   removeSession: protectedProcedure
     .input(
       z.object({

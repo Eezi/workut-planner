@@ -35,7 +35,7 @@ export const IntesityBadge = ({ intensity, isSmall }: Props) => (
   <>
     {isSmall ? (
       <div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24"><path fill={colors.get(intensity)} fill-rule="evenodd" d="m6 15.235l6 3.333l6-3.333v-6.47l-6-3.333l-6 3.333v6.47ZM12 2L3 7v10l9 5l9-5V7l-9-5Z" clip-rule="evenodd"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24"><path fill={colors.get(intensity)} fillRule="evenodd" d="m6 15.235l6 3.333l6-3.333v-6.47l-6-3.333l-6 3.333v6.47ZM12 2L3 7v10l9 5l9-5V7l-9-5Z" clip-rule="evenodd"/></svg>
       </div>
     ) : (
       <div

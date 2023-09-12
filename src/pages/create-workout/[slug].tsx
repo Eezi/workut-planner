@@ -8,6 +8,21 @@ import { Intensity } from "../../types/workout";
 
 const CREATE_MODE = "create";
 
+const defaultLabels = [
+ {
+   label: 'Boulder',
+   key: 'boulder',
+ },
+ {
+   label: 'Lead',
+   key: 'lead',
+ },
+ {
+   label: 'Supportive Training',
+   key: 'supportive-training',
+ },
+]
+
 const AllWorkouts: NextPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
