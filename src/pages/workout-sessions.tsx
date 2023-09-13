@@ -4,7 +4,7 @@ import { trpc } from "../utils/trpc";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Modal } from "../components/AddSessionModal";
-import { Collapse } from '../components/Collapse';
+import { Collapse } from "../components/Collapse";
 import { WorkoutModalContent } from "../components/Modal";
 import { useRouter } from "next/router";
 import { IntesityBadge } from "../components/workoutCard";
@@ -12,14 +12,23 @@ import { DateInput } from "../components/DateInput";
 import dayjs from "dayjs";
 import { Session } from "../types/Session";
 import cn from "classnames";
-import { sliceLongText } from '../utils/sliceLongText';
+import { sliceLongText } from "../utils/sliceLongText";
 
-const SessionNotes = ({ sessionId, notes = "" }: { sessionId: string, notes: string | null }) => {
+const SessionNotes = ({
+  sessionId,
+  notes = "",
+}: {
+  sessionId: string;
+  notes?: string;
+}) => {
   const handleSessionkDone = trpc.workoutSession.editSessionNotes.useMutation();
 
-  const handleEditNotes = (event: React.FocusEvent<HTMLTextAreaElement, Element>) => {
-    const { currentTarget: { value } } = event
-    console.log('value', value)
+  const handleEditNotes = (
+    event: React.FocusEvent<HTMLTextAreaElement, Element>
+  ) => {
+    const {
+      currentTarget: { value },
+    } = event;
     handleSessionkDone.mutate({
       id: sessionId,
       notes: value,
@@ -28,10 +37,15 @@ const SessionNotes = ({ sessionId, notes = "" }: { sessionId: string, notes: str
 
   return (
     <div className="w-full">
-      <textarea onBlur={handleEditNotes} defaultValue={notes} className="textarea textarea-primary w-full" placeholder="Notes"></textarea>
+      <textarea
+        onBlur={handleEditNotes}
+        defaultValue={notes}
+        className="textarea-primary textarea w-full"
+        placeholder="Notes"
+      ></textarea>
     </div>
-  )
-}
+  );
+};
 
 const ActionList = ({
   handleRemove,
@@ -43,7 +57,7 @@ const ActionList = ({
   handleOpenWorkout: () => void;
 }) => {
   const dropdownClassName = cn({
-    "dropdown": true,
+    dropdown: true,
     "dropdown-left": true,
     "dropdown-end": true,
   });
@@ -249,9 +263,9 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
         />
       </div>
 
-        <div className="flex w-full flex-col">
-          <div className="flex justify-between">
-      <Collapse Content={<SessionNotes sessionId={id} notes={notes} />}>
+      <div className="flex w-full flex-col">
+        <div className="flex justify-between">
+          <Collapse Content={<SessionNotes sessionId={id} notes={notes} />}>
             <div
               onClick={() => setOpenWorkout(true)}
               className="label-text flex flex-grow items-center gap-3 text-base text-white md:text-lg"
@@ -259,100 +273,100 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
               <IntesityBadge isSmall intensity={workout?.intensity} />
               {sliceLongText(workout?.title)}
             </div>
-      </Collapse>
-            <ActionList
-              handleRemove={handleRemove}
-              handleOpenWorkout={() => setOpenWorkout(true)}
-              handleOpen={() => setOpen(false)}
+          </Collapse>
+          <ActionList
+            handleRemove={handleRemove}
+            handleOpenWorkout={() => setOpenWorkout(true)}
+            handleOpen={() => setOpen(false)}
+          />
+        </div>
+        <div className="flex gap-2">
+          <span className="text-sm text-gray-400">
+            {dayjs(date).format("dddd")} - {dayjs(date).format("DD.MM.YYYY")}
+          </span>
+        </div>
+        {!open ? (
+          <div className="mt-3">
+            <DateInput
+              date={date}
+              readOnly={open}
+              setDate={(date) => {
+                handleEditSession(id, date);
+                setOpen(true);
+              }}
             />
           </div>
-          <div className="flex gap-2">
-            <span className="text-sm text-gray-400">
-              {dayjs(date).format("dddd")} - {dayjs(date).format("DD.MM.YYYY")}
-            </span>
-          </div>
-          {!open ? (
-            <div className="mt-3">
-              <DateInput
-                date={date}
-                readOnly={open}
-                setDate={(date) => {
-                  handleEditSession(id, date);
-                  setOpen(true);
-                }}
-              />
-            </div>
-          ) : null}
-        </div>
+        ) : null}
+      </div>
     </div>
   );
 };
 
 const tabs = [
-  { label: 'All', key: 'all' },
-  { label: 'Today', key: 'today' },
-  { label: 'Week', key: 'week' },
-  { label: 'Hide Completed', key: 'hide' },
-]
+  { label: "All", key: "all" },
+  { label: "Today", key: "today" },
+  { label: "Week", key: "week" },
+  { label: "Hide Completed", key: "hide" },
+];
 
-const Tabs = ({ setActiveTab, activeTab }: {
+const Tabs = ({
+  setActiveTab,
+  activeTab,
+}: {
   setActiveTab: (tab: string) => void;
-  activeTab: string
+  activeTab: string;
 }) => {
-
   const renderClass = (key: string) => {
-    if (key === activeTab) return 'tab tab-active'
-    return 'tab'
-  }
+    if (key === activeTab) return "tab tab-active";
+    return "tab";
+  };
 
   return (
     <div className="tabs tabs-boxed">
       {tabs.map(({ label, key }) => (
-        <a onClick={() => setActiveTab(key)} key={key} className={renderClass(key)}>{label}</a>
+        <a
+          onClick={() => setActiveTab(key)}
+          key={key}
+          className={renderClass(key)}
+        >
+          {label}
+        </a>
       ))}
     </div>
-  )
-}
+  );
+};
 
 const WorkoutSessions: NextPage = () => {
-  const {
-    data: sessions,
-    isLoading,
-  } = trpc.workoutSession.getAllWorkoutSessions.useQuery();
+  const { data: sessions, isLoading } =
+    trpc.workoutSession.getAllWorkoutSessions.useQuery();
   // const { data: sessionData } = useSession();
   // const router = useRouter();
-  const [activeTab, setActiveTab] = useState('all')
+  const [activeTab, setActiveTab] = useState("all");
 
   /*useEffect(() => {
     if (!sessionData) router.push("/");
   }, []);*/
 
-
-
   const handleFilteredSessions = () => {
-    if (activeTab === 'week') {
-
+    if (activeTab === "week") {
       const thisWeek = sessions?.filter(({ date }) =>
         dayjs(date).isSame(dayjs(), "week")
       );
       return thisWeek;
-
     }
-    if (activeTab === 'today') {
-
+    if (activeTab === "today") {
       const todaySessions = sessions?.filter(({ date }) =>
         dayjs(date).isSame(dayjs(), "day")
       );
       return todaySessions;
     }
 
-    if (activeTab === 'hide') {
-
+    if (activeTab === "hide") {
       const hideDones = sessions?.filter(({ done }) => done !== true);
-      return hideDones
+      return hideDones;
     }
     return sessions;
-  }
+  };
 
   const filteredSessions = handleFilteredSessions();
 
@@ -373,7 +387,7 @@ const WorkoutSessions: NextPage = () => {
               All Workout Sessions
             </h4>
             <Tabs setActiveTab={setActiveTab} activeTab={activeTab} />
-            <div className="grid mb-16 w-full grid-cols-1 gap-4 md:w-5/12 md:gap-8">
+            <div className="mb-16 grid w-full grid-cols-1 gap-4 md:w-5/12 md:gap-8">
               {allSessions?.map((session) => (
                 <SessionCard key={session.id} {...session} />
               ))}
