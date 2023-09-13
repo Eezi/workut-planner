@@ -14,7 +14,7 @@ import { Session } from "../types/Session";
 import cn from "classnames";
 import { sliceLongText } from '../utils/sliceLongText';
 
-const SessionNotes = ({ sessionId, notes = "" }: { sessionId: string, notes: string }) => {
+const SessionNotes = ({ sessionId, notes = "" }: { sessionId: string, notes?: string }) => {
   const handleSessionkDone = trpc.workoutSession.editSessionNotes.useMutation();
 
   const handleEditNotes = (event: React.FocusEvent<HTMLTextAreaElement, Element>) => {
