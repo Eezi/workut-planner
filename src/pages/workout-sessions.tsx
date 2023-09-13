@@ -265,7 +265,9 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
 
       <div className="flex w-full flex-col">
         <div className="flex justify-between">
-          <Collapse Content={<SessionNotes sessionId={id} notes={notes} />}>
+          <Collapse
+            Content={<SessionNotes sessionId={id} notes={notes || ""} />}
+          >
             <div
               onClick={() => setOpenWorkout(true)}
               className="label-text flex flex-grow items-center gap-3 text-base text-white md:text-lg"
