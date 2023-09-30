@@ -114,4 +114,56 @@ export const workoutRouter = router({
         console.log(error);
       }
     }),
+
+  sessionCountsPerWorkout: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const userWorkouts = await ctx.prisma.workout.findMany({
+        where: {
+          userId: ctx.session.user.id
+        },
+       select: {
+        id: true,
+        title: true
+      }
+     });
+      const workoutWithSessionCounts = await Promise.allSettled(userWorkouts.map(async (workout) => {
+        const sessionCount = await prisma.workoutSession.count({
+          where: {
+            workoutId: workout.id,
+            userId: ctx.session.user.id,
+            /*doneAt: {
+              gte: new Date('start_date'),
+              lte: new Date('end_date')
+            }*/
+          }
+      });
+
+ return {
+   ...workout,
+   session_count: sessionCount
+ };
+
+}));
+
+      /*const groupedData = await prisma.workoutSession.groupBy({
+  by: ['workoutId'],
+  where: {
+    userId: ctx.session.user.id,
+    createdAt: {
+      gte: new Date('start_date'),
+      lte: new Date('end_date')
+    }
+  },
+  _count: {
+    _all: true,
+  },
+});*/
+
+      console.log('workoutWithSessionCounts',workoutWithSessionCounts)
+      return workoutWithSessionCounts?.map((w) => w.value);
+
+    } catch (error) {
+      console.log("error", error);
+    }
+  }),
 });

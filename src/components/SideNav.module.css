@@ -1,0 +1,9 @@
+.nav_container {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 220px;
+  height: 100%;
+}
+

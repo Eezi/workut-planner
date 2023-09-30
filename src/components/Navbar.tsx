@@ -9,6 +9,7 @@ const LoggedInNav = () => {
   return (
     <>
       <div className="invisible md:visible flex md:gap-7 gap-0 font-semibold">
+        <Link href="/statistics">Stats</Link>
         <Link href="/workout-sessions">Sessions</Link>
         <Link href="/allworkouts">Workouts</Link>
         <Link
@@ -102,6 +103,12 @@ export const BottomNavBar = () => {
         </svg>
 
         <span className="btm-nav-label text-xs">Workouts</span>
+      </Link>
+      <Link href="/statistics">
+        <svg 
+          className="h-5 w-5"
+          xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><rect width="48" height="160" x="64" y="320" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32" rx="8" ry="8"/><rect width="48" height="256" x="288" y="224" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32" rx="8" ry="8"/><rect width="48" height="368" x="400" y="112" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32" rx="8" ry="8"/><rect width="48" height="448" x="176" y="32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32" rx="8" ry="8"/></svg>
+        <span className="btm-nav-label text-xs">Stats</span>
       </Link>
       <Link href="/create-workout/create">
 
