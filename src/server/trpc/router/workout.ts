@@ -126,8 +126,8 @@ export const workoutRouter = router({
         title: true
       }
      });
-      const workoutWithSessionCounts = await Promise.allSettled(userWorkouts.map(async (workout) => {
-        const sessionCount = await prisma.workoutSession.count({
+      const workoutWithSessionCounts = await Promise.all(userWorkouts.map(async (workout) => {
+        const sessionCount = await ctx.prisma.workoutSession.count({
           where: {
             workoutId: workout.id,
             userId: ctx.session.user.id,
@@ -140,7 +140,7 @@ export const workoutRouter = router({
 
  return {
    ...workout,
-   session_count: sessionCount
+   count: sessionCount
  };
 
 }));
@@ -159,9 +159,7 @@ export const workoutRouter = router({
   },
 });*/
 
-      console.log('workoutWithSessionCounts',workoutWithSessionCounts)
-      return workoutWithSessionCounts?.map((w) => w.value);
-
+    return workoutWithSessionCounts;
     } catch (error) {
       console.log("error", error);
     }

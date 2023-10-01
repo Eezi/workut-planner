@@ -8,21 +8,23 @@ const LoggedInNav = () => {
 
   return (
     <>
-      <div className="invisible md:visible flex md:gap-7 gap-0 font-semibold">
-        <Link href="/statistics">Stats</Link>
+      <div className="invisible flex gap-0 font-semibold md:visible md:gap-7">
+        <Link href="/statistics">Statics</Link>
         <Link href="/workout-sessions">Sessions</Link>
         <Link href="/allworkouts">Workouts</Link>
         <Link
           href={{
-            pathname: '/create-workout/[slug]',
-            query: { slug: 'create' },
+            pathname: "/create-workout/[slug]",
+            query: { slug: "create" },
           }}
-        >Create Workout</Link>
+        >
+          Create Workout
+        </Link>
       </div>
       <div className="dropdown-end dropdown">
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
           <div className="w-10 rounded-full">
-            <img alt="user-image" src={sessionData?.user?.image || ''} />
+            <img alt="user-image" src={sessionData?.user?.image || ""} />
           </div>
         </label>
         <ul
@@ -66,9 +68,11 @@ export const BottomNavBar = () => {
   //if (isDesktop) return null;
 
   return (
-    <div data-theme="nightforest" className="btm-nav fixed bottom-0 md:invisible">
-      <Link href="/workout-sessions" >
-
+    <div
+      data-theme="nightforest"
+      className="btm-nav fixed bottom-0 md:invisible"
+    >
+      <Link href="/workout-sessions">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"
@@ -86,7 +90,6 @@ export const BottomNavBar = () => {
         <span className="btm-nav-label text-xs">Sessions</span>
       </Link>
       <Link href="/allworkouts">
-
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"
@@ -105,13 +108,67 @@ export const BottomNavBar = () => {
         <span className="btm-nav-label text-xs">Workouts</span>
       </Link>
       <Link href="/statistics">
-        <svg 
+        <svg
           className="h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><rect width="48" height="160" x="64" y="320" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32" rx="8" ry="8"/><rect width="48" height="256" x="288" y="224" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32" rx="8" ry="8"/><rect width="48" height="368" x="400" y="112" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32" rx="8" ry="8"/><rect width="48" height="448" x="176" y="32" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32" rx="8" ry="8"/></svg>
-        <span className="btm-nav-label text-xs">Stats</span>
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        >
+          <rect
+            width="48"
+            height="160"
+            x="64"
+            y="320"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="32"
+            rx="8"
+            ry="8"
+          />
+          <rect
+            width="48"
+            height="256"
+            x="288"
+            y="224"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="32"
+            rx="8"
+            ry="8"
+          />
+          <rect
+            width="48"
+            height="368"
+            x="400"
+            y="112"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="32"
+            rx="8"
+            ry="8"
+          />
+          <rect
+            width="48"
+            height="448"
+            x="176"
+            y="32"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="32"
+            rx="8"
+            ry="8"
+          />
+        </svg>
+        <span className="btm-nav-label text-xs">Statics</span>
       </Link>
       <Link href="/create-workout/create">
-
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"

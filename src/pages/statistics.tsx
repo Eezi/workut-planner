@@ -12,13 +12,18 @@ const Statistics = () => {
         {isLoading ? (
           <div>Fetching workouts...</div>
         ) : (
-          <div className="stats stats-vertical shadow lg:stats-horizontal">
-            {data?.map(({ id, title, session_count }) => (
-              <div key={id} className="stat">
-                <div className="stat-title">{title}</div>
-                <div className="stat-value">{session_count}</div>
-              </div>
-            ))}
+          <div className="mt-10 px-5">
+            <h1 className="text-xl font-semibold md:text-3xl">
+              Number of sessions per workout
+            </h1>
+            <div className="stats stats-vertical mt-3 shadow lg:stats-horizontal">
+              {data?.map(({ id, title, count }) => (
+                <div key={id} className="stat">
+                  <div className="stat-title text-center">{title}</div>
+                  <div className="stat-value text-center">{count}</div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </main>
