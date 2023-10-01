@@ -8,7 +8,7 @@ const LoggedInNav = () => {
 
   return (
     <>
-      <div className="invisible flex gap-0 font-semibold md:visible md:gap-7">
+      <div className="hidden gap-0 font-semibold md:flex md:gap-7">
         <Link href="/statistics">Statics</Link>
         <Link href="/workout-sessions">Sessions</Link>
         <Link href="/allworkouts">Workouts</Link>
@@ -23,7 +23,7 @@ const LoggedInNav = () => {
       </div>
       <div className="dropdown-end dropdown">
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
-          <div className="w-10 rounded-full">
+          <div className="w-8 rounded-full">
             <img alt="user-image" src={sessionData?.user?.image || ""} />
           </div>
         </label>
