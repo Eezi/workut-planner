@@ -308,15 +308,18 @@ const tabs = [
   { label: "All", key: "all" },
   { label: "Today", key: "today" },
   { label: "Week", key: "week" },
-  { label: "Hide Completed", key: "hide" },
 ];
 
 const Tabs = ({
   setActiveTab,
   activeTab,
+  hideCompleted,
+  setHideCompleted,
 }: {
   setActiveTab: (tab: string) => void;
   activeTab: string;
+  hideCompleted: boolean;
+  setHideCompleted: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const renderClass = (key: string) => {
     if (key === activeTab) return "tab tab-active";
@@ -324,16 +327,29 @@ const Tabs = ({
   };
 
   return (
-    <div className="tabs tabs-boxed">
-      {tabs.map(({ label, key }) => (
-        <a
-          onClick={() => setActiveTab(key)}
-          key={key}
-          className={renderClass(key)}
-        >
-          {label}
-        </a>
-      ))}
+    <div>
+      <div className="tabs tabs-boxed">
+        {tabs.map(({ label, key }) => (
+          <a
+            onClick={() => setActiveTab(key)}
+            key={key}
+            className={renderClass(key)}
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+      <div className="form-control w-40">
+        <label className="label cursor-pointer">
+          <span className="label-text">Hide Comleted</span>
+          <input
+            type="checkbox"
+            className="toggle-secondary toggle"
+            checked={hideCompleted}
+            onChange={() => setHideCompleted(!hideCompleted)}
+          />
+        </label>
+      </div>
     </div>
   );
 };
@@ -344,30 +360,36 @@ const WorkoutSessions: NextPage = () => {
   // const { data: sessionData } = useSession();
   // const router = useRouter();
   const [activeTab, setActiveTab] = useState("all");
+  const [hideCompleted, setHideCompleted] = useState(true);
 
   /*useEffect(() => {
     if (!sessionData) router.push("/");
   }, []);*/
 
   const handleFilteredSessions = () => {
+    let defaultSessions = sessions;
+
+    if (hideCompleted) {
+      defaultSessions = sessions?.filter(({ done }) => done !== true);
+    }
     if (activeTab === "week") {
-      const thisWeek = sessions?.filter(({ date }) =>
+      const thisWeek = defaultSessions?.filter(({ date }) =>
         dayjs(date).isSame(dayjs(), "week")
       );
       return thisWeek;
     }
     if (activeTab === "today") {
-      const todaySessions = sessions?.filter(({ date }) =>
+      const todaySessions = defaultSessions?.filter(({ date }) =>
         dayjs(date).isSame(dayjs(), "day")
       );
       return todaySessions;
     }
 
     if (activeTab === "hide") {
-      const hideDones = sessions?.filter(({ done }) => done !== true);
+      const hideDones = defaultSessions?.filter(({ done }) => done !== true);
       return hideDones;
     }
-    return sessions;
+    return defaultSessions;
   };
 
   const filteredSessions = handleFilteredSessions();
@@ -388,7 +410,12 @@ const WorkoutSessions: NextPage = () => {
             <h4 className="text-xl font-bold tracking-tight text-white sm:text-[3rem]">
               All Workout Sessions
             </h4>
-            <Tabs setActiveTab={setActiveTab} activeTab={activeTab} />
+            <Tabs
+              hideCompleted={hideCompleted}
+              setHideCompleted={setHideCompleted}
+              setActiveTab={setActiveTab}
+              activeTab={activeTab}
+            />
             <div className="mb-16 grid w-full grid-cols-1 gap-4 md:w-5/12 md:gap-8">
               {allSessions?.map((session) => (
                 <SessionCard key={session.id} {...session} />
