@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { Workout } from "../../../types";
 import dayjs from "dayjs";
+import { DateType } from "react-tailwindcss-datepicker/dist/types";
 
 interface CountFilter {
   workoutId: string;
@@ -126,9 +126,18 @@ export const workoutRouter = router({
   sessionCountsPerWorkout: protectedProcedure
     .input(
       z.object({
-        startDate: z.string().nullish(),
-        endDate: z.string().nullish(),
-      }).nullish(),
+        startDate: z.union([
+          z.string(),
+          z.instanceof(Date),
+          z.null(),
+        ]),
+        endDate: z.union([
+          z.string(),
+          z.instanceof(Date),
+          z.null(),
+        ]),
+
+      })
     )
     .query(async ({ ctx, input }) => {
       try {
@@ -141,8 +150,6 @@ export const workoutRouter = router({
             title: true,
           },
         });
-
-        console.warn('input', input)
 
         const workoutWithSessionCounts = await Promise.all(
           userWorkouts.map(async (workout: any) => {

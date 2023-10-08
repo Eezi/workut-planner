@@ -2,16 +2,15 @@ import { trpc } from "../utils/trpc";
 import { useState } from "react";
 import { PageHead } from "../components/Head";
 import Datepicker from "react-tailwindcss-datepicker";
-
-type TimePeriod = { startDate: string | null; endDate: string | null };
+import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 
 interface Props {
-  timePeriod: TimePeriod;
-  setTimePeriod: React.Dispatch<React.SetStateAction<TimePeriod>>;
+  timePeriod: DateValueType;
+  setTimePeriod: React.Dispatch<React.SetStateAction<DateValueType>>;
 }
 
 const PeriodOfTimePicker = ({ timePeriod, setTimePeriod }: Props) => {
-  const handleValueChange = (newValue: TimePeriod) => {
+  const handleValueChange = (newValue: DateValueType) => {
     setTimePeriod(newValue);
   };
 
@@ -29,13 +28,15 @@ const PeriodOfTimePicker = ({ timePeriod, setTimePeriod }: Props) => {
 };
 
 const Statistics = () => {
-  const [timePeriod, setTimePeriod] = useState<TimePeriod>({
+  const [timePeriod, setTimePeriod] = useState<DateValueType>({
     startDate: null,
     endDate: null,
   });
 
-  const { data, isLoading } =
-    trpc.workout.sessionCountsPerWorkout.useQuery(timePeriod);
+  const { data, isLoading } = trpc.workout.sessionCountsPerWorkout.useQuery({
+    startDate: timePeriod?.startDate || null,
+    endDate: timePeriod?.endDate || null,
+  });
 
   return (
     <div data-theme="nightforest">
