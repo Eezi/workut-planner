@@ -14,7 +14,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Navbar />
-      <div className="flex">
+      <div className="flex overflow-scroll">
         {/*<div>
           <SideNav />
         </div>*/}

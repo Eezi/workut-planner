@@ -1,5 +1,13 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
+import { Workout } from "../../../types";
+import dayjs from "dayjs";
+
+interface CountFilter {
+  workoutId: string;
+  userId: string;
+  doneAt?: { gte?: Date; lte?: Date };
+}
 
 export const workoutRouter = router({
   postWorkout: protectedProcedure
@@ -8,7 +16,7 @@ export const workoutRouter = router({
         title: z.string(),
         description: z.string(),
         userId: z.string(),
-        intensity: z.enum(['HARD', 'MEDIUM', 'EASY']),
+        intensity: z.enum(["HARD", "MEDIUM", "EASY"]),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -72,13 +80,13 @@ export const workoutRouter = router({
     }),
 
   workoutById: protectedProcedure
-  .input(
-    z.object({
-      id: z.string(),
-    })
-  )
-  .query(async ({ ctx, input }) => {
-    try {
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
         return await ctx.prisma.workout.findFirst({
           where: {
             id: input.id,
@@ -95,7 +103,7 @@ export const workoutRouter = router({
         id: z.string(),
         title: z.string(),
         description: z.string(),
-        intensity: z.enum(['HARD', 'MEDIUM', 'EASY']),
+        intensity: z.enum(["HARD", "MEDIUM", "EASY"]),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -115,37 +123,58 @@ export const workoutRouter = router({
       }
     }),
 
-  sessionCountsPerWorkout: protectedProcedure.query(async ({ ctx }) => {
-    try {
-      const userWorkouts = await ctx.prisma.workout.findMany({
-        where: {
-          userId: ctx.session.user.id
-        },
-       select: {
-        id: true,
-        title: true
-      }
-     });
-      const workoutWithSessionCounts = await Promise.all(userWorkouts.map(async (workout) => {
-        const sessionCount = await ctx.prisma.workoutSession.count({
+  sessionCountsPerWorkout: protectedProcedure
+    .input(
+      z.object({
+        startDate: z.string().nullish(),
+        endDate: z.string().nullish(),
+      }).nullish(),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const userWorkouts = await ctx.prisma.workout.findMany({
           where: {
-            workoutId: workout.id,
             userId: ctx.session.user.id,
-            /*doneAt: {
-              gte: new Date('start_date'),
-              lte: new Date('end_date')
-            }*/
-          }
-      });
+          },
+          select: {
+            id: true,
+            title: true,
+          },
+        });
 
- return {
-   ...workout,
-   count: sessionCount
- };
+        console.warn('input', input)
 
-}));
+        const workoutWithSessionCounts = await Promise.all(
+          userWorkouts.map(async (workout: any) => {
+            const filter: CountFilter = {
+              workoutId: workout.id,
+              userId: ctx.session.user.id,
+            };
 
-      /*const groupedData = await prisma.workoutSession.groupBy({
+            if (input?.startDate || input?.endDate) {
+              filter.doneAt = {};
+
+              if (input?.startDate) {
+                filter.doneAt.gte = new Date(dayjs(input?.startDate).startOf('day').toString());
+              }
+
+              if (input?.endDate) {
+                filter.doneAt.lte = new Date(dayjs(input?.endDate).endOf("day").toString());
+              }
+            }
+
+            const sessionCount = await ctx.prisma.workoutSession.count({
+              where: filter,
+            });
+
+            return {
+              ...workout,
+              count: sessionCount,
+            };
+          })
+        );
+
+        /*const groupedData = await prisma.workoutSession.groupBy({
   by: ['workoutId'],
   where: {
     userId: ctx.session.user.id,
@@ -159,9 +188,9 @@ export const workoutRouter = router({
   },
 });*/
 
-    return workoutWithSessionCounts;
-    } catch (error) {
-      console.log("error", error);
-    }
-  }),
+        return workoutWithSessionCounts;
+      } catch (error) {
+        console.log("error", error);
+      }
+    }),
 });
