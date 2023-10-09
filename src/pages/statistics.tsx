@@ -45,7 +45,7 @@ const Statistics = () => {
         {isLoading ? (
           <div>Fetching workouts...</div>
         ) : (
-          <div className="mt-10 mb-20 px-5">
+          <div className="mt-10 mb-20 px-5 text-center lg:text-left">
             <PeriodOfTimePicker
               timePeriod={timePeriod}
               setTimePeriod={setTimePeriod}
