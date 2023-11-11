@@ -70,7 +70,7 @@ export const BottomNavBar = () => {
   return (
     <div
       data-theme="nightforest"
-      className="btm-nav fixed bottom-0 md:hidden"
+      className="btm-nav fixed bottom-0 md:hidden pb-6"
     >
       <Link href="/workout-sessions">
         <svg
