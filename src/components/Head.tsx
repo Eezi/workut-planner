@@ -7,8 +7,8 @@ export const PageHead = ({ title }: { title: string }) => (
     <meta name="theme-color" content="#RRGGBB"></meta>
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
-    />
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    ></meta>
     <link rel="icon" href="/icons/wa-logo-48.png" />
     <link rel="manifest" href="/manifest.json" />
   </Head>
