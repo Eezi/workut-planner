@@ -36,6 +36,7 @@ const LoggedInNav = () => {
           if (name === "Create workout") {
             return (
               <Link
+                key={link}
                 href={{
                   pathname: "/create-workout/[slug]",
                   query: { slug: "create" },
@@ -50,6 +51,7 @@ const LoggedInNav = () => {
               style={{
                 borderBottom: isActive ? "2px solid white" : "none",
               }}
+              key={link}
               href={link}
             >
               {name}
