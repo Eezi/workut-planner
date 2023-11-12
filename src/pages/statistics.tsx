@@ -3,6 +3,7 @@ import { useState } from "react";
 import { PageHead } from "../components/Head";
 import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
+import { PageTitle } from "../components/PageTitle";
 
 interface Props {
   timePeriod: DateValueType;
@@ -39,32 +40,28 @@ const Statistics = () => {
   });
 
   return (
-    <div data-theme="nightforest">
+    <>
       <PageHead title="Statistics" />
-      <main className="flex min-h-screen flex-col items-center">
-        {isLoading ? (
-          <div>Fetching workouts...</div>
-        ) : (
-          <div className="mt-10 mb-20 px-5 text-center lg:text-left">
-            <PeriodOfTimePicker
-              timePeriod={timePeriod}
-              setTimePeriod={setTimePeriod}
-            />
-            <h1 className="mt-5 text-xl font-semibold md:text-3xl">
-              Number of sessions per workout
-            </h1>
-            <div className="stats stats-vertical mt-3 shadow lg:stats-horizontal">
-              {data?.map(({ id, title, count }) => (
-                <div key={id} className="stat">
-                  <div className="stat-title text-center">{title}</div>
-                  <div className="stat-value text-center">{count}</div>
-                </div>
-              ))}
-            </div>
+      {isLoading ? (
+        <div>Fetching workouts...</div>
+      ) : (
+        <div className="mb-20 px-5">
+          <PageTitle title="Number of sessions per workout" />
+          <PeriodOfTimePicker
+            timePeriod={timePeriod}
+            setTimePeriod={setTimePeriod}
+          />
+          <div className="stats stats-vertical mt-3 shadow lg:stats-horizontal">
+            {data?.map(({ id, title, count }) => (
+              <div key={id} className="stat">
+                <div className="stat-title text-center">{title}</div>
+                <div className="stat-value text-center">{count}</div>
+              </div>
+            ))}
           </div>
-        )}
-      </main>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

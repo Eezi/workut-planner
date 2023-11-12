@@ -4,10 +4,15 @@ import { WorkoutCard } from "../components/workoutCard";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { PageHead } from '../components/Head';
+import { PageHead } from "../components/Head";
+import { PageTitle } from "../components/PageTitle";
 
 const AllWorkouts: NextPage = () => {
-  const { data: workouts, isLoading, refetch } = trpc.workout.getAllWorkouts.useQuery();
+  const {
+    data: workouts,
+    isLoading,
+    refetch,
+  } = trpc.workout.getAllWorkouts.useQuery();
   const { data: sessionData } = useSession();
   const router = useRouter();
 
@@ -16,25 +21,23 @@ const AllWorkouts: NextPage = () => {
   });
 
   return (
-    <div data-theme="nightforest">
+    <>
       <PageHead title="All Workouts" />
-      <main className="flex min-h-screen flex-col items-center">
-        {isLoading ? (
-          <div>Fetching workouts...</div>
-        ) : (
-          <div className="container max-w-3xl md:px-4 px-6 pt-16">
-            <h4 className="text-center text-xl font-bold mb-8 tracking-tight text-white sm:text-[3rem]">
-              All Workouts
-            </h4>
-            <div className="flex mb-20 flex-col gap-5">
-              {workouts?.map((workout) => {
-                return <WorkoutCard key={workout.id} {...workout} refetch={refetch} />;
-              })}
-            </div>
+      {isLoading ? (
+        <div>Fetching workouts...</div>
+      ) : (
+        <>
+          <PageTitle title="All workouts" />
+          <div className="mb-20 flex flex-col gap-5">
+            {workouts?.map((workout) => {
+              return (
+                <WorkoutCard key={workout.id} {...workout} refetch={refetch} />
+              );
+            })}
           </div>
-        )}
-      </main>
-    </div>
+        </>
+      )}
+    </>
   );
 };
 

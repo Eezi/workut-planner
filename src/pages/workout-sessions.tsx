@@ -2,17 +2,16 @@ import { type NextPage } from "next";
 import { PageHead } from "../components/Head";
 import { trpc } from "../utils/trpc";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 import { Modal } from "../components/AddSessionModal";
 import { Collapse } from "../components/Collapse";
 import { WorkoutModalContent } from "../components/Modal";
-import { useRouter } from "next/router";
 import { IntesityBadge } from "../components/workoutCard";
 import { DateInput } from "../components/DateInput";
 import dayjs from "dayjs";
 import { Session } from "../types/Session";
 import cn from "classnames";
 import { sliceLongText } from "../utils/sliceLongText";
+import { PageTitle } from "../components/PageTitle";
 
 const SessionNotes = ({
   sessionId,
@@ -64,15 +63,15 @@ const ActionList = ({
   return (
     <div className={dropdownClassName}>
       <svg
-        tabIndex={0}
         xmlns="http://www.w3.org/2000/svg"
         width="27"
+        tabIndex={0}
         height="27"
-        viewBox="0 0 24 24"
+        viewBox="0 0 512 512"
       >
         <path
+          d="M136 216c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40zm240 0c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40zm-120 0c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40z"
           fill="currentColor"
-          d="M14 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm0 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm0 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"
         />
       </svg>
       <ul
@@ -244,7 +243,7 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
   return (
     <div
       key={id}
-      className="flex min-w-full items-center gap-4 rounded-xl p-3"
+      className="flex items-center gap-6 rounded-xl p-3"
       style={{ border: "1px solid #2c2d3c" }}
     >
       <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
@@ -270,22 +269,25 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
           >
             <div
               onClick={() => setOpenWorkout(true)}
-              className="label-text flex flex-grow items-center gap-3 text-base text-white md:text-lg"
+              className="mb-2 flex flex-grow font-semibold"
             >
-              <IntesityBadge isSmall intensity={workout?.intensity} />
               {sliceLongText(workout?.title)}
             </div>
+            <div>
+              <span className="text-sm text-gray-300">
+                {dayjs(date).format("dddd")} -{" "}
+                {dayjs(date).format("DD.MM.YYYY")}
+              </span>
+            </div>
           </Collapse>
-          <ActionList
-            handleRemove={handleRemove}
-            handleOpenWorkout={() => setOpenWorkout(true)}
-            handleOpen={() => setOpen(false)}
-          />
-        </div>
-        <div className="flex gap-2">
-          <span className="text-sm text-gray-400">
-            {dayjs(date).format("dddd")} - {dayjs(date).format("DD.MM.YYYY")}
-          </span>
+          <div className="flex flex-col justify-between">
+            <IntesityBadge isSmall intensity={workout?.intensity} />
+            <ActionList
+              handleRemove={handleRemove}
+              handleOpenWorkout={() => setOpenWorkout(true)}
+              handleOpen={() => setOpen(false)}
+            />
+          </div>
         </div>
         {!open ? (
           <div className="mt-3">
@@ -328,7 +330,7 @@ const Tabs = ({
 
   return (
     <div>
-      <div className="tabs tabs-boxed">
+      <div className="tabs tabs-boxed mb-3">
         {tabs.map(({ label, key }) => (
           <a
             onClick={() => setActiveTab(key)}
@@ -400,31 +402,27 @@ const WorkoutSessions: NextPage = () => {
   });
 
   return (
-    <div data-theme="nightforest" className="h-full">
+    <>
       <PageHead title="Sessions" />
-      <main className="flex min-h-screen flex-col items-center">
-        {isLoading ? (
-          <div>Fetching sessions...</div>
-        ) : (
-          <div className="container flex flex-col items-center gap-4 px-4 py-8">
-            <h4 className="text-xl font-bold tracking-tight text-white sm:text-[3rem]">
-              All Workout Sessions
-            </h4>
-            <Tabs
-              hideCompleted={hideCompleted}
-              setHideCompleted={setHideCompleted}
-              setActiveTab={setActiveTab}
-              activeTab={activeTab}
-            />
-            <div className="mb-16 grid w-full grid-cols-1 gap-4 md:w-5/12 md:gap-8">
-              {allSessions?.map((session) => (
-                <SessionCard key={session.id} {...session} />
-              ))}
-            </div>
+      {isLoading ? (
+        <div>Fetching sessions...</div>
+      ) : (
+        <div className="flex flex-col gap-6 px-4 py-4">
+          <PageTitle title="All workout sessions" />
+          <Tabs
+            hideCompleted={hideCompleted}
+            setHideCompleted={setHideCompleted}
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+          />
+          <div className="mb-16 flex flex-col gap-6">
+            {allSessions?.map((session) => (
+              <SessionCard key={session.id} {...session} />
+            ))}
           </div>
-        )}
-      </main>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

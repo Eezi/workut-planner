@@ -6,6 +6,15 @@ module.exports = {
     "./node_modules/tailwind-datepicker-react/dist/**/*.js",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: '1.5rem',
+
+      screens: {
+        xl: '1024px',
+        '2xl': '1024px'
+      }
+    },
     extend: {
       colors: {
         main: '#0f141b',

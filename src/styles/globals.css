@@ -2,7 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+:root {
+  --main-color: #0c0c0c;
+}
+
+html, body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
+  background-color: var(--main-color) !important;
 }

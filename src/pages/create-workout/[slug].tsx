@@ -5,23 +5,24 @@ import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Intensity } from "../../types/workout";
+import { PageTitle } from "../../components/PageTitle";
 
 const CREATE_MODE = "create";
 
 const defaultLabels = [
- {
-   label: 'Boulder',
-   key: 'boulder',
- },
- {
-   label: 'Lead',
-   key: 'lead',
- },
- {
-   label: 'Supportive Training',
-   key: 'supportive-training',
- },
-]
+  {
+    label: "Boulder",
+    key: "boulder",
+  },
+  {
+    label: "Lead",
+    key: "lead",
+  },
+  {
+    label: "Supportive Training",
+    key: "supportive-training",
+  },
+];
 
 const AllWorkouts: NextPage = () => {
   const [title, setTitle] = useState("");
@@ -94,7 +95,7 @@ const AllWorkouts: NextPage = () => {
     setTitle("");
     setDescription("");
     router.push("/allworkouts");
-  }
+  };
 
   const handleSubmit = async () => {
     if (!title) {
@@ -112,55 +113,46 @@ const AllWorkouts: NextPage = () => {
   return (
     <>
       <PageHead title="Create Workout" />
-      <main
-        className="flex min-h-screen flex-col items-center justify-center"
-        data-theme="nightforest"
-      >
-        <h4 className="text-center text-xl font-bold mb-8 tracking-tight text-white sm:text-[3rem]">
-          Create new workout
-        </h4>
-        <div className="container flex flex-col items-center justify-center gap-8 py-16 text-white">
-          <div className="w-full text-center">
-            <input
-              type="text"
-              value={title}
-              placeholder="Your workout name..."
-              required
-              minLength={2}
-              maxLength={200}
-              onChange={(event) => {
-                setTitle(event.target.value);
-                setErrors({ title: null });
-              }}
-              className="input-bordered input-primary input w-full max-w-xs"
-            />
-            {errors.title && <span>{errors.title}</span>}
-          </div>
-          <select
-            onChange={(event) => setIntensity(event.target.value as Intensity)}
-            className="select-primary select w-full max-w-xs"
-            value={intensity}
-          >
-            <option disabled selected>
-              Intesity of workout
-            </option>
-            <option value="HARD">Hard</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="EASY">Easy</option>
-          </select>
+      <PageTitle title="Create new workout" />
+      <div className="flex flex-col gap-8">
+        <input
+          type="text"
+          value={title}
+          placeholder="Your workout name..."
+          required
+          minLength={2}
+          maxLength={200}
+          onChange={(event) => {
+            setTitle(event.target.value);
+            setErrors({ title: null });
+          }}
+          className="input-bordered input-primary input"
+        />
+        {errors.title && <span>{errors.title}</span>}
+        <select
+          onChange={(event) => setIntensity(event.target.value as Intensity)}
+          className="select-primary select"
+          value={intensity}
+        >
+          <option disabled selected>
+            Intesity of workout
+          </option>
+          <option value="HARD">Hard</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="EASY">Easy</option>
+        </select>
 
-          <textarea
-            value={description}
-            rows={4}
-            placeholder="Description..."
-            onChange={(event) => setDescription(event.target.value)}
-            className="textarea-primary textarea w-80"
-          />
-          <button onClick={handleSubmit} className="btn-success btn">
-            {isCreateForm ? "Create" : "Update"}
-          </button>
-        </div>
-      </main>
+        <textarea
+          value={description}
+          rows={4}
+          placeholder="Description..."
+          onChange={(event) => setDescription(event.target.value)}
+          className="textarea-primary textarea"
+        />
+        <button onClick={handleSubmit} className="btn-success btn">
+          {isCreateForm ? "Create" : "Update"}
+        </button>
+      </div>
     </>
   );
 };

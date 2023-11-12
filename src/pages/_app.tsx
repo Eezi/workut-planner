@@ -6,6 +6,7 @@ import { SideNav } from "../components/SideNav";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
+import { PageContainer } from "../components/PageContainer";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -14,14 +15,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Navbar />
-      <div className="flex overflow-scroll">
-        {/*<div>
-          <SideNav />
-        </div>*/}
-        <div className="grow">
-          <Component {...pageProps} />
-        </div>
-      </div>
+      <PageContainer>
+        <Component {...pageProps} />
+      </PageContainer>
       <BottomNavBar />
     </SessionProvider>
   );
