@@ -4,7 +4,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { PageHead } from "../components/Head";
 
 const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
   return (
     <>
       <PageHead title="Workout Plan" />
@@ -12,6 +12,7 @@ const Home: NextPage = () => {
         <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
           Workout <span className="text-primary">Plan</span> App
         </h1>
+        {status === "loading" && <h3 className="text-2xl">Loading...</h3>}
         {sessionData && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             <Link

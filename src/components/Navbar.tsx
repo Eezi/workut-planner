@@ -24,7 +24,6 @@ const pages = [
 
 const LoggedInNav = () => {
   const pathname = usePathname();
-  console.log("path", pathname);
   const { data: sessionData } = useSession();
   if (!sessionData) return null;
 
