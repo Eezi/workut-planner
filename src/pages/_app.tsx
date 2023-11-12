@@ -2,11 +2,11 @@ import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Navbar, BottomNavBar } from "../components/Navbar";
-import { SideNav } from "../components/SideNav";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
 import { PageContainer } from "../components/PageContainer";
+import { SessionContainer } from "../components/SessionContainer";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -14,11 +14,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Navbar />
-      <PageContainer>
-        <Component {...pageProps} />
-      </PageContainer>
-      <BottomNavBar />
+      <SessionContainer>
+        <Navbar />
+        <PageContainer>
+          <Component {...pageProps} />
+        </PageContainer>
+        <BottomNavBar />
+      </SessionContainer>
     </SessionProvider>
   );
 };

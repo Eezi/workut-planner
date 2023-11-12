@@ -1,25 +1,61 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 
+const pages = [
+  {
+    link: "/statistics",
+    name: "Statics",
+  },
+  {
+    link: "/workout-sessions",
+    name: "Sessions",
+  },
+  {
+    link: "/allworkouts",
+    name: "Sessions",
+  },
+  {
+    link: "/create-workout/[slug]",
+    name: "Create workout",
+  },
+];
+
 const LoggedInNav = () => {
+  const pathname = usePathname();
+  console.log("path", pathname);
   const { data: sessionData } = useSession();
   if (!sessionData) return null;
 
   return (
     <>
       <div className="hidden gap-0 font-semibold md:flex md:gap-7">
-        <Link href="/statistics">Statics</Link>
-        <Link href="/workout-sessions">Sessions</Link>
-        <Link href="/allworkouts">Workouts</Link>
-        <Link
-          href={{
-            pathname: "/create-workout/[slug]",
-            query: { slug: "create" },
-          }}
-        >
-          Create Workout
-        </Link>
+        {pages.map(({ link, name }) => {
+          const isActive = pathname === link;
+          if (name === "Create workout") {
+            return (
+              <Link
+                href={{
+                  pathname: "/create-workout/[slug]",
+                  query: { slug: "create" },
+                }}
+              >
+                Create Workout
+              </Link>
+            );
+          }
+          return (
+            <Link
+              style={{
+                borderBottom: isActive ? "2px solid white" : "none",
+              }}
+              href={link}
+            >
+              {name}
+            </Link>
+          );
+        })}
       </div>
       <div className="dropdown-end dropdown">
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">

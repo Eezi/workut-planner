@@ -359,14 +359,8 @@ const Tabs = ({
 const WorkoutSessions: NextPage = () => {
   const { data: sessions, isLoading } =
     trpc.workoutSession.getAllWorkoutSessions.useQuery();
-  // const { data: sessionData } = useSession();
-  // const router = useRouter();
   const [activeTab, setActiveTab] = useState("all");
   const [hideCompleted, setHideCompleted] = useState(true);
-
-  /*useEffect(() => {
-    if (!sessionData) router.push("/");
-  }, []);*/
 
   const handleFilteredSessions = () => {
     let defaultSessions = sessions;

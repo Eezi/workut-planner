@@ -1,9 +1,6 @@
 import { type NextPage } from "next";
 import { trpc } from "../utils/trpc";
 import { WorkoutCard } from "../components/workoutCard";
-import { useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
 
@@ -13,12 +10,6 @@ const AllWorkouts: NextPage = () => {
     isLoading,
     refetch,
   } = trpc.workout.getAllWorkouts.useQuery();
-  const { data: sessionData } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!sessionData) router.push("/");
-  });
 
   return (
     <>

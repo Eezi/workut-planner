@@ -6,7 +6,7 @@ import { trpc } from "../utils/trpc";
 import { WorkoutModalContent } from "./Modal";
 import Link from "next/link";
 import cn from "classnames";
-import { sliceLongText } from '../utils/sliceLongText';
+import { sliceLongText } from "../utils/sliceLongText";
 
 const colors = new Map([
   ["HARD", "#ff4b3f"],
@@ -35,7 +35,19 @@ export const IntesityBadge = ({ intensity, isSmall }: Props) => (
   <>
     {isSmall ? (
       <div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24"><path fill={colors.get(intensity)} fillRule="evenodd" d="m6 15.235l6 3.333l6-3.333v-6.47l-6-3.333l-6 3.333v6.47ZM12 2L3 7v10l9 5l9-5V7l-9-5Z" clip-rule="evenodd"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="27"
+          height="27"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill={colors.get(intensity)}
+            fillRule="evenodd"
+            d="m6 15.235l6 3.333l6-3.333v-6.47l-6-3.333l-6 3.333v6.47ZM12 2L3 7v10l9 5l9-5V7l-9-5Z"
+            clip-rule="evenodd"
+          />
+        </svg>
       </div>
     ) : (
       <div
@@ -48,7 +60,6 @@ export const IntesityBadge = ({ intensity, isSmall }: Props) => (
     )}
   </>
 );
-
 
 export const WorkoutCard = ({
   title,
@@ -107,7 +118,7 @@ export const WorkoutCard = ({
   };
 
   const dropdownClassName = cn({
-    "dropdown": true,
+    dropdown: true,
     "dropdown-left": true,
     "dropdown-end": true,
     "ml-auto": true,
@@ -124,25 +135,23 @@ export const WorkoutCard = ({
       </Modal>
       <div
         data-theme="nightforest"
-        className="w-full rounded-md card-border bg-neutral shadow-xl"
+        className="card-border w-full rounded-md bg-neutral shadow-xl"
       >
         <div className="p-4">
           <div className="flex gap-2">
-              <IntesityBadge isSmall intensity={intensity} />
-            <h2 className="md:text-xl text-white">
-              {sliceLongText(title)}
-            </h2>
+            <IntesityBadge isSmall intensity={intensity} />
+            <h2 className="text-white md:text-xl">{sliceLongText(title)}</h2>
             <div className={dropdownClassName}>
               <svg
-                tabIndex={0}
                 xmlns="http://www.w3.org/2000/svg"
                 width="27"
+                tabIndex={0}
                 height="27"
-                viewBox="0 0 24 24"
+                viewBox="0 0 512 512"
               >
                 <path
+                  d="M136 216c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40zm240 0c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40zm-120 0c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40z"
                   fill="currentColor"
-                  d="M14 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm0 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Zm0 6a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"
                 />
               </svg>
               <ul
