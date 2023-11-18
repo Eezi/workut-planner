@@ -14,11 +14,7 @@ const pages = [
   },
   {
     link: "/allworkouts",
-    name: "Sessions",
-  },
-  {
-    link: "/create-workout/[slug]",
-    name: "Create workout",
+    name: "Workouts",
   },
 ];
 
@@ -32,19 +28,6 @@ const LoggedInNav = () => {
       <div className="hidden gap-0 font-semibold md:flex md:gap-7">
         {pages.map(({ link, name }) => {
           const isActive = pathname === link;
-          if (name === "Create workout") {
-            return (
-              <Link
-                key={link}
-                href={{
-                  pathname: "/create-workout/[slug]",
-                  query: { slug: "create" },
-                }}
-              >
-                Create Workout
-              </Link>
-            );
-          }
           return (
             <Link
               style={{
@@ -58,7 +41,7 @@ const LoggedInNav = () => {
           );
         })}
       </div>
-      <div className="dropdown-end dropdown">
+      <div className="dropdown-end dropdown ml-4">
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
           <div className="w-8 rounded-full">
             <img alt="user-image" src={sessionData?.user?.image || ""} />
@@ -204,23 +187,6 @@ export const BottomNavBar = () => {
           />
         </svg>
         <span className="btm-nav-label text-xs">Statics</span>
-      </Link>
-      <Link href="/create-workout/create">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <span className="btm-nav-label text-xs">Create Workout</span>
       </Link>
     </div>
   );

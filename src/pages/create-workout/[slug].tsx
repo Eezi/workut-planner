@@ -114,7 +114,7 @@ const AllWorkouts: NextPage = () => {
     <>
       <PageHead title="Create Workout" />
       <PageTitle title="Create new workout" />
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 py-6">
         <input
           type="text"
           value={title}

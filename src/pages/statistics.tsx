@@ -46,7 +46,9 @@ const Statistics = () => {
         <div>Fetching workouts...</div>
       ) : (
         <div className="mb-20 px-5">
-          <PageTitle title="Number of sessions per workout" />
+          <div className="mb-4">
+            <PageTitle title="Number of sessions per workout" />
+          </div>
           <PeriodOfTimePicker
             timePeriod={timePeriod}
             setTimePeriod={setTimePeriod}

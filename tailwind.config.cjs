@@ -26,11 +26,11 @@ module.exports = {
     themes: ["light", "dark", "night",
       {
         nightforest: {
-          "primary": "#06dc83",
+          "primary": "#464CF6",
           "secondary": "#D926AA",
           "accent": "#8b5cf6",
           "neutral": "#18181b",
-          "base-100": "#0c0c0c",
+          "base-100": "#000212",
           "borderColor": "#27272a",
           "info": "#3ABFF8",
           "success": "#36D399",
