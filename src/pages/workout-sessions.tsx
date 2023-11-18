@@ -256,7 +256,7 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
       <div>
         <input
           type="checkbox"
-          className="checkbox-secondary checkbox"
+          className="checkbox-primary checkbox"
           defaultChecked={done}
           onChange={({ target }) => handleMarkDone(id, target.checked)}
         />
@@ -341,12 +341,12 @@ const Tabs = ({
           </a>
         ))}
       </div>
-      <div className="form-control w-40">
+      <div className="form-control w-40 pt-2">
         <label className="label cursor-pointer">
           <span className="label-text">Hide Comleted</span>
           <input
             type="checkbox"
-            className="toggle-secondary toggle"
+            className="toggle-primary toggle"
             checked={hideCompleted}
             onChange={() => setHideCompleted(!hideCompleted)}
           />
