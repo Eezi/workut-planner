@@ -174,9 +174,22 @@ export const workoutRouter = router({
               where: filter,
             });
 
+       const latestSession =  await ctx.prisma.workoutSession.findFirst({
+          where: { 
+            userId: ctx.session.user.id,
+            workoutId: workout.id,
+            done: true,
+           },
+          orderBy: {
+            date: "desc",
+          },
+      });
+      console.log('sessio', latestSession)
+
             return {
               ...workout,
               count: sessionCount,
+              latestSession,
             };
           })
         );

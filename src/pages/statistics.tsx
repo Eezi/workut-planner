@@ -4,6 +4,7 @@ import { PageHead } from "../components/Head";
 import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 import { PageTitle } from "../components/PageTitle";
+import { SessionsTable, WorkoutSessionData } from "../components/SessionsTable";
 
 interface Props {
   timePeriod: DateValueType;
@@ -38,7 +39,6 @@ const Statistics = () => {
     startDate: timePeriod?.startDate || null,
     endDate: timePeriod?.endDate || null,
   });
-
   return (
     <>
       <PageHead title="Statistics" />
@@ -53,13 +53,8 @@ const Statistics = () => {
             timePeriod={timePeriod}
             setTimePeriod={setTimePeriod}
           />
-          <div className="stats stats-vertical mt-3 shadow lg:stats-horizontal">
-            {data?.map(({ id, title, count }) => (
-              <div key={id} className="stat">
-                <div className="stat-title text-center">{title}</div>
-                <div className="stat-value text-center">{count}</div>
-              </div>
-            ))}
+          <div className="pt-5">
+            <SessionsTable sessionData={data as WorkoutSessionData[]} />
           </div>
         </div>
       )}
