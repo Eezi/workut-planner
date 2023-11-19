@@ -126,17 +126,8 @@ export const workoutRouter = router({
   sessionCountsPerWorkout: protectedProcedure
     .input(
       z.object({
-        startDate: z.union([
-          z.string(),
-          z.instanceof(Date),
-          z.null(),
-        ]),
-        endDate: z.union([
-          z.string(),
-          z.instanceof(Date),
-          z.null(),
-        ]),
-
+        startDate: z.union([z.string(), z.instanceof(Date), z.null()]),
+        endDate: z.union([z.string(), z.instanceof(Date), z.null()]),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -162,11 +153,15 @@ export const workoutRouter = router({
               filter.doneAt = {};
 
               if (input?.startDate) {
-                filter.doneAt.gte = new Date(dayjs(input?.startDate).startOf('day').toString());
+                filter.doneAt.gte = new Date(
+                  dayjs(input?.startDate).startOf("day").toString()
+                );
               }
 
               if (input?.endDate) {
-                filter.doneAt.lte = new Date(dayjs(input?.endDate).endOf("day").toString());
+                filter.doneAt.lte = new Date(
+                  dayjs(input?.endDate).endOf("day").toString()
+                );
               }
             }
 
@@ -174,17 +169,16 @@ export const workoutRouter = router({
               where: filter,
             });
 
-       const latestSession =  await ctx.prisma.workoutSession.findFirst({
-          where: { 
-            userId: ctx.session.user.id,
-            workoutId: workout.id,
-            done: true,
-           },
-          orderBy: {
-            date: "desc",
-          },
-      });
-      console.log('sessio', latestSession)
+            const latestSession = await ctx.prisma.workoutSession.findFirst({
+              where: {
+                userId: ctx.session.user.id,
+                workoutId: workout.id,
+                done: true,
+              },
+              orderBy: {
+                date: "desc",
+              },
+            });
 
             return {
               ...workout,

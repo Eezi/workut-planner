@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/router";
 
 const pages = [
   {
@@ -179,6 +178,7 @@ export const BottomNavBar = () => {
         const isActive = pathname === link;
         return (
           <Link
+            key={link}
             style={{
               textDecoration: isActive ? "underline" : "none",
               textDecorationThickness: "2px",
