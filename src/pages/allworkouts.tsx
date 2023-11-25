@@ -4,8 +4,9 @@ import Link from "next/link";
 import { WorkoutCard } from "../components/workoutCard";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
+import PageTransition from "../components/PageTransition";
 
-const AllWorkouts: NextPage = () => {
+const AllWorkouts: NextPage = (props: {}, ref: React.ForwardedRef<HTMLDivElement>) => {
   const {
     data: workouts,
     isLoading,
@@ -13,7 +14,7 @@ const AllWorkouts: NextPage = () => {
   } = trpc.workout.getAllWorkouts.useQuery();
 
   return (
-    <>
+    <PageTransition ref={ref}>
       <PageHead title="All Workouts" />
       {isLoading ? (
         <div>Fetching workouts...</div>
@@ -40,7 +41,7 @@ const AllWorkouts: NextPage = () => {
           </div>
         </>
       )}
-    </>
+    </PageTransition>
   );
 };
 

@@ -172,7 +172,7 @@ export const BottomNavBar = () => {
   return (
     <div
       data-theme="nightforest"
-      className="btm-nav fixed bottom-0 p-2 pb-5 md:hidden"
+      className="btm-nav fixed bottom-0 p-2 pb-5 md:hidden h-16"
     >
       {pages.map(({ name, link, icon }) => {
         const isActive = pathname === link;

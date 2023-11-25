@@ -12,6 +12,7 @@ import { Session } from "../types/Session";
 import cn from "classnames";
 import { sliceLongText } from "../utils/sliceLongText";
 import { PageTitle } from "../components/PageTitle";
+import PageTransition from "../components/PageTransition";
 
 const SessionNotes = ({
   sessionId,
@@ -19,7 +20,7 @@ const SessionNotes = ({
 }: {
   sessionId: string;
   notes?: string;
-}) => {
+},  ref: React.ForwardedRef<HTMLDivElement>) => {
   const handleSessionkDone = trpc.workoutSession.editSessionNotes.useMutation();
 
   const handleEditNotes = (
@@ -35,6 +36,7 @@ const SessionNotes = ({
   };
 
   return (
+    <PageTransition ref={ref}>
     <div className="w-full">
       <textarea
         onBlur={handleEditNotes}
@@ -43,6 +45,7 @@ const SessionNotes = ({
         placeholder="Notes"
       ></textarea>
     </div>
+  </PageTransition>
   );
 };
 

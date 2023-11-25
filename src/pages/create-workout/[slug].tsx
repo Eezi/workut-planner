@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Intensity } from "../../types/workout";
 import { PageTitle } from "../../components/PageTitle";
+import PageTransition from "../../components/PageTransition";
 
 const CREATE_MODE = "create";
 
@@ -24,7 +25,7 @@ const defaultLabels = [
   },
 ];
 
-const AllWorkouts: NextPage = () => {
+const AllWorkouts: NextPage = (props: {}, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [intensity, setIntensity] = useState<Intensity>("MEDIUM");
@@ -111,7 +112,7 @@ const AllWorkouts: NextPage = () => {
   };
 
   return (
-    <>
+    <PageTransition ref={ref}>
       <PageHead title="Create Workout" />
       <PageTitle title="Create new workout" />
       <div className="flex flex-col gap-8 py-6">
@@ -153,7 +154,7 @@ const AllWorkouts: NextPage = () => {
           {isCreateForm ? "Create" : "Update"}
         </button>
       </div>
-    </>
+    </PageTransition>
   );
 };
 
