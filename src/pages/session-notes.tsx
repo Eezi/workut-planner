@@ -1,6 +1,6 @@
 import { WorkoutSession } from "@prisma/client";
 
-export const SessionNotes = ({
+const SessionNotes = ({
   workoutSessions,
 }: {
   workoutSessions: WorkoutSession[];
@@ -23,3 +23,5 @@ export const SessionNotes = ({
       ))}
     </div>
   ); */ 
+
+  export default SessionNotes
