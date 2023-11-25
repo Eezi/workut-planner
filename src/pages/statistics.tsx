@@ -29,8 +29,8 @@ const PeriodOfTimePicker = ({ timePeriod, setTimePeriod }: Props) => {
     </div>
   );
 };
-
-const Statistics = (props: {}, ref: React.ForwardedRef<HTMLDivElement>) => {
+type PageProps = {}
+const Statistics = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [timePeriod, setTimePeriod] = useState<DateValueType>({
     startDate: null,
     endDate: null,

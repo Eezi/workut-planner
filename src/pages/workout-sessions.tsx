@@ -20,7 +20,7 @@ const SessionNotes = ({
 }: {
   sessionId: string;
   notes?: string;
-},  ref: React.ForwardedRef<HTMLDivElement>) => {
+}) => {
   const handleSessionkDone = trpc.workoutSession.editSessionNotes.useMutation();
 
   const handleEditNotes = (
@@ -36,7 +36,6 @@ const SessionNotes = ({
   };
 
   return (
-    <PageTransition ref={ref}>
     <div className="w-full">
       <textarea
         onBlur={handleEditNotes}
@@ -45,7 +44,6 @@ const SessionNotes = ({
         placeholder="Notes"
       ></textarea>
     </div>
-  </PageTransition>
   );
 };
 
@@ -359,7 +357,8 @@ const Tabs = ({
   );
 };
 
-const WorkoutSessions: NextPage = () => {
+type PageProps = {}
+const WorkoutSessions: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
   const { data: sessions, isLoading } =
     trpc.workoutSession.getAllWorkoutSessions.useQuery();
   const [activeTab, setActiveTab] = useState("all");
@@ -399,7 +398,7 @@ const WorkoutSessions: NextPage = () => {
   });
 
   return (
-    <>
+    <PageTransition ref={ref}>
       <PageHead title="Sessions" />
       {isLoading ? (
         <div>Fetching sessions...</div>
@@ -419,7 +418,7 @@ const WorkoutSessions: NextPage = () => {
           </div>
         </div>
       )}
-    </>
+      </PageTransition>
   );
 };
 

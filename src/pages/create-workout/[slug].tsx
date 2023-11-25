@@ -24,8 +24,8 @@ const defaultLabels = [
     key: "supportive-training",
   },
 ];
-
-const AllWorkouts: NextPage = (props: {}, ref: React.ForwardedRef<HTMLDivElement>) => {
+type PageProps = {}
+const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [intensity, setIntensity] = useState<Intensity>("MEDIUM");

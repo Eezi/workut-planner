@@ -4,9 +4,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { PageHead } from "../components/Head";
 import PageTransition from "../components/PageTransition";
 
-type IndexPageProps = {}
+type PageProps = {}
 
-const Home: NextPage = (props: IndexPageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+const Home: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
   const { data: sessionData, status } = useSession();
   return (
 		<PageTransition ref={ref}>

@@ -6,7 +6,8 @@ import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
 import PageTransition from "../components/PageTransition";
 
-const AllWorkouts: NextPage = (props: {}, ref: React.ForwardedRef<HTMLDivElement>) => {
+type PageProps = {}
+const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
   const {
     data: workouts,
     isLoading,

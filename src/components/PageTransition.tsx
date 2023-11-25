@@ -9,7 +9,7 @@ function PageTransition({ children, ...rest }: PageTransitionProps, ref: PageTra
 	const inTheCenter = { x: 0 }
 	const onTheLeft = { x: '-100%' }
 
-	const transition = { duration: 0.3, ease: 'easeInOut' }
+	const transition = { duration: 0.2, ease: 'easeInOut' }
 
 	return (
 		<motion.div
