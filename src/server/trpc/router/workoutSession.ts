@@ -131,4 +131,31 @@ export const workoutSessionRouter = router({
       console.log("error", error);
     }
   }),
+
+  getAllWorkoutNotes: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+    try {
+      return await ctx.prisma.workoutSession.findMany({
+        where: { 
+          userId: ctx.session.user.id,
+          workoutId: input.id,
+          OR: [{ notes: {not: null } }, { notes: { not: ""} }],
+        },
+        include: {
+          workout: true,
+        },
+        orderBy: {
+          done: "asc",
+        },
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
+  }),
+
 });
