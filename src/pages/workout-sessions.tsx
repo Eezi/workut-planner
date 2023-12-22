@@ -167,7 +167,7 @@ const SessionCard = ({
         undefined,
         (prevEntries: any) => {
           if (prevEntries && newEntry) {
-            return prevEntries.map((item: Session) => {
+            return prevEntries.map((item: WorkoutSession) => {
               if (item.id === newEntry.id) {
                 return {
                   ...item,
@@ -192,7 +192,7 @@ const SessionCard = ({
         undefined,
         (prevEntries: any) => {
           if (prevEntries && newEntry) {
-            return prevEntries.map((item: Session) => {
+            return prevEntries.map((item: WorkoutSession) => {
               if (item.id === newEntry.id) {
                 return {
                   ...item,
@@ -217,7 +217,9 @@ const SessionCard = ({
         undefined,
         (prevEntries: any) => {
           if (prevEntries) {
-            return prevEntries.filter(({ id }: Session) => id !== newEntry.id);
+            return prevEntries.filter(
+              ({ id }: WorkoutSession) => id !== newEntry.id
+            );
           }
         }
       );
