@@ -13,6 +13,7 @@ import cn from "classnames";
 import { sliceLongText } from "../utils/sliceLongText";
 import { PageTitle } from "../components/PageTitle";
 import PageTransition from "../components/PageTransition";
+import { WorkoutSession } from "@prisma/client";
 
 const SessionNotes = ({
   sessionId,
@@ -146,7 +147,14 @@ const ActionList = ({
   );
 };
 
-const SessionCard = ({ id, done, date, workout, notes }: Session) => {
+const SessionCard = ({
+  id,
+  done,
+  date,
+  workout,
+  notes,
+  hideCompleted,
+}: WorkoutSession & { hideCompleted: boolean }) => {
   const [open, setOpen] = useState<boolean>(true);
   const [openWorkout, setOpenWorkout] = useState(false);
 
@@ -220,10 +228,12 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
   });
 
   const handleMarkDone = (sessionId: string, checked: boolean) => {
-    handleSessionkDone.mutate({
-      id: sessionId,
-      done: checked,
-    });
+    setTimeout(() => {
+      handleSessionkDone.mutate({
+        id: sessionId,
+        done: checked,
+      });
+    }, 500);
   };
 
   const handleEditSession = (sessionId: string, date: Date) => {
@@ -270,16 +280,18 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
           >
             <div
               onClick={() => setOpenWorkout(true)}
-              className="mb-2 flex flex-grow font-semibold"
+              className="flex flex-grow font-semibold"
             >
               {sliceLongText(workout?.title)}
             </div>
-            <div>
-              <span className="text-sm text-gray-300">
-                {dayjs(date).format("dddd")} -{" "}
-                {dayjs(date).format("DD.MM.YYYY")}
-              </span>
-            </div>
+            {!hideCompleted && (
+              <div>
+                <span className="text-sm text-gray-300">
+                  {dayjs(date).format("dddd")} -{" "}
+                  {dayjs(date).format("DD.MM.YYYY")}
+                </span>
+              </div>
+            )}
           </Collapse>
           <div className="flex flex-col justify-between">
             <IntesityBadge isSmall intensity={workout?.intensity} />
@@ -307,95 +319,131 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
   );
 };
 
-const tabs = [
-  { label: "All", key: "all" },
-  { label: "Today", key: "today" },
-  { label: "Week", key: "week" },
-];
-
 const Tabs = ({
-  setActiveTab,
-  activeTab,
   hideCompleted,
   setHideCompleted,
 }: {
-  setActiveTab: (tab: string) => void;
-  activeTab: string;
   hideCompleted: boolean;
   setHideCompleted: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const renderClass = (key: string) => {
-    if (key === activeTab) return "tab tab-active";
-    return "tab";
-  };
-
   return (
-    <div>
-      <div className="tabs tabs-boxed mb-3">
-        {tabs.map(({ label, key }) => (
-          <a
-            onClick={() => setActiveTab(key)}
-            key={key}
-            className={renderClass(key)}
-          >
-            {label}
-          </a>
-        ))}
-      </div>
-      <div className="form-control w-40 pt-2">
-        <label className="label cursor-pointer">
-          <span className="label-text">Hide Comleted</span>
-          <input
-            type="checkbox"
-            className="toggle-primary toggle"
-            checked={hideCompleted}
-            onChange={() => setHideCompleted(!hideCompleted)}
-          />
-        </label>
-      </div>
+    <div className="form-control w-40 pt-2">
+      <label className="label cursor-pointer">
+        <span className="label-text">Hide Comleted</span>
+        <input
+          type="checkbox"
+          className="toggle-primary toggle"
+          checked={hideCompleted}
+          onChange={() => setHideCompleted(!hideCompleted)}
+        />
+      </label>
     </div>
   );
 };
 
-type PageProps = {}
-const WorkoutSessions: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+type GroupedData = {
+  [key: string]: WorkoutSession[];
+};
+
+const SessionCardContainer = ({
+  hideCompleted,
+  nextSevenDaysSessions,
+  completedSessions,
+}: {
+  nextSevenDaysSessions: GroupedData;
+  completedSessions: WorkoutSession[] | undefined;
+  hideCompleted: boolean;
+}) => {
+  if (!hideCompleted) {
+    return (
+      <>
+        {completedSessions?.map((session) => (
+          <SessionCard
+            hideCompleted={hideCompleted}
+            key={session.id}
+            {...session}
+          />
+        ))}
+      </>
+    );
+  }
+  const gropedSessions = Object.keys(nextSevenDaysSessions);
+  return (
+    <>
+      {gropedSessions?.map((dayKey) => (
+        <div key={dayKey}>
+          <div className="mb-3">
+            <span className="mr-2 text-2xl font-bold">
+              {dayjs(dayKey).format("D")}
+            </span>
+            <span className="text-xl font-semibold">
+              {dayjs(dayKey).format("dddd")}
+            </span>
+          </div>
+          <div className="flex flex-col gap-6">
+            {nextSevenDaysSessions[dayKey]?.map((session) => (
+              <SessionCard
+                hideCompleted={hideCompleted}
+                key={session.id}
+                {...session}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
+type PageProps = {};
+const WorkoutSessions: NextPage = (
+  props: PageProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) => {
   const { data: sessions, isLoading } =
     trpc.workoutSession.getAllWorkoutSessions.useQuery();
-  const [activeTab, setActiveTab] = useState("all");
   const [hideCompleted, setHideCompleted] = useState(true);
 
+  const notDoneSessions = sessions?.filter(({ done }) => !done);
+
+  const groupByNextSevenDays = (
+    sessions: WorkoutSession[] | undefined
+  ): GroupedData => {
+    const nextSevenDays = Array.from({ length: 7 }, (_, i) =>
+      dayjs().add(i, "day").format("YYYY-MM-DD")
+    );
+
+    const acc: GroupedData = nextSevenDays.reduce<GroupedData>((acc, date) => {
+      acc[date] = [];
+      return acc;
+    }, {});
+
+    sessions?.forEach((item) => {
+      const date = dayjs(item.date).format("YYYY-MM-DD");
+      if (acc[date]) {
+        acc[date]?.push(item);
+      }
+    });
+
+    return acc;
+  };
+
+  const nextSevenDaysSessions = groupByNextSevenDays(notDoneSessions);
+
   const handleFilteredSessions = () => {
-    let defaultSessions = sessions;
+    let defaultSessions = sessions?.sort((a, b) => {
+      if (a.done === true) return 1;
+      return Number(new Date(a.date)) - Number(new Date(b.date));
+    });
 
     if (hideCompleted) {
       defaultSessions = sessions?.filter(({ done }) => done !== true);
     }
-    if (activeTab === "week") {
-      const thisWeek = defaultSessions?.filter(({ date }) =>
-        dayjs(date).isSame(dayjs(), "week")
-      );
-      return thisWeek;
-    }
-    if (activeTab === "today") {
-      const todaySessions = defaultSessions?.filter(({ date }) =>
-        dayjs(date).isSame(dayjs(), "day")
-      );
-      return todaySessions;
-    }
 
-    if (activeTab === "hide") {
-      const hideDones = defaultSessions?.filter(({ done }) => done !== true);
-      return hideDones;
-    }
     return defaultSessions;
   };
 
   const filteredSessions = handleFilteredSessions();
-
-  const allSessions = filteredSessions?.sort((a, b) => {
-    if (a.done === true) return 1;
-    return Number(new Date(a.date)) - Number(new Date(b.date));
-  });
 
   return (
     <PageTransition ref={ref}>
@@ -408,17 +456,17 @@ const WorkoutSessions: NextPage = (props: PageProps, ref: React.ForwardedRef<HTM
           <Tabs
             hideCompleted={hideCompleted}
             setHideCompleted={setHideCompleted}
-            setActiveTab={setActiveTab}
-            activeTab={activeTab}
           />
-          <div className="mb-16 flex flex-col gap-6">
-            {allSessions?.map((session) => (
-              <SessionCard key={session.id} {...session} />
-            ))}
+          <div className="mb-16 flex flex-col gap-10">
+            <SessionCardContainer
+              hideCompleted={hideCompleted}
+              nextSevenDaysSessions={nextSevenDaysSessions}
+              completedSessions={filteredSessions}
+            />
           </div>
         </div>
       )}
-      </PageTransition>
+    </PageTransition>
   );
 };
 
