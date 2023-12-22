@@ -13,7 +13,6 @@ import cn from "classnames";
 import { sliceLongText } from "../utils/sliceLongText";
 import { PageTitle } from "../components/PageTitle";
 import PageTransition from "../components/PageTransition";
-import { WorkoutSession } from "@prisma/client";
 
 const SessionNotes = ({
   sessionId,
@@ -154,7 +153,7 @@ const SessionCard = ({
   workout,
   notes,
   hideCompleted,
-}: WorkoutSession & { hideCompleted: boolean }) => {
+}: Session & { hideCompleted: boolean }) => {
   const [open, setOpen] = useState<boolean>(true);
   const [openWorkout, setOpenWorkout] = useState(false);
 
@@ -167,7 +166,7 @@ const SessionCard = ({
         undefined,
         (prevEntries: any) => {
           if (prevEntries && newEntry) {
-            return prevEntries.map((item: WorkoutSession) => {
+            return prevEntries.map((item: Session) => {
               if (item.id === newEntry.id) {
                 return {
                   ...item,
@@ -192,7 +191,7 @@ const SessionCard = ({
         undefined,
         (prevEntries: any) => {
           if (prevEntries && newEntry) {
-            return prevEntries.map((item: WorkoutSession) => {
+            return prevEntries.map((item: Session) => {
               if (item.id === newEntry.id) {
                 return {
                   ...item,
@@ -217,9 +216,7 @@ const SessionCard = ({
         undefined,
         (prevEntries: any) => {
           if (prevEntries) {
-            return prevEntries.filter(
-              ({ id }: WorkoutSession) => id !== newEntry.id
-            );
+            return prevEntries.filter(({ id }: Session) => id !== newEntry.id);
           }
         }
       );
@@ -344,7 +341,7 @@ const Tabs = ({
 };
 
 type GroupedData = {
-  [key: string]: WorkoutSession[];
+  [key: string]: Session[];
 };
 
 const SessionCardContainer = ({
@@ -353,7 +350,7 @@ const SessionCardContainer = ({
   completedSessions,
 }: {
   nextSevenDaysSessions: GroupedData;
-  completedSessions: WorkoutSession[] | undefined;
+  completedSessions: Session[] | undefined;
   hideCompleted: boolean;
 }) => {
   if (!hideCompleted) {
@@ -409,7 +406,7 @@ const WorkoutSessions: NextPage = (
   const notDoneSessions = sessions?.filter(({ done }) => !done);
 
   const groupByNextSevenDays = (
-    sessions: WorkoutSession[] | undefined
+    sessions: Session[] | undefined
   ): GroupedData => {
     const nextSevenDays = Array.from({ length: 7 }, (_, i) =>
       dayjs().add(i, "day").format("YYYY-MM-DD")
