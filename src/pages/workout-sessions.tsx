@@ -14,7 +14,7 @@ import { sliceLongText } from "../utils/sliceLongText";
 import { PageTitle } from "../components/PageTitle";
 import PageTransition from "../components/PageTransition";
 
-const SessionNotes = ({
+/* const SessionNotes = ({
   sessionId,
   notes = "",
 }: {
@@ -45,7 +45,7 @@ const SessionNotes = ({
       ></textarea>
     </div>
   );
-};
+}; */
 
 const ActionList = ({
   handleRemove,
@@ -146,14 +146,7 @@ const ActionList = ({
   );
 };
 
-const SessionCard = ({
-  id,
-  done,
-  date,
-  workout,
-  notes,
-  hideCompleted,
-}: Session & { hideCompleted: boolean }) => {
+const SessionCard = ({ id, done, date, workout, notes }: Session) => {
   const [open, setOpen] = useState<boolean>(true);
   const [openWorkout, setOpenWorkout] = useState(false);
 
@@ -263,7 +256,7 @@ const SessionCard = ({
           intensity={intensity}
         />
       </Modal>
-      <div>
+      <div className="grid place-content-center">
         <input
           type="checkbox"
           className="checkbox-primary checkbox"
@@ -273,25 +266,10 @@ const SessionCard = ({
       </div>
 
       <div className="flex w-full flex-col">
-        <div className="flex justify-between">
-          <Collapse
-            Content={<SessionNotes sessionId={id} notes={notes || ""} />}
-          >
-            <div
-              onClick={() => setOpenWorkout(true)}
-              className="flex flex-grow font-semibold"
-            >
-              {sliceLongText(workout?.title)}
-            </div>
-            {!hideCompleted && (
-              <div>
-                <span className="text-sm text-gray-300">
-                  {dayjs(date).format("dddd")} -{" "}
-                  {dayjs(date).format("DD.MM.YYYY")}
-                </span>
-              </div>
-            )}
-          </Collapse>
+        <div className="flex items-center justify-between">
+          <div onClick={() => setOpenWorkout(true)} className="font-semibold">
+            {sliceLongText(workout?.title)}
+          </div>
           <div className="flex flex-col justify-between">
             <IntesityBadge isSmall intensity={workout?.intensity} />
             <ActionList
@@ -318,7 +296,7 @@ const SessionCard = ({
   );
 };
 
-const Tabs = ({
+/* const Tabs = ({
   hideCompleted,
   setHideCompleted,
 }: {
@@ -338,54 +316,35 @@ const Tabs = ({
       </label>
     </div>
   );
-};
+}; */
 
 type GroupedData = {
   [key: string]: Session[];
 };
 
 const SessionCardContainer = ({
-  hideCompleted,
   nextSevenDaysSessions,
-  completedSessions,
 }: {
   nextSevenDaysSessions: GroupedData;
-  completedSessions: Session[] | undefined;
-  hideCompleted: boolean;
 }) => {
-  if (!hideCompleted) {
-    return (
-      <>
-        {completedSessions?.map((session) => (
-          <SessionCard
-            hideCompleted={hideCompleted}
-            key={session.id}
-            {...session}
-          />
-        ))}
-      </>
-    );
-  }
   const gropedSessions = Object.keys(nextSevenDaysSessions);
   return (
     <>
       {gropedSessions?.map((dayKey) => (
         <div key={dayKey}>
-          <div className="mb-3">
-            <span className="mr-2 text-2xl font-bold">
+          <div className="mb-3 flex items-end gap-1">
+            <span className="mr-1 text-3xl font-bold">
               {dayjs(dayKey).format("D")}
             </span>
-            <span className="text-xl font-semibold">
-              {dayjs(dayKey).format("dddd")}
-            </span>
+            <div className="grow">
+              <span className="text-xl font-semibold">
+                {dayjs(dayKey).format("dddd")}
+              </span>
+            </div>
           </div>
           <div className="flex flex-col gap-6">
             {nextSevenDaysSessions[dayKey]?.map((session) => (
-              <SessionCard
-                hideCompleted={hideCompleted}
-                key={session.id}
-                {...session}
-              />
+              <SessionCard key={session.id} {...session} />
             ))}
           </div>
         </div>
@@ -401,9 +360,6 @@ const WorkoutSessions: NextPage = (
 ) => {
   const { data: sessions, isLoading } =
     trpc.workoutSession.getAllWorkoutSessions.useQuery();
-  const [hideCompleted, setHideCompleted] = useState(true);
-
-  const notDoneSessions = sessions?.filter(({ done }) => !done);
 
   const groupByNextSevenDays = (
     sessions: Session[] | undefined
@@ -427,22 +383,7 @@ const WorkoutSessions: NextPage = (
     return acc;
   };
 
-  const nextSevenDaysSessions = groupByNextSevenDays(notDoneSessions);
-
-  const handleFilteredSessions = () => {
-    let defaultSessions = sessions?.sort((a, b) => {
-      if (a.done === true) return 1;
-      return Number(new Date(a.date)) - Number(new Date(b.date));
-    });
-
-    if (hideCompleted) {
-      defaultSessions = sessions?.filter(({ done }) => done !== true);
-    }
-
-    return defaultSessions;
-  };
-
-  const filteredSessions = handleFilteredSessions();
+  const nextSevenDaysSessions = groupByNextSevenDays(sessions);
 
   return (
     <PageTransition ref={ref}>
@@ -450,17 +391,11 @@ const WorkoutSessions: NextPage = (
       {isLoading ? (
         <div>Fetching sessions...</div>
       ) : (
-        <div className="flex flex-col gap-6 px-4 py-4">
-          <PageTitle title="All workout sessions" />
-          <Tabs
-            hideCompleted={hideCompleted}
-            setHideCompleted={setHideCompleted}
-          />
+        <div className="flex flex-col gap-6 px-4 py-1">
+          <PageTitle title="Upcoming sessions" />
           <div className="mb-16 flex flex-col gap-10">
             <SessionCardContainer
-              hideCompleted={hideCompleted}
               nextSevenDaysSessions={nextSevenDaysSessions}
-              completedSessions={filteredSessions}
             />
           </div>
         </div>

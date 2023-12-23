@@ -119,7 +119,7 @@ export const workoutSessionRouter = router({
   getAllWorkoutSessions: protectedProcedure.query(async ({ ctx }) => {
     try {
       return await ctx.prisma.workoutSession.findMany({
-        where: { userId: ctx.session.user.id },
+        where: { userId: ctx.session.user.id, done: false },
         include: {
           workout: true,
         },

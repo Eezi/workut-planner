@@ -26,7 +26,7 @@ export const Modal = ({
   });
 
   const modalClass = cn({
-    "modal modal-bottom sm:modal-middle": true,
+    "modal modal-middle": true,
     "modal-open": open,
   });
 
