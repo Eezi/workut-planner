@@ -18,7 +18,6 @@ const SessionNotes = (
     trpc.workoutSession.getAllWorkoutNotes.useQuery({
       id: slug as string,
     });
-  console.log("notes", notes);
 
   return (
     <PageTransition ref={ref}>
@@ -49,8 +48,5 @@ const SessionNotes = (
     </PageTransition>
   );
 };
-/* return (
-   
-  ); */
 
 export default SessionNotes;

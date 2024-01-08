@@ -12,8 +12,13 @@ export const workoutSessionRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log('input', input)
       try {
-        await ctx.prisma.workoutSession.create({
+        const workout = await ctx.prisma.workout.findFirst({
+          where: { id: input.workoutId },
+        });
+
+        const created = await ctx.prisma.workoutSession.create({
           data: {
             workoutId: input.workoutId,
             date: input.date,
@@ -21,6 +26,16 @@ export const workoutSessionRouter = router({
             done: input.done,
             createdAt: new Date(),
           },
+        });
+        const reps = workout?.reps
+          ? [...Array(workout?.reps).keys()].map((n) => ({
+              workoutId: input.workoutId,
+              workoutSessionId: created.id,
+              done: false,
+            }))
+          : [];
+        await ctx.prisma.rep.createMany({
+          data: reps,
         });
       } catch (error) {
         console.log(error);
@@ -86,6 +101,11 @@ export const workoutSessionRouter = router({
             id: input.id,
           },
         });
+        await ctx.prisma.rep.deleteMany({
+          where: {
+            workoutSessionId: input.id,
+          },
+        });
       } catch (error) {
         console.log(error);
       }
@@ -139,23 +159,44 @@ export const workoutSessionRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-    try {
-      return await ctx.prisma.workoutSession.findMany({
-        where: { 
-          userId: ctx.session.user.id,
-          workoutId: input.id,
-          OR: [{ notes: {not: null } }, { notes: { not: ""} }],
-        },
-        include: {
-          workout: true,
-        },
-        orderBy: {
-          done: "asc",
-        },
-      });
-    } catch (error) {
-      console.log("error", error);
-    }
-  }),
+      try {
+        return await ctx.prisma.workoutSession.findMany({
+          where: {
+            userId: ctx.session.user.id,
+            workoutId: input.id,
+            OR: [{ notes: { not: null } }, { notes: { not: "" } }],
+          },
+          include: {
+            workout: true,
+          },
+          orderBy: {
+            done: "asc",
+          },
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+    }),
 
+  sessionById: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.workoutSession.findFirst({
+          where: {
+            id: input.id,
+          },
+          include: {
+            workout: true,
+            reps: true,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
 });

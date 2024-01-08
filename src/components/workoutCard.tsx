@@ -267,7 +267,7 @@ export const WorkoutCard = ({
           </div>
           <div className="card-actions">
             <Modal open={open} onClose={() => setOpen(false)}>
-              <div style={{ height: "26rem" }}>
+              <div>
                 <label
                   htmlFor="my-modal-6"
                   className="btn-sm btn-circle btn absolute right-2 top-2"

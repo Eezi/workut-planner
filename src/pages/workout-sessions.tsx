@@ -8,11 +8,12 @@ import { WorkoutModalContent } from "../components/Modal";
 import { IntesityBadge } from "../components/workoutCard";
 import { DateInput } from "../components/DateInput";
 import dayjs from "dayjs";
-import { Session } from "../types/Session";
+import type { Session } from "../types/Session";
 import cn from "classnames";
 import { sliceLongText } from "../utils/sliceLongText";
 import { PageTitle } from "../components/PageTitle";
 import PageTransition from "../components/PageTransition";
+import Link from "next/link";
 
 /* const SessionNotes = ({
   sessionId,
@@ -51,10 +52,12 @@ const ActionList = ({
   handleRemove,
   handleOpen,
   handleOpenWorkout,
+  sessionId,
 }: {
   handleOpen: () => void;
   handleRemove: () => void;
   handleOpenWorkout: () => void;
+  sessionId: string;
 }) => {
   const dropdownClassName = cn({
     dropdown: true,
@@ -80,7 +83,12 @@ const ActionList = ({
         className="dropdown-content menu rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
       >
         <li onClick={handleOpenWorkout}>
-          <a>
+          <Link
+            href={{
+              pathname: "/session-view/[slug]",
+              query: { slug: sessionId },
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -103,7 +111,7 @@ const ActionList = ({
               />
             </svg>
             Details
-          </a>
+          </Link>
         </li>
         <li onClick={handleOpen}>
           <a>
@@ -249,13 +257,13 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
       className="flex items-center gap-6 rounded-xl p-3"
       style={{ border: "1px solid #2c2d3c" }}
     >
-      <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
+      {/*<Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
         <WorkoutModalContent
           title={title}
           description={description}
           intensity={intensity}
         />
-      </Modal>
+  </Modal>*/}
       <div className="grid place-content-center">
         <input
           type="checkbox"
@@ -268,7 +276,15 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
       <div className="flex w-full flex-col">
         <div className="flex items-center justify-between">
           <div onClick={() => setOpenWorkout(true)} className="font-semibold">
-            {sliceLongText(workout?.title)}
+            <Link
+              href={{
+                pathname: "/session-view/[slug]",
+                query: { slug: id },
+              }}
+              // className="btn-primary btn"
+            >
+              {sliceLongText(workout?.title)}
+            </Link>
           </div>
           <div className="flex flex-col justify-between">
             <IntesityBadge isSmall intensity={workout?.intensity} />
@@ -276,6 +292,7 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
               handleRemove={handleRemove}
               handleOpenWorkout={() => setOpenWorkout(true)}
               handleOpen={() => setOpen(false)}
+              sessionId={id}
             />
           </div>
         </div>

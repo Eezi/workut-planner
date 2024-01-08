@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import dayjs from "dayjs";
-import { DateType } from "react-tailwindcss-datepicker/dist/types";
 
 interface CountFilter {
   workoutId: string;
@@ -16,7 +15,9 @@ export const workoutRouter = router({
         title: z.string(),
         description: z.string(),
         userId: z.string(),
+        reps: z.number(),
         intensity: z.enum(["HARD", "MEDIUM", "EASY"]),
+        repUnit: z.enum(["SECOND", "KG"]),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -25,6 +26,8 @@ export const workoutRouter = router({
           data: {
             title: input.title,
             description: input.description,
+            reps: input.reps,
+            repUnit: input.repUnit,
             intensity: input.intensity,
             userId: input.userId,
           },
@@ -102,11 +105,14 @@ export const workoutRouter = router({
       z.object({
         id: z.string(),
         title: z.string(),
+        reps: z.number(),
         description: z.string(),
         intensity: z.enum(["HARD", "MEDIUM", "EASY"]),
+        repUnit: z.enum(["KG", "SECOND"]),
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log('input', input, typeof input.reps)
       try {
         await ctx.prisma.workout.update({
           where: {
@@ -116,6 +122,8 @@ export const workoutRouter = router({
             title: input.title,
             description: input.description,
             intensity: input.intensity,
+            reps: input.reps,
+            repUnit: input.repUnit
           },
         });
       } catch (error) {

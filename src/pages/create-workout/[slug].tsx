@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { type NextPage } from "next";
 import { PageHead } from "../../components/Head";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Intensity } from "../../types/workout";
+import type { Intensity } from "../../types/workout";
 import { PageTitle } from "../../components/PageTitle";
 import PageTransition from "../../components/PageTransition";
+import { v4 as uuidv4 } from "uuid";
 
 const CREATE_MODE = "create";
 
@@ -24,11 +25,16 @@ const defaultLabels = [
     key: "supportive-training",
   },
 ];
-type PageProps = {}
-const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+type PageProps = {};
+const AllWorkouts: NextPage = (
+  props: PageProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [numberOfReps, setNumberOfReps] = useState("");
   const [intensity, setIntensity] = useState<Intensity>("MEDIUM");
+  const [repUnit, setRepUnit] = useState<RepUnit>("SECOND");
   const [errors, setErrors] = useState<{ title: string | null }>({
     title: null,
   });
@@ -45,10 +51,11 @@ const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDiv
 
   useEffect(() => {
     if (!isLoading && workout) {
-      const { title, description, intensity } = workout;
+      const { title, description, intensity, reps } = workout;
       setTitle(title);
       setDescription(description || "");
       setIntensity(intensity);
+      setNumberOfReps(reps ? reps.toString() : "");
     }
   }, [isLoading, workout]);
 
@@ -72,11 +79,14 @@ const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDiv
     },
   });
 
+  console.log("reps", numberOfReps);
   const createWorkout = async () => {
     postWorkout.mutate({
       title,
       description,
+      reps: numberOfReps === "" ? null : Number(numberOfReps),
       intensity: intensity,
+      repUnit,
       userId: sessionData?.user?.id || "",
     });
   };
@@ -87,6 +97,8 @@ const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDiv
         id: workout.id,
         title,
         description,
+        reps: numberOfReps === "" ? null : Number(numberOfReps),
+        repUnit,
         intensity: intensity,
       });
     }
@@ -141,6 +153,29 @@ const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDiv
           <option value="HARD">Hard</option>
           <option value="MEDIUM">Medium</option>
           <option value="EASY">Easy</option>
+        </select>
+        <input
+          type="number"
+          value={numberOfReps}
+          placeholder="Set number of reps"
+          required
+          minLength={1}
+          maxLength={2}
+          onChange={(event) => {
+            setNumberOfReps(event.target.value);
+          }}
+          className="input-bordered input-primary input"
+        />
+        <select
+          onChange={(event) => setRepUnit(event.target.value as RepUnit)}
+          className="select-primary select"
+          value={repUnit}
+        >
+          <option disabled selected>
+            Rep unit
+          </option>
+          <option value="SECOND">Secound</option>
+          <option value="KG">Kg</option>
         </select>
 
         <textarea
