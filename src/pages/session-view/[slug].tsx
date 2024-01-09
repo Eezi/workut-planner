@@ -78,12 +78,13 @@ const SessionNotes = (
   return (
     <PageTransition ref={ref}>
       <PageHead title="Session" />
-      <PageTitle title="Session" />
+      <PageTitle title="Session view" />
       {isLoading ? (
         <div>Fetching session...</div>
       ) : (
         <div>
-          <h1>{session?.workout?.title}</h1>
+          <h1 className="mb-4 text-2xl font-bold">{session?.workout?.title}</h1>
+          <p className="text-xl">{session?.workout?.description}</p>
           <div className="mt-8 grid gap-8">
             {session?.reps?.map((rep, index) => (
               <RepCheckbox

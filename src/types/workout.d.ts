@@ -6,6 +6,6 @@ export interface Workout {
     title: string;
     id: string;
     userId: string;
-    description?: string;
+    description?: string | null;
     reps?: number;
 }
