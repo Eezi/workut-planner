@@ -7,11 +7,11 @@ import dayjs from "dayjs";
 import { useState } from "react";
 
 type Rep = {
-  amount: number;
+  amount: number | null;
   title: string;
   id: string;
   workoutId: string;
-  workoutSessionId: string;
+  workoutSessionId: string | null;
   done: boolean;
 };
 
