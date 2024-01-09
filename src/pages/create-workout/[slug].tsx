@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import type { Intensity } from "../../types/workout";
 import { PageTitle } from "../../components/PageTitle";
 import PageTransition from "../../components/PageTransition";
+import { RepUnit } from "../../types/workout";
 import { v4 as uuidv4 } from "uuid";
 
 const CREATE_MODE = "create";
@@ -84,7 +85,7 @@ const AllWorkouts: NextPage = (
     postWorkout.mutate({
       title,
       description,
-      reps: numberOfReps === "" ? null : Number(numberOfReps),
+      reps: Number(numberOfReps),
       intensity: intensity,
       repUnit,
       userId: sessionData?.user?.id || "",
@@ -97,7 +98,7 @@ const AllWorkouts: NextPage = (
         id: workout.id,
         title,
         description,
-        reps: numberOfReps === "" ? null : Number(numberOfReps),
+        reps: Number(numberOfReps),
         repUnit,
         intensity: intensity,
       });

@@ -378,9 +378,7 @@ const WorkoutSessions: NextPage = (
   const { data: sessions, isLoading } =
     trpc.workoutSession.getAllWorkoutSessions.useQuery();
 
-  const groupByNextSevenDays = (
-    sessions: Session[] | undefined
-  ): GroupedData => {
+  const groupByNextSevenDays = (sessions: any): GroupedData => {
     const nextSevenDays = Array.from({ length: 7 }, (_, i) =>
       dayjs().add(i, "day").format("YYYY-MM-DD")
     );
@@ -390,7 +388,7 @@ const WorkoutSessions: NextPage = (
       return acc;
     }, {});
 
-    sessions?.forEach((item) => {
+    sessions?.forEach((item: any) => {
       const date = dayjs(item.date).format("YYYY-MM-DD");
       if (acc[date]) {
         acc[date]?.push(item);
