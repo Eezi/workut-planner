@@ -2,7 +2,7 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
 export const workoutRouter = router({
-  postLabel: protectedProcedure
+  /*postLabel: protectedProcedure
     .input(
       z.object({
         title: z.string(),
@@ -92,5 +92,5 @@ export const workoutRouter = router({
       } catch (error) {
         console.log(error);
       }
-    }),
+    }),*/
 });
