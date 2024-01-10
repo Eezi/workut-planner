@@ -3,7 +3,6 @@ import { PageHead } from "../../components/Head";
 import { PageTitle } from "../../components/PageTitle";
 import { useRouter } from "next/router";
 import PageTransition from "../../components/PageTransition";
-import dayjs from "dayjs";
 import { useState } from "react";
 
 type Rep = {
@@ -17,7 +16,6 @@ type Rep = {
 
 const RepCheckbox = ({ rep }: { rep: Rep }) => {
   const { title, id, amount, done } = rep;
-  const utils = trpc.useContext();
   const editRep = trpc.rep.editRep.useMutation();
   const [isDone, setIsDone] = useState(done);
   const [currentAmount, setCurrentAmount] = useState(amount || "");
@@ -73,7 +71,6 @@ const SessionNotes = (
       id: slug as string,
     }
   );
-  console.log("data", session);
 
   return (
     <PageTransition ref={ref}>
@@ -82,10 +79,10 @@ const SessionNotes = (
       {isLoading ? (
         <div>Fetching session...</div>
       ) : (
-        <div>
+        <div className="mb-16">
           <h1 className="mb-4 text-2xl font-bold">{session?.workout?.title}</h1>
           <p className="text-xl">{session?.workout?.description}</p>
-          <div className="mt-8 grid gap-8">
+          <div className="mt-8 grid gap-8 pb-10">
             {session?.reps?.map((rep, index) => (
               <RepCheckbox
                 rep={{ ...rep, title: `Rep ${index + 1}` }}
