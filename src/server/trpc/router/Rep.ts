@@ -11,6 +11,7 @@ export const repRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log('MUOKKAA REP: ', input)
       try {
         await ctx.prisma.rep.update({
           where: {

@@ -148,7 +148,7 @@ export const workoutSessionRouter = router({
         },
       });
     } catch (error) {
-      console.log("error", error);
+      console.log("[getAllWorkoutSessions]: Error", error);
     }
   }),
 
@@ -181,10 +181,11 @@ export const workoutSessionRouter = router({
   sessionById: protectedProcedure
     .input(
       z.object({
-        id: z.string(),
+        id: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
+      console.log('input', input)
       try {
         return await ctx.prisma.workoutSession.findFirst({
           where: {

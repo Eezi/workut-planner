@@ -3,7 +3,7 @@ import { PageHead } from "../../components/Head";
 import { PageTitle } from "../../components/PageTitle";
 import { useRouter } from "next/router";
 import PageTransition from "../../components/PageTransition";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Rep = {
   amount: number | null;
@@ -17,13 +17,22 @@ type Rep = {
 const RepCheckbox = ({ rep }: { rep: Rep }) => {
   const { title, id, amount, done } = rep;
   const editRep = trpc.rep.editRep.useMutation();
-  const [isDone, setIsDone] = useState(done);
-  const [currentAmount, setCurrentAmount] = useState(amount || "");
+  const [isDone, setIsDone] = useState(false);
+  const [currentAmount, setCurrentAmount] = useState("");
 
-  const handleEditRep = () => {
+  useEffect(() => {
+    if (rep.done !== null) {
+      setIsDone(rep.done);
+    }
+    if (rep.amount !== null) {
+      setCurrentAmount(rep.amount.toString());
+    }
+  }, [rep.done, rep.amount]);
+
+  const handleEditRep = (checked: boolean) => {
     editRep.mutate({
       id,
-      done: isDone,
+      done: checked,
       amount: Number(currentAmount),
     });
   };
@@ -34,8 +43,10 @@ const RepCheckbox = ({ rep }: { rep: Rep }) => {
           <input
             type="checkbox"
             checked={isDone}
-            onChange={({ target }) => setIsDone(target.checked)}
-            onBlur={handleEditRep}
+            onChange={({ target }) => {
+              setIsDone(target.checked);
+              handleEditRep(target.checked);
+            }}
             className="checkbox-primary checkbox mr-4"
           />
           <span className="label-text text-xl">{title}</span>
@@ -46,7 +57,7 @@ const RepCheckbox = ({ rep }: { rep: Rep }) => {
           <input
             type="number"
             placeholder="Amount"
-            onBlur={handleEditRep}
+            onBlur={() => handleEditRep(isDone)}
             value={currentAmount}
             onChange={({ target }) => setCurrentAmount(target.value)}
             className="input-bordered input-primary input input-sm w-full max-w-xs "
@@ -72,6 +83,7 @@ const SessionNotes = (
     }
   );
 
+  console.log("session", session?.reps);
   return (
     <PageTransition ref={ref}>
       <PageHead title="Session" />
