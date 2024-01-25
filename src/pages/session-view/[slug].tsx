@@ -3,6 +3,7 @@ import { PageHead } from "../../components/Head";
 import { PageTitle } from "../../components/PageTitle";
 import { useRouter } from "next/router";
 import PageTransition from "../../components/PageTransition";
+import { DateInput } from "../../components/DateInput";
 import { useState, useEffect } from "react";
 
 type Rep = {
@@ -82,8 +83,18 @@ const SessionNotes = (
       id: slug as string,
     }
   );
+  const editSession = trpc.workoutSession.editSession.useMutation();
 
-  console.log("session", session?.reps);
+  const handleEditSession = (sessionId: string | undefined, date: Date) => {
+    if (sessionId) {
+      editSession.mutate({
+        id: sessionId,
+        date,
+      });
+    }
+  };
+
+  console.log("session", session);
   return (
     <PageTransition ref={ref}>
       <PageHead title="Session" />
@@ -94,6 +105,15 @@ const SessionNotes = (
         <div className="mb-16">
           <h1 className="mb-4 text-2xl font-bold">{session?.workout?.title}</h1>
           <p className="text-xl">{session?.workout?.description}</p>
+          <div className="mt-1">
+            <DateInput
+              date={session?.date || new Date()}
+              // readOnly={open}
+              setDate={(date: Date) => {
+                handleEditSession(session?.id, date);
+              }}
+            />
+          </div>
           <div className="mt-8 grid gap-8 pb-10">
             {session?.reps?.map((rep, index) => (
               <RepCheckbox

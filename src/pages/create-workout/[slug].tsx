@@ -80,7 +80,6 @@ const AllWorkouts: NextPage = (
     },
   });
 
-  console.log("reps", numberOfReps);
   const createWorkout = async () => {
     postWorkout.mutate({
       title,

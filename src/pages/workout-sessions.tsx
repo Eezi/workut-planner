@@ -2,11 +2,7 @@ import { type NextPage } from "next";
 import { PageHead } from "../components/Head";
 import { trpc } from "../utils/trpc";
 import { useState } from "react";
-import { Modal } from "../components/AddSessionModal";
-import { Collapse } from "../components/Collapse";
-import { WorkoutModalContent } from "../components/Modal";
 import { IntesityBadge } from "../components/workoutCard";
-import { DateInput } from "../components/DateInput";
 import dayjs from "dayjs";
 import type { Session } from "../types/Session";
 import cn from "classnames";
@@ -15,46 +11,11 @@ import { PageTitle } from "../components/PageTitle";
 import PageTransition from "../components/PageTransition";
 import Link from "next/link";
 
-/* const SessionNotes = ({
-  sessionId,
-  notes = "",
-}: {
-  sessionId: string;
-  notes?: string;
-}) => {
-  const handleSessionkDone = trpc.workoutSession.editSessionNotes.useMutation();
-
-  const handleEditNotes = (
-    event: React.FocusEvent<HTMLTextAreaElement, Element>
-  ) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    handleSessionkDone.mutate({
-      id: sessionId,
-      notes: value,
-    });
-  };
-
-  return (
-    <div className="w-full">
-      <textarea
-        onBlur={handleEditNotes}
-        defaultValue={notes}
-        className="textarea-primary textarea w-full"
-        placeholder="Notes"
-      ></textarea>
-    </div>
-  );
-}; */
-
 const ActionList = ({
   handleRemove,
-  handleOpen,
   handleOpenWorkout,
   sessionId,
 }: {
-  handleOpen: () => void;
   handleRemove: () => void;
   handleOpenWorkout: () => void;
   sessionId: string;
@@ -113,22 +74,6 @@ const ActionList = ({
             Details
           </Link>
         </li>
-        <li onClick={handleOpen}>
-          <a>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="m14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83a.996.996 0 0 0 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"
-              />
-            </svg>
-            Edit Date
-          </a>
-        </li>
         <li onClick={handleRemove}>
           <a>
             <svg
@@ -155,7 +100,6 @@ const ActionList = ({
 };
 
 const SessionCard = ({ id, done, date, workout, notes }: Session) => {
-  const [open, setOpen] = useState<boolean>(true);
   const [openWorkout, setOpenWorkout] = useState(false);
 
   const utils = trpc.useContext();
@@ -172,31 +116,6 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
                 return {
                   ...item,
                   done: newEntry.done,
-                };
-              }
-              return item;
-            });
-          }
-        }
-      );
-    },
-    onSettled: async () => {
-      await utils.workoutSession.getAllWorkoutSessions.invalidate();
-    },
-  });
-
-  const editSession = trpc.workoutSession.editSession.useMutation({
-    onMutate: async (newEntry: any) => {
-      await utils.workoutSession.getAllWorkoutSessions.cancel();
-      utils.workoutSession.getAllWorkoutSessions.setData(
-        undefined,
-        (prevEntries: any) => {
-          if (prevEntries && newEntry) {
-            return prevEntries.map((item: Session) => {
-              if (item.id === newEntry.id) {
-                return {
-                  ...item,
-                  date: newEntry.date,
                 };
               }
               return item;
@@ -236,13 +155,6 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
     }, 500);
   };
 
-  const handleEditSession = (sessionId: string, date: Date) => {
-    editSession.mutate({
-      id: sessionId,
-      date,
-    });
-  };
-
   const handleRemove = () => {
     removeSession.mutate({
       id,
@@ -257,13 +169,6 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
       className="flex items-center gap-6 rounded-xl p-3"
       style={{ border: "1px solid #2c2d3c" }}
     >
-      {/*<Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
-        <WorkoutModalContent
-          title={title}
-          description={description}
-          intensity={intensity}
-        />
-  </Modal>*/}
       <div className="grid place-content-center">
         <input
           type="checkbox"
@@ -291,23 +196,10 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
             <ActionList
               handleRemove={handleRemove}
               handleOpenWorkout={() => setOpenWorkout(true)}
-              handleOpen={() => setOpen(false)}
               sessionId={id}
             />
           </div>
         </div>
-        {!open ? (
-          <div className="mt-3">
-            <DateInput
-              date={date}
-              readOnly={open}
-              setDate={(date) => {
-                handleEditSession(id, date);
-                setOpen(true);
-              }}
-            />
-          </div>
-        ) : null}
       </div>
     </div>
   );

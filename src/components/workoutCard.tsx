@@ -265,38 +265,36 @@ export const WorkoutCard = ({
               </ul>
             </div>
           </div>
-          <div className="card-actions">
-            <Modal open={open} onClose={() => setOpen(false)}>
-              <div>
-                <label
-                  htmlFor="my-modal-6"
-                  className="btn-sm btn-circle btn absolute right-2 top-2"
-                  onClick={() => setOpen(false)}
-                >
-                  ✕
-                </label>
-                <div>
-                  <h3 className="mb-3 text-lg font-bold">
-                    Select day for your session
-                  </h3>
-                  <div className="flex gap-4">
-                    <DateInput setDate={setDate} date={date} />
-                    <div>
-                      <label
-                        onClick={handleSubmit}
-                        htmlFor="my-modal-6"
-                        className="btn"
-                      >
-                        Create session
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Modal>
-          </div>
         </div>
       </div>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <div>
+          <label
+            htmlFor="my-modal-6"
+            className="btn-sm btn-circle btn absolute right-2 top-2"
+            onClick={() => setOpen(false)}
+          >
+            ✕
+          </label>
+          <div>
+            <h3 className="mb-3 text-lg font-bold">
+              Select day for your session
+            </h3>
+            <div className="flex gap-4">
+              <DateInput setDate={setDate} date={date} />
+              <div>
+                <label
+                  onClick={handleSubmit}
+                  htmlFor="my-modal-6"
+                  className="btn"
+                >
+                  Create session
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

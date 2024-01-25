@@ -77,6 +77,19 @@ model Workout {
   reps        Int?
   intensity   Intensity
   sessions    WorkoutSession[]
+  notes       Note[]
+}
+
+model Note {
+  id               String          @id @default(cuid())
+  createdAt        DateTime        @default(now())
+  description      String
+  updatedAt        DateTime?
+  workoutId        String
+  userId           String
+  workoutSessionId String?         @unique
+  Workout          Workout         @relation(fields: [workoutId], references: [id])
+  WorkoutSession   WorkoutSession?
 }
 
 model WorkoutSession {
@@ -90,6 +103,8 @@ model WorkoutSession {
   notes     String?   @db.Text
   workout   Workout   @relation(fields: [workoutId], references: [id])
   reps      Rep[]
+  note      Note?     @relation(fields: [noteId], references: [id])
+  noteId    String?   @unique
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
