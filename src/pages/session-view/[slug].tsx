@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import PageTransition from "../../components/PageTransition";
 import { DateInput } from "../../components/DateInput";
 import { useState, useEffect } from "react";
+import { AddNotes } from "../../components/AddNotes";
 
 type Rep = {
   amount: number | null;
@@ -93,7 +94,7 @@ const RepCheckbox = (props: Props) => {
       <div>
         <button
           onClick={handleRemoveRep}
-          className="btn-outline btn-square btn-sm btn"
+          className="btn-outline btn-sm btn-square btn"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -126,6 +127,7 @@ const SessionNotes = (
   } = router;
   const {
     data: session,
+    error,
     isLoading,
     refetch,
   } = trpc.workoutSession.sessionById.useQuery({
@@ -164,6 +166,10 @@ const SessionNotes = (
     }
   };
 
+  if (error) {
+    <h1>Tapahtui virhe :(</h1>;
+  }
+
   return (
     <PageTransition ref={ref}>
       <PageHead title="Session" />
@@ -185,7 +191,7 @@ const SessionNotes = (
             />
           </div>
           <h5 className="my-4 text-xl font-bold">Reps</h5>
-          <div className="grid gap-8 pb-8">
+          <div className="grid gap-4 pb-5">
             {reps.map((rep, index) => (
               <RepCheckbox
                 rep={{ ...rep, repCount: `${index + 1}` }}
@@ -194,13 +200,16 @@ const SessionNotes = (
               />
             ))}
           </div>
-          <div className="pb-4">
-            <button
-              onClick={handleCreateRep}
-              className="btn-normal btn-primary btn"
-            >
+          <div className="mb-6">
+            <button onClick={handleCreateRep} className="btn-neutral btn">
               Create rep
             </button>
+          </div>
+          <div>
+            <AddNotes
+              workoutId={session?.workoutId as string}
+              workoutSessionId={session?.id as string}
+            />
           </div>
         </div>
       )}
