@@ -12,7 +12,6 @@ export const workoutSessionRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log('input', input)
       try {
         const workout = await ctx.prisma.workout.findFirst({
           where: { id: input.workoutId },

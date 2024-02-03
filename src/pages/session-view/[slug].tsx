@@ -8,16 +8,23 @@ import { useState, useEffect } from "react";
 
 type Rep = {
   amount: number | null;
-  title: string;
   id: string;
   workoutId: string;
   workoutSessionId: string | null;
   done: boolean;
 };
 
-const RepCheckbox = ({ rep }: { rep: Rep }) => {
-  const { title, id, amount, done } = rep;
+type Props = {
+  rep: Rep & { repCount: string };
+  setReps: React.Dispatch<React.SetStateAction<Rep[]>>;
+};
+
+const RepCheckbox = (props: Props) => {
+  const { rep, setReps } = props;
+  const { id, repCount } = rep;
+
   const editRep = trpc.rep.editRep.useMutation();
+  const removeRep = trpc.rep.removeRep.useMutation();
   const [isDone, setIsDone] = useState(false);
   const [currentAmount, setCurrentAmount] = useState("");
 
@@ -36,7 +43,26 @@ const RepCheckbox = ({ rep }: { rep: Rep }) => {
       done: checked,
       amount: Number(currentAmount),
     });
+    setReps((prev) =>
+      prev.map((rep) => {
+        if (rep.id === id) {
+          return {
+            ...rep,
+            done: checked,
+            amount: Number(currentAmount),
+          };
+        }
+        return rep;
+      })
+    );
   };
+  const handleRemoveRep = () => {
+    removeRep.mutate({
+      id,
+    });
+    setReps((prev) => prev.filter((rep) => rep.id !== id));
+  };
+
   return (
     <div className="flex items-center gap-4">
       <div>
@@ -48,9 +74,8 @@ const RepCheckbox = ({ rep }: { rep: Rep }) => {
               setIsDone(target.checked);
               handleEditRep(target.checked);
             }}
-            className="checkbox-primary checkbox mr-4"
+            className="checkbox-primary checkbox"
           />
-          <span className="label-text text-xl">{title}</span>
         </label>
       </div>
       <div>
@@ -65,6 +90,27 @@ const RepCheckbox = ({ rep }: { rep: Rep }) => {
           />
         </label>
       </div>
+      <div>
+        <button
+          onClick={handleRemoveRep}
+          className="btn-outline btn-square btn-sm btn"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-3 w-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 };
@@ -78,12 +124,26 @@ const SessionNotes = (
   const {
     query: { slug },
   } = router;
-  const { data: session, isLoading } = trpc.workoutSession.sessionById.useQuery(
-    {
-      id: slug as string,
-    }
-  );
+  const {
+    data: session,
+    isLoading,
+    refetch,
+  } = trpc.workoutSession.sessionById.useQuery({
+    id: slug as string,
+  });
+  const [reps, setReps] = useState<Rep[]>([]);
   const editSession = trpc.workoutSession.editSession.useMutation();
+  const createRep = trpc.rep.createRep.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
+  useEffect(() => {
+    if (!isLoading && session && session?.reps?.length > 0) {
+      setReps(session.reps);
+    }
+  }, [session, isLoading]);
 
   const handleEditSession = (sessionId: string | undefined, date: Date) => {
     if (sessionId) {
@@ -94,7 +154,16 @@ const SessionNotes = (
     }
   };
 
-  console.log("session", session);
+  const handleCreateRep = () => {
+    if (session) {
+      createRep.mutate({
+        workoutSessionId: session.id,
+        workoutId: session.workoutId,
+      });
+      refetch();
+    }
+  };
+
   return (
     <PageTransition ref={ref}>
       <PageHead title="Session" />
@@ -104,23 +173,33 @@ const SessionNotes = (
       ) : (
         <div className="mb-16">
           <h1 className="mb-4 text-2xl font-bold">{session?.workout?.title}</h1>
-          <p className="text-xl">{session?.workout?.description}</p>
+          <p className="mb-6 max-w-[45ch] text-xl">
+            {session?.workout?.description}
+          </p>
           <div className="mt-1">
             <DateInput
               date={session?.date || new Date()}
-              // readOnly={open}
               setDate={(date: Date) => {
                 handleEditSession(session?.id, date);
               }}
             />
           </div>
-          <div className="mt-8 grid gap-8 pb-10">
-            {session?.reps?.map((rep, index) => (
+          <div className="mt-8 grid gap-8 pb-8">
+            {reps.map((rep, index) => (
               <RepCheckbox
-                rep={{ ...rep, title: `Rep ${index + 1}` }}
+                rep={{ ...rep, repCount: `${index + 1}` }}
+                setReps={setReps}
                 key={rep.id}
               />
             ))}
+          </div>
+          <div className="pb-4">
+            <button
+              onClick={handleCreateRep}
+              className="btn-normal btn-primary btn"
+            >
+              Create rep
+            </button>
           </div>
         </div>
       )}

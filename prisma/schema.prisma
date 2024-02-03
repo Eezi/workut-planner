@@ -58,6 +58,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// Pitäiskö tässä olla molemmat amount ja painon määrä mutta mites sit aika?
 model Rep {
   id               String          @id @default(cuid())
   done             Boolean

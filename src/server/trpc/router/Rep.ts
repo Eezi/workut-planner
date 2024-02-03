@@ -25,4 +25,41 @@ export const repRouter = router({
         console.log(error);
       }
     }),
+  createRep: protectedProcedure
+    .input(
+      z.object({
+        workoutId: z.string(),
+        workoutSessionId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.rep.create({
+          data: {
+              workoutId: input.workoutId,
+              workoutSessionId: input.workoutSessionId,
+              done: false,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+  removeRep: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.rep.delete({
+          where: {
+            id: input.id,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }),
 });

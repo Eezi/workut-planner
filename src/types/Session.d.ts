@@ -5,5 +5,4 @@ export interface Session {
   date: Date;
   workout: Workout;
   done: boolean;
-  notes?: string | null;
 }

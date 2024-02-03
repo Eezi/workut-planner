@@ -13,11 +13,9 @@ import Link from "next/link";
 
 const ActionList = ({
   handleRemove,
-  handleOpenWorkout,
   sessionId,
 }: {
   handleRemove: () => void;
-  handleOpenWorkout: () => void;
   sessionId: string;
 }) => {
   const dropdownClassName = cn({
@@ -43,7 +41,7 @@ const ActionList = ({
         tabIndex={0}
         className="dropdown-content menu rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
       >
-        <li onClick={handleOpenWorkout}>
+        <li>
           <Link
             href={{
               pathname: "/session-view/[slug]",
@@ -99,9 +97,7 @@ const ActionList = ({
   );
 };
 
-const SessionCard = ({ id, done, date, workout, notes }: Session) => {
-  const [openWorkout, setOpenWorkout] = useState(false);
-
+const SessionCard = ({ id, done, workout }: Session) => {
   const utils = trpc.useContext();
 
   const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
@@ -180,24 +176,19 @@ const SessionCard = ({ id, done, date, workout, notes }: Session) => {
 
       <div className="flex w-full flex-col">
         <div className="flex items-center justify-between">
-          <div onClick={() => setOpenWorkout(true)} className="font-semibold">
+          <div className="font-semibold">
             <Link
               href={{
                 pathname: "/session-view/[slug]",
                 query: { slug: id },
               }}
-              // className="btn-primary btn"
             >
               {sliceLongText(workout?.title)}
             </Link>
           </div>
           <div className="flex flex-col justify-between">
             <IntesityBadge isSmall intensity={workout?.intensity} />
-            <ActionList
-              handleRemove={handleRemove}
-              handleOpenWorkout={() => setOpenWorkout(true)}
-              sessionId={id}
-            />
+            <ActionList handleRemove={handleRemove} sessionId={id} />
           </div>
         </div>
       </div>

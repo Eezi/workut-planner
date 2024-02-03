@@ -34,7 +34,7 @@ export const Modal = ({
 
   return (
     <dialog className={modalClass}>
-      <div style={{ minHeight: "30rem" }} className="modal-box">
+      <div className="modal-box">
         <div ref={ref}>{children}</div>
       </div>
     </dialog>
