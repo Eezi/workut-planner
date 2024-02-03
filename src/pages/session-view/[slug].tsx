@@ -184,7 +184,8 @@ const SessionNotes = (
               }}
             />
           </div>
-          <div className="mt-8 grid gap-8 pb-8">
+          <h5 className="my-4 text-xl font-bold">Reps</h5>
+          <div className="grid gap-8 pb-8">
             {reps.map((rep, index) => (
               <RepCheckbox
                 rep={{ ...rep, repCount: `${index + 1}` }}

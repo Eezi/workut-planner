@@ -268,7 +268,7 @@ export const WorkoutCard = ({
         </div>
       </div>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <div>
+        <div className="h-[27rem]">
           <label
             htmlFor="my-modal-6"
             className="btn-sm btn-circle btn absolute right-2 top-2"
