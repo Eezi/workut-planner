@@ -1,5 +1,21 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { Workout } from "@prisma/client";
+
+const generateReps = (workout: Workout | null, sessionId: string) => {
+  if (!workout) return []
+  const { secoundsAmount, weightAmount, repsAmount, reps, id } = workout;
+
+  const repsList = reps
+    ? [...Array(workout?.reps).keys()].map((n) => ({
+        workoutId: id,
+        workoutSessionId: sessionId,
+        done: false,
+      }))
+    : [];
+
+  return repsList;
+};
 
 export const workoutSessionRouter = router({
   postWorkoutSession: protectedProcedure
@@ -26,13 +42,7 @@ export const workoutSessionRouter = router({
             createdAt: new Date(),
           },
         });
-        const reps = workout?.reps
-          ? [...Array(workout?.reps).keys()].map((n) => ({
-              workoutId: input.workoutId,
-              workoutSessionId: created.id,
-              done: false,
-            }))
-          : [];
+        const reps = generateReps(workout, created.id)
         await ctx.prisma.rep.createMany({
           data: reps,
         });
@@ -184,7 +194,7 @@ export const workoutSessionRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      console.log('input', input)
+      console.log("input", input);
       try {
         return await ctx.prisma.workoutSession.findFirst({
           where: {

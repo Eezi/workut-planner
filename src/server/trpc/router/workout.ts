@@ -18,6 +18,9 @@ export const workoutRouter = router({
         reps: z.number(),
         intensity: z.enum(["HARD", "MEDIUM", "EASY"]),
         repUnit: z.enum(["SECOND", "KG"]),
+        includeSeconds: z.boolean().optional(),
+        includeWeight: z.boolean().optional(),
+        includeReps: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -27,7 +30,9 @@ export const workoutRouter = router({
             title: input.title,
             description: input.description,
             reps: input.reps,
-            repUnit: input.repUnit,
+            includeSeconds: input.includeSeconds,
+            includeWeight: input.includeSeconds,
+            includeReps: input.includeReps,
             intensity: input.intensity,
             userId: input.userId,
           },
@@ -109,10 +114,12 @@ export const workoutRouter = router({
         description: z.string(),
         intensity: z.enum(["HARD", "MEDIUM", "EASY"]),
         repUnit: z.enum(["KG", "SECOND"]),
+        includeSeconds: z.boolean().optional(),
+        includeWeight: z.boolean().optional(),
+        includeReps: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log('input', input, typeof input.reps)
       try {
         await ctx.prisma.workout.update({
           where: {
@@ -123,7 +130,9 @@ export const workoutRouter = router({
             description: input.description,
             intensity: input.intensity,
             reps: input.reps,
-            repUnit: input.repUnit
+            includeSeconds: input.includeSeconds,
+            includeWeight: input.includeSeconds,
+            includeReps: input.includeReps,
           },
         });
       } catch (error) {

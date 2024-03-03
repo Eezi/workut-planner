@@ -58,27 +58,31 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// Pitäiskö tässä olla molemmat amount ja painon määrä mutta mites sit aika?
 model Rep {
   id               String          @id @default(cuid())
   done             Boolean
-  amount           Int?
+  secoundsAmount   Int?
+  weightAmount     Int?
+  repsAmount       Int?
   WorkoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
   workoutSessionId String?
   workoutId        String
 }
 
 model Workout {
-  id          String           @id @default(cuid())
-  createdAt   DateTime         @default(now())
-  userId      String
-  title       String
-  description String?          @db.Text
-  repUnit     RepUnit?
-  reps        Int?
-  intensity   Intensity
-  sessions    WorkoutSession[]
-  notes       Note[]
+  id             String           @id @default(cuid())
+  createdAt      DateTime         @default(now())
+  userId         String
+  title          String
+  description    String?          @db.Text
+  repUnit        RepUnit?
+  includeSeconds Boolean?
+  includeWeight  Boolean?
+  includeReps    Boolean?
+  reps           Int?
+  intensity      Intensity
+  sessions       WorkoutSession[]
+  notes          Note[]
 }
 
 model Note {
@@ -128,4 +132,5 @@ enum Intensity {
 enum RepUnit {
   SECOND
   KG
+  REP
 }

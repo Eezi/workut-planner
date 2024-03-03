@@ -7,7 +7,9 @@ export const repRouter = router({
       z.object({
         id: z.string(),
         done: z.boolean(),
-        amount: z.number(),
+        secoundsAmount: z.number().optional(),
+        repsAmount: z.number().optional(),
+        weightAmount: z.number().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -18,7 +20,9 @@ export const repRouter = router({
           },
           data: {
             done: input.done,
-            amount: input.amount,
+            secoundsAmount: input.secoundsAmount,
+            weightAmount: input.weightAmount,
+            repsAmount: input.repsAmount,
           },
         });
       } catch (error) {

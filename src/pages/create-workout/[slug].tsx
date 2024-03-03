@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { type NextPage } from "next";
 import { PageHead } from "../../components/Head";
 import { trpc } from "../../utils/trpc";
@@ -26,6 +26,31 @@ const defaultLabels = [
     key: "supportive-training",
   },
 ];
+
+const UnitCheckbox = ({
+  value,
+  onChange,
+  label,
+}: {
+  value: boolean;
+  onChange: (newValue: boolean) => void;
+  label: string;
+}) => {
+  return (
+    <div className="form-control">
+      <label className="label cursor-pointer">
+        <span className="label-text">{label}</span>
+        <input
+          type="checkbox"
+          checked={value}
+          onChange={({ currentTarget }) => onChange(currentTarget.checked)}
+          className="checkbox-primary checkbox"
+        />
+      </label>
+    </div>
+  );
+};
+
 type PageProps = {};
 const AllWorkouts: NextPage = (
   props: PageProps,
@@ -34,6 +59,9 @@ const AllWorkouts: NextPage = (
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [numberOfReps, setNumberOfReps] = useState("");
+  const [includeSeconds, setIncludeSeconds] = useState(true);
+  const [includeWeight, setIncludeWeight] = useState(true);
+  const [includeReps, setIncludeReps] = useState(false);
   const [intensity, setIntensity] = useState<Intensity>("MEDIUM");
   const [repUnit, setRepUnit] = useState<RepUnit>("SECOND");
   const [errors, setErrors] = useState<{ title: string | null }>({
@@ -88,6 +116,9 @@ const AllWorkouts: NextPage = (
       intensity: intensity,
       repUnit,
       userId: sessionData?.user?.id || "",
+      includeSeconds,
+      includeWeight,
+      includeReps,
     });
   };
 
@@ -100,6 +131,9 @@ const AllWorkouts: NextPage = (
         reps: Number(numberOfReps),
         repUnit,
         intensity: intensity,
+        includeSeconds,
+        includeWeight,
+        includeReps,
       });
     }
   };
@@ -166,17 +200,21 @@ const AllWorkouts: NextPage = (
           }}
           className="input-bordered input-primary input"
         />
-        <select
-          onChange={(event) => setRepUnit(event.target.value as RepUnit)}
-          className="select-primary select"
-          value={repUnit}
-        >
-          <option disabled selected>
-            Rep unit
-          </option>
-          <option value="SECOND">Secound</option>
-          <option value="KG">Kg</option>
-        </select>
+        <UnitCheckbox
+          value={includeSeconds}
+          onChange={(newValue: boolean) => setIncludeSeconds(newValue)}
+          label="Add secounds"
+        />
+        <UnitCheckbox
+          label="Add kg"
+          value={includeWeight}
+          onChange={(newValue: boolean) => setIncludeWeight(newValue)}
+        />
+        <UnitCheckbox
+          label="Add reps"
+          value={includeReps}
+          onChange={(newValue: boolean) => setIncludeReps(newValue)}
+        />
 
         <textarea
           value={description}

@@ -36,7 +36,7 @@ const options = {
   language: "en",
 };
 
-export const DateInput = ({ setDate, date }: Props) => {
+export const DateInput = ({ setDate }: Props) => {
   const [show, setShow] = useState<boolean>(false);
 
   const handleChange = (selectedDate: Date) => {

@@ -36,7 +36,7 @@ export const AddNotes = ({
         value={currentNote}
         onChange={({ currentTarget }) => setCurrentNote(currentTarget.value)}
       ></textarea>
-      <button onClick={handlePostNote} className="btn-outline btn-primary btn">
+      <button onClick={handlePostNote} className="btn-primary btn-outline btn">
         Add note
       </button>
     </div>

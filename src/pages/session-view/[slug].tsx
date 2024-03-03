@@ -1,48 +1,67 @@
 import { trpc } from "../../utils/trpc";
+import { z } from "zod";
 import { PageHead } from "../../components/Head";
 import { PageTitle } from "../../components/PageTitle";
 import { useRouter } from "next/router";
 import PageTransition from "../../components/PageTransition";
 import { DateInput } from "../../components/DateInput";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
-
-type Rep = {
-  amount: number | null;
-  id: string;
-  workoutId: string;
-  workoutSessionId: string | null;
-  done: boolean;
-};
+import { Workout, Rep } from "@prisma/client";
 
 type Props = {
   rep: Rep & { repCount: string };
+  workout: Workout | undefined;
   setReps: React.Dispatch<React.SetStateAction<Rep[]>>;
 };
 
 const RepCheckbox = (props: Props) => {
-  const { rep, setReps } = props;
+  const validateAmount = z.number().nonnegative();
+  const { rep, setReps, workout } = props;
   const { id, repCount } = rep;
 
   const editRep = trpc.rep.editRep.useMutation();
   const removeRep = trpc.rep.removeRep.useMutation();
   const [isDone, setIsDone] = useState(false);
-  const [currentAmount, setCurrentAmount] = useState("");
+  const [secoundsAmount, setSecondsAmount] = useState("");
+  const [weightAmount, setWeightAmount] = useState("");
+  const [repsAmount, setRepsAmount] = useState("");
 
   useEffect(() => {
-    if (rep.done !== null) {
-      setIsDone(rep.done);
+    const { secoundsAmount, weightAmount, repsAmount, done } = rep;
+    if (done !== null) {
+      setIsDone(done);
     }
-    if (rep.amount !== null) {
-      setCurrentAmount(rep.amount.toString());
+    if (weightAmount !== null) {
+      setWeightAmount(weightAmount.toString() || "");
     }
-  }, [rep.done, rep.amount]);
+    if (secoundsAmount !== null) {
+      setSecondsAmount(secoundsAmount.toString() || "");
+    }
+    if (repsAmount !== null) {
+      setRepsAmount(repsAmount.toString() || "");
+    }
+  }, [rep]);
 
   const handleEditRep = (checked: boolean) => {
+    const newSecAmount = isNaN(Number(secoundsAmount))
+      ? undefined
+      : Number(secoundsAmount);
+    const newWeightAmount = isNaN(Number(weightAmount))
+      ? undefined
+      : Number(weightAmount);
+    const newRepsAmount = isNaN(Number(repsAmount))
+      ? undefined
+      : Number(repsAmount);
+    validateAmount.safeParse(newSecAmount);
+    validateAmount.safeParse(newWeightAmount);
+    validateAmount.safeParse(newRepsAmount);
     editRep.mutate({
       id,
       done: checked,
-      amount: Number(currentAmount),
+      secoundsAmount: newSecAmount,
+      weightAmount: newWeightAmount,
+      repsAmount: newRepsAmount,
     });
     setReps((prev) =>
       prev.map((rep) => {
@@ -50,7 +69,9 @@ const RepCheckbox = (props: Props) => {
           return {
             ...rep,
             done: checked,
-            amount: Number(currentAmount),
+            secoundsAmount: newSecAmount || null,
+            weightAmount: newWeightAmount || null,
+            repsAmount: newRepsAmount || null,
           };
         }
         return rep;
@@ -64,10 +85,13 @@ const RepCheckbox = (props: Props) => {
     setReps((prev) => prev.filter((rep) => rep.id !== id));
   };
 
+  const { includeSeconds, includeWeight, includeReps } = workout || {};
+  console.log("workout", workout);
   return (
-    <div className="flex items-center gap-4">
-      <div>
-        <label className="label cursor-pointer">
+    <tr>
+      <th>
+        <label className="flex gap-3">
+          <p>{repCount}</p>
           <input
             type="checkbox"
             checked={isDone}
@@ -78,23 +102,44 @@ const RepCheckbox = (props: Props) => {
             className="checkbox-primary checkbox"
           />
         </label>
-      </div>
-      <div>
-        <label className="form-control w-full max-w-xs">
+      </th>
+      {includeWeight && (
+        <td>
           <input
-            type="number"
-            placeholder="Amount"
             onBlur={() => handleEditRep(isDone)}
-            value={currentAmount}
-            onChange={({ target }) => setCurrentAmount(target.value)}
-            className="input-bordered input-primary input input-sm w-full max-w-xs "
+            value={weightAmount}
+            name="weightAmount"
+            onChange={({ target }) => setWeightAmount(target.value)}
+            className="input-bordered input input-sm w-14 "
           />
-        </label>
-      </div>
-      <div>
+        </td>
+      )}
+      {includeSeconds && (
+        <td>
+          <input
+            onBlur={() => handleEditRep(isDone)}
+            value={secoundsAmount}
+            name="secoundsAmount"
+            onChange={({ target }) => setSecondsAmount(target.value)}
+            className="input-bordered input input-sm w-14 max-w-xs "
+          />
+        </td>
+      )}
+      {includeReps && (
+        <td>
+          <input
+            onBlur={() => handleEditRep(isDone)}
+            value={repsAmount}
+            name="repsAmount"
+            onChange={({ target }) => setRepsAmount(target.value)}
+            className="input-bordered input input-sm w-14 max-w-xs "
+          />
+        </td>
+      )}
+      <td>
         <button
           onClick={handleRemoveRep}
-          className="btn-outline btn-sm btn-square btn"
+          className="btn-outline btn btn-square btn-xs"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +156,43 @@ const RepCheckbox = (props: Props) => {
             />
           </svg>
         </button>
-      </div>
+      </td>
+    </tr>
+  );
+};
+
+const RepsTable = ({
+  reps,
+  workout,
+  setReps,
+}: {
+  reps: Rep[];
+  workout: Workout | undefined;
+  setReps: React.Dispatch<React.SetStateAction<Rep[]>>;
+}) => {
+  const { includeSeconds, includeReps, includeWeight } = workout || {};
+  return (
+    <div className="overflow-x-auto">
+      <table className="table">
+        {/* head */}
+        <thead>
+          <tr>
+            <th></th>
+            {includeWeight && <th>Kg</th>}
+            {includeSeconds && <th>Secounds</th>}
+            {includeReps && <th>Reps</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {reps.map((rep, index) => (
+            <RepCheckbox
+              setReps={setReps}
+              workout={workout}
+              rep={{ ...rep, repCount: `${index + 1}` }}
+            />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
@@ -170,6 +251,10 @@ const SessionNotes = (
     <h1>Tapahtui virhe :(</h1>;
   }
 
+  const formattedText = useMemo(() => {
+    return session?.workout?.description?.split("\n").join("<br />");
+  }, [session?.workout?.description]);
+
   return (
     <PageTransition ref={ref}>
       <PageHead title="Session" />
@@ -180,7 +265,9 @@ const SessionNotes = (
         <div className="mb-16">
           <h1 className="mb-4 text-2xl font-bold">{session?.workout?.title}</h1>
           <p className="mb-6 max-w-[45ch] text-xl">
-            {session?.workout?.description}
+            <div
+              dangerouslySetInnerHTML={{ __html: formattedText as string }}
+            />
           </p>
           <div className="mt-1">
             <DateInput
@@ -191,15 +278,17 @@ const SessionNotes = (
             />
           </div>
           <h5 className="my-4 text-xl font-bold">Reps</h5>
-          <div className="grid gap-4 pb-5">
+          <RepsTable reps={reps} workout={session?.workout} setReps={setReps} />
+          {/*<div className="grid gap-4 pb-5">
             {reps.map((rep, index) => (
               <RepCheckbox
                 rep={{ ...rep, repCount: `${index + 1}` }}
+                workout={session?.workout}
                 setReps={setReps}
                 key={rep.id}
               />
             ))}
-          </div>
+            </div>*/}
           <div className="mb-6">
             <button onClick={handleCreateRep} className="btn-neutral btn">
               Create rep
