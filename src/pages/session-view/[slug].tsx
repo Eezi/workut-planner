@@ -187,6 +187,7 @@ const RepsTable = ({
           {reps.map((rep, index) => (
             <RepCheckbox
               setReps={setReps}
+              key={rep.id}
               workout={workout}
               rep={{ ...rep, repCount: `${index + 1}` }}
             />

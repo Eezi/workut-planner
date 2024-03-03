@@ -4,7 +4,7 @@ import { Workout } from "@prisma/client";
 
 const generateReps = (workout: Workout | null, sessionId: string) => {
   if (!workout) return []
-  const { secoundsAmount, weightAmount, repsAmount, reps, id } = workout;
+  const { reps, id } = workout;
 
   const repsList = reps
     ? [...Array(workout?.reps).keys()].map((n) => ({
