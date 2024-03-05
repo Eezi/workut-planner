@@ -15,7 +15,7 @@ export const SessionsTable = ({
 }) => {
   return (
     <div className="overflow-x-auto">
-      <table className="table-xs table-zebra table">
+      <table className="table-zebra table-md table">
         <thead>
           <tr>
             <th>Workout name</th>
