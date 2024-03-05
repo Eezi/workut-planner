@@ -37,7 +37,7 @@ const UnitCheckbox = ({
   label: string;
 }) => {
   return (
-    <div className="form-control">
+    <div className="form-control mb-2">
       <label className="label cursor-pointer">
         <span className="label-text">{label}</span>
         <input
@@ -161,7 +161,7 @@ const AllWorkouts: NextPage = (
     <PageTransition ref={ref}>
       <PageHead title="Create Workout" />
       <PageTitle title="Create new workout" />
-      <div className="mt-5 flex flex-col gap-8">
+      <div className="mt-5 flex flex-col gap-6">
         <input
           type="text"
           value={title}
@@ -200,21 +200,23 @@ const AllWorkouts: NextPage = (
           }}
           className="input-bordered input-primary input"
         />
-        <UnitCheckbox
-          value={includeSeconds}
-          onChange={(newValue: boolean) => setIncludeSeconds(newValue)}
-          label="Add secounds"
-        />
-        <UnitCheckbox
-          label="Add kg"
-          value={includeWeight}
-          onChange={(newValue: boolean) => setIncludeWeight(newValue)}
-        />
-        <UnitCheckbox
-          label="Add reps"
-          value={includeReps}
-          onChange={(newValue: boolean) => setIncludeReps(newValue)}
-        />
+        <div>
+          <UnitCheckbox
+            value={includeSeconds}
+            onChange={(newValue: boolean) => setIncludeSeconds(newValue)}
+            label="Add secounds"
+          />
+          <UnitCheckbox
+            label="Add kg"
+            value={includeWeight}
+            onChange={(newValue: boolean) => setIncludeWeight(newValue)}
+          />
+          <UnitCheckbox
+            label="Add reps"
+            value={includeReps}
+            onChange={(newValue: boolean) => setIncludeReps(newValue)}
+          />
+        </div>
 
         <textarea
           value={description}

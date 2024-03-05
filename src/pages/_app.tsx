@@ -2,7 +2,7 @@ import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Navbar, BottomNavBar } from "../components/Navbar";
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 
@@ -14,18 +14,18 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const router = useRouter()
-	const pageKey = router.asPath
+  const router = useRouter();
+  const pageKey = router.asPath;
   return (
     <SessionProvider session={session}>
       <SessionContainer>
-        <Navbar />
         <PageContainer>
-        <AnimatePresence initial={false} mode="popLayout">
-          <Component key={pageKey} {...pageProps} />
+          <Navbar />
+          <AnimatePresence initial={false} mode="popLayout">
+            <Component key={pageKey} {...pageProps} />
           </AnimatePresence>
+          <BottomNavBar />
         </PageContainer>
-        <BottomNavBar />
       </SessionContainer>
     </SessionProvider>
   );
