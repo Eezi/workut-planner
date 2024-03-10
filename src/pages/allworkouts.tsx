@@ -6,8 +6,11 @@ import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
 import PageTransition from "../components/PageTransition";
 
-type PageProps = {}
-const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+type PageProps = {};
+const AllWorkouts: NextPage = (
+  props: PageProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) => {
   const {
     data: workouts,
     isLoading,
@@ -28,7 +31,7 @@ const AllWorkouts: NextPage = (props: PageProps, ref: React.ForwardedRef<HTMLDiv
                 pathname: "/create-workout/[slug]",
                 query: { slug: "create" },
               }}
-              className="btn-primary btn"
+              className="btn-primary btn btn-sm md:btn"
             >
               Create workout
             </Link>

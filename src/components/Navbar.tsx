@@ -133,14 +133,14 @@ const LoggedInNav = () => {
         })}
       </div>
       <div className="dropdown-end dropdown ml-4">
-        <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
+        <label tabIndex={0} className="btn-ghost btn btn-circle avatar">
           <div className="w-8 rounded-full">
             <img alt="user-image" src={sessionData?.user?.image || ""} />
           </div>
         </label>
         <ul
           tabIndex={0}
-          className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
+          className="menu-compact dropdown-content menu mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
         >
           <li>
             <a onClick={() => signOut()}>Logout</a>
@@ -153,9 +153,9 @@ const LoggedInNav = () => {
 
 export const Navbar = () => {
   return (
-    <div data-theme="nightforest" className="navbar">
+    <div data-theme="nightforest" className="navbar px-0">
       <div className="flex-1">
-        <Link href="/" className="btn-ghost btn text-xl normal-case">
+        <Link href="/" className="text-lg normal-case text-slate-400">
           Workout App
         </Link>
       </div>
@@ -179,7 +179,7 @@ export const BottomNavBar = () => {
         return (
           <Link
             key={link}
-            className={isActive ? "text-primary" : ""}
+            className={isActive ? "text-primary" : "text-white"}
             href={link}
           >
             {icon}
