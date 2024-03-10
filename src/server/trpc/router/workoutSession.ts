@@ -14,6 +14,7 @@ const generateReps = (workout: Workout | null, sessionId: string) => {
       }))
     : [];
 
+  console.log('repsList', repsList)
   return repsList;
 };
 

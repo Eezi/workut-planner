@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import { PageHead } from "../../components/Head";
 import { trpc } from "../../utils/trpc";
@@ -7,25 +7,8 @@ import { useRouter } from "next/router";
 import type { Intensity } from "../../types/workout";
 import { PageTitle } from "../../components/PageTitle";
 import PageTransition from "../../components/PageTransition";
-import { RepUnit } from "../../types/workout";
-import { v4 as uuidv4 } from "uuid";
 
 const CREATE_MODE = "create";
-
-const defaultLabels = [
-  {
-    label: "Boulder",
-    key: "boulder",
-  },
-  {
-    label: "Lead",
-    key: "lead",
-  },
-  {
-    label: "Supportive Training",
-    key: "supportive-training",
-  },
-];
 
 const UnitCheckbox = ({
   value,
@@ -63,7 +46,6 @@ const AllWorkouts: NextPage = (
   const [includeWeight, setIncludeWeight] = useState(true);
   const [includeReps, setIncludeReps] = useState(false);
   const [intensity, setIntensity] = useState<Intensity>("MEDIUM");
-  const [repUnit, setRepUnit] = useState<RepUnit>("SECOND");
   const [errors, setErrors] = useState<{ title: string | null }>({
     title: null,
   });
@@ -114,7 +96,6 @@ const AllWorkouts: NextPage = (
       description,
       reps: Number(numberOfReps),
       intensity: intensity,
-      repUnit,
       userId: sessionData?.user?.id || "",
       includeSeconds,
       includeWeight,
@@ -129,7 +110,6 @@ const AllWorkouts: NextPage = (
         title,
         description,
         reps: Number(numberOfReps),
-        repUnit,
         intensity: intensity,
         includeSeconds,
         includeWeight,
@@ -161,7 +141,7 @@ const AllWorkouts: NextPage = (
     <PageTransition ref={ref}>
       <PageHead title="Create Workout" />
       <PageTitle title="Create new workout" />
-      <div className="mb-13 mt-5 flex flex-col gap-6">
+      <div className="mt-5 mb-14 flex flex-col gap-6">
         <input
           type="text"
           value={title}

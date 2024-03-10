@@ -17,7 +17,6 @@ export const workoutRouter = router({
         userId: z.string(),
         reps: z.number(),
         intensity: z.enum(["HARD", "MEDIUM", "EASY"]),
-        repUnit: z.enum(["SECOND", "KG"]),
         includeSeconds: z.boolean().optional(),
         includeWeight: z.boolean().optional(),
         includeReps: z.boolean().optional(),
@@ -113,7 +112,6 @@ export const workoutRouter = router({
         reps: z.number(),
         description: z.string(),
         intensity: z.enum(["HARD", "MEDIUM", "EASY"]),
-        repUnit: z.enum(["KG", "SECOND"]),
         includeSeconds: z.boolean().optional(),
         includeWeight: z.boolean().optional(),
         includeReps: z.boolean().optional(),
@@ -204,20 +202,6 @@ export const workoutRouter = router({
             };
           })
         );
-
-        /*const groupedData = await prisma.workoutSession.groupBy({
-  by: ['workoutId'],
-  where: {
-    userId: ctx.session.user.id,
-    createdAt: {
-      gte: new Date('start_date'),
-      lte: new Date('end_date')
-    }
-  },
-  _count: {
-    _all: true,
-  },
-});*/
 
         return workoutWithSessionCounts;
       } catch (error) {

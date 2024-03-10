@@ -44,15 +44,11 @@ const RepCheckbox = (props: Props) => {
   }, [rep]);
 
   const handleEditRep = (checked: boolean) => {
-    const newSecAmount = isNaN(Number(secoundsAmount))
-      ? undefined
-      : Number(secoundsAmount);
-    const newWeightAmount = isNaN(Number(weightAmount))
-      ? undefined
-      : Number(weightAmount);
-    const newRepsAmount = isNaN(Number(repsAmount))
-      ? undefined
-      : Number(repsAmount);
+    const newSecAmount =
+      secoundsAmount === "" ? undefined : Number(secoundsAmount);
+    const newWeightAmount =
+      weightAmount === "" ? undefined : Number(weightAmount);
+    const newRepsAmount = repsAmount === "" ? undefined : Number(repsAmount);
     validateAmount.safeParse(newSecAmount);
     validateAmount.safeParse(newWeightAmount);
     validateAmount.safeParse(newRepsAmount);

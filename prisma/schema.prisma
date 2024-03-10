@@ -75,7 +75,6 @@ model Workout {
   userId         String
   title          String
   description    String?          @db.Text
-  repUnit        RepUnit?
   includeSeconds Boolean?
   includeWeight  Boolean?
   includeReps    Boolean?
