@@ -1,10 +1,11 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
+  provider     = "sqlite"
+  url          = "file:./dev.db"
   relationMode = "prisma"
 }
 
@@ -20,12 +21,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -74,12 +75,12 @@ model Workout {
   createdAt      DateTime         @default(now())
   userId         String
   title          String
-  description    String?          @db.Text
+  description    String?
   includeSeconds Boolean?
   includeWeight  Boolean?
   includeReps    Boolean?
   reps           Int?
-  intensity      Intensity
+  intensity      String
   sessions       WorkoutSession[]
   notes          Note[]
 }
@@ -104,32 +105,9 @@ model WorkoutSession {
   date      DateTime
   done      Boolean   @default(false)
   doneAt    DateTime?
-  notes     String?   @db.Text
+  notes     String?
   workout   Workout   @relation(fields: [workoutId], references: [id])
   reps      Rep[]
   note      Note?     @relation(fields: [noteId], references: [id])
   noteId    String?   @unique
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model Labels {
-  id             String?  @db.VarChar(255)
-  label          String?  @db.VarChar(255)
-  labelKey       String?  @db.VarChar(255)
-  userId         String?  @db.VarChar(255)
-  isDefaultLabel Boolean?
-
-  @@ignore
-}
-
-enum Intensity {
-  HARD
-  MEDIUM
-  EASY
-}
-
-enum RepUnit {
-  SECOND
-  KG
-  REP
 }
