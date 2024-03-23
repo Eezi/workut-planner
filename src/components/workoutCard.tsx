@@ -50,7 +50,7 @@ const AddSessionModalContent = ({
     >
       ✕
     </label>
-    <div className="h-[26rem]">
+    <div className="h-[415px]">
       <h3 className="mb-3 text-lg font-bold">Select day for your session</h3>
       <div className="flex items-center gap-3">
         <DateInput setDate={setDate} date={date} />
