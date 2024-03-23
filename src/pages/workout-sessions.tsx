@@ -8,7 +8,7 @@ import type { Session } from "../types/Session";
 import cn from "classnames";
 import { sliceLongText } from "../utils/sliceLongText";
 import { PageTitle } from "../components/PageTitle";
-import { PageTransition } from "../components/PageTransition";
+import PageTransition from "../components/PageTransition";
 import Link from "next/link";
 
 const ActionList = ({

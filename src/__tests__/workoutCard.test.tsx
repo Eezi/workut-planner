@@ -1,14 +1,13 @@
 import { describe, expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { WorkoutCard } from "../components/workoutCard";
-import { Intensity } from ".prisma/client";
 import { PageTitle } from "../components/PageTitle";
 
 const workout = {
   id: "123",
   title: "Maxvoima",
   description: "Testi",
-  intensity: "HARD" as Intensity,
+  intensity: "HARD",
   userId: "123",
 };
 

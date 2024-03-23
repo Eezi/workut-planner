@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { PageHead } from "../components/Head";
-import { PageTransition } from "../components/PageTransition";
+import PageTransition from "../components/PageTransition";
 
 type PageProps = {};
 

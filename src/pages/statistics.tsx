@@ -5,7 +5,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 import { PageTitle } from "../components/PageTitle";
 import { SessionsTable, WorkoutSessionData } from "../components/SessionsTable";
-import { PageTransition } from "../components/PageTransition";
+import PageTransition from "../components/PageTransition";
 
 interface Props {
   timePeriod: DateValueType;

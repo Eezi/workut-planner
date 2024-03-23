@@ -4,9 +4,8 @@ import { PageHead } from "../../components/Head";
 import { trpc } from "../../utils/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import type { Intensity } from "../../types/workout";
 import { PageTitle } from "../../components/PageTitle";
-import { PageTransition } from "../../components/PageTransition";
+import PageTransition from "../../components/PageTransition";
 
 const CREATE_MODE = "create";
 
@@ -45,7 +44,7 @@ const AllWorkouts: NextPage = (
   const [includeSeconds, setIncludeSeconds] = useState(true);
   const [includeWeight, setIncludeWeight] = useState(true);
   const [includeReps, setIncludeReps] = useState(false);
-  const [intensity, setIntensity] = useState<Intensity>("MEDIUM");
+  const [intensity, setIntensity] = useState<string>("MEDIUM");
   const [errors, setErrors] = useState<{ title: string | null }>({
     title: null,
   });
@@ -157,7 +156,7 @@ const AllWorkouts: NextPage = (
         />
         {errors.title && <span>{errors.title}</span>}
         <select
-          onChange={(event) => setIntensity(event.target.value as Intensity)}
+          onChange={(event) => setIntensity(event.target.value)}
           className="select-primary select"
           value={intensity}
         >

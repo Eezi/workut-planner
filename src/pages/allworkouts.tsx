@@ -4,7 +4,7 @@ import Link from "next/link";
 import { WorkoutCard } from "../components/workoutCard";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
-import { PageTransition } from "../components/PageTransition";
+import PageTransition from "../components/PageTransition";
 
 type PageProps = {};
 const AllWorkouts: NextPage = (
