@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import type { Intensity } from "../../types/workout";
 import { PageTitle } from "../../components/PageTitle";
-import PageTransition from "../../components/PageTransition";
+import { PageTransition } from "../../components/PageTransition";
 
 const CREATE_MODE = "create";
 

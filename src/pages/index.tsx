@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { PageHead } from "../components/Head";
-import PageTransition from "../components/PageTransition";
+import { PageTransition } from "../components/PageTransition";
 
 type PageProps = {};
 
@@ -20,7 +20,7 @@ const Home: NextPage = (
             Workout <span className="text-primary">Plan</span> App
           </h1>
           {status === "loading" ? (
-            <span className="loading-spinner loading text-info"></span>
+            <span className="loading loading-spinner text-info"></span>
           ) : (
             <>
               {sessionData && (

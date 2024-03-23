@@ -3,7 +3,7 @@ import { z } from "zod";
 import { PageHead } from "../../components/Head";
 import { PageTitle } from "../../components/PageTitle";
 import { useRouter } from "next/router";
-import PageTransition from "../../components/PageTransition";
+import { PageTransition } from "../../components/PageTransition";
 import { DateInput } from "../../components/DateInput";
 import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
@@ -82,7 +82,6 @@ const RepCheckbox = (props: Props) => {
   };
 
   const { includeSeconds, includeWeight, includeReps } = workout || {};
-  console.log("workout", workout);
   return (
     <tr>
       <th>
@@ -240,7 +239,6 @@ const SessionNotes = (
         workoutSessionId: session.id,
         workoutId: session.workoutId,
       });
-      refetch();
     }
   };
 

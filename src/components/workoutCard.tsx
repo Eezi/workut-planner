@@ -156,7 +156,7 @@ export const WorkoutCard = ({
               </svg>
               <ul
                 tabIndex={0}
-                className="dropdown-content menu rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
+                className="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
               >
                 <li onClick={() => setOpen(true)}>
                   <a>
@@ -267,11 +267,11 @@ export const WorkoutCard = ({
           </div>
         </div>
       </div>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <div className="h-[27rem]">
+      <Modal className="h-52" open={open} onClose={() => setOpen(false)}>
+        <div>
           <label
             htmlFor="my-modal-6"
-            className="btn-sm btn-circle btn absolute right-2 top-2"
+            className="btn btn-sm btn-circle absolute right-2 top-2"
             onClick={() => setOpen(false)}
           >
             ✕

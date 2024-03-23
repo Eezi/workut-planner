@@ -8,7 +8,7 @@ import type { Session } from "../types/Session";
 import cn from "classnames";
 import { sliceLongText } from "../utils/sliceLongText";
 import { PageTitle } from "../components/PageTitle";
-import PageTransition from "../components/PageTransition";
+import { PageTransition } from "../components/PageTransition";
 import Link from "next/link";
 
 const ActionList = ({
@@ -39,7 +39,7 @@ const ActionList = ({
       </svg>
       <ul
         tabIndex={0}
-        className="dropdown-content menu rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
+        className="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
       >
         <li>
           <Link

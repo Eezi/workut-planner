@@ -5,7 +5,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 import { PageTitle } from "../components/PageTitle";
 import { SessionsTable, WorkoutSessionData } from "../components/SessionsTable";
-import PageTransition from "../components/PageTransition";
+import { PageTransition } from "../components/PageTransition";
 
 interface Props {
   timePeriod: DateValueType;
@@ -29,8 +29,11 @@ const PeriodOfTimePicker = ({ timePeriod, setTimePeriod }: Props) => {
     </div>
   );
 };
-type PageProps = {}
-const Statistics = (props: PageProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+type PageProps = {};
+const Statistics = (
+  props: PageProps,
+  ref: React.ForwardedRef<HTMLDivElement>
+) => {
   const [timePeriod, setTimePeriod] = useState<DateValueType>({
     startDate: null,
     endDate: null,

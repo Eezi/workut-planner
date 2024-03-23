@@ -9,6 +9,7 @@ type Props = {
   disableClickOutside?: boolean;
   //add onClose event so that we can close the modal from inside the component
   onClose(): void;
+  className?: string;
 };
 
 export const Modal = ({
@@ -16,6 +17,7 @@ export const Modal = ({
   open,
   disableClickOutside,
   onClose,
+  className = "",
 }: Props) => {
   const ref = useRef(null);
 
@@ -30,6 +32,7 @@ export const Modal = ({
     "modal-bottom": true,
     "sm:modal-middle": true,
     "modal-open": open,
+    [className]: className,
   });
 
   return (

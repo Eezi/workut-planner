@@ -44,9 +44,13 @@ export const workoutSessionRouter = router({
           },
         });
         const reps = generateReps(workout, created.id)
-        await ctx.prisma.rep.createMany({
-          data: reps,
-        });
+        await Promise.all(
+          reps?.map(async (rep) => {
+            await ctx.prisma.rep.create({
+              data: rep,
+            })
+          })
+        )
       } catch (error) {
         console.log(error);
       }

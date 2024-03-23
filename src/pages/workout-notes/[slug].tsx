@@ -2,7 +2,7 @@ import { trpc } from "../../utils/trpc";
 import { PageHead } from "../../components/Head";
 import { PageTitle } from "../../components/PageTitle";
 import { useRouter } from "next/router";
-import PageTransition from "../../components/PageTransition";
+import { PageTransition } from "../../components/PageTransition";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { AddNotes } from "../../components/AddNotes";
