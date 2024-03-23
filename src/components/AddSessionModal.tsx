@@ -37,7 +37,7 @@ export const Modal = ({
 
   return (
     <dialog className={modalClass}>
-      <div className="modal-box">
+      <div className="modal-box px-2">
         <div ref={ref}>{children}</div>
       </div>
     </dialog>

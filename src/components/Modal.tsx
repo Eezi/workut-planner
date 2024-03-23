@@ -15,7 +15,12 @@ const FormatLongString = ({ text }: { text: string | null | undefined }) => {
 
   const formattedString = formatString();
 
-  return <div dangerouslySetInnerHTML={{ __html: formattedString }}></div>;
+  return (
+    <div
+      className="mt-4 text-base leading-relaxed text-gray-200"
+      dangerouslySetInnerHTML={{ __html: formattedString }}
+    ></div>
+  );
 };
 
 export const WorkoutModalContent = ({
@@ -29,9 +34,7 @@ export const WorkoutModalContent = ({
     </p>
     <IntesityBadge intensity={intensity} />
     <div className="max-h-72 overflow-y-auto">
-      <p className="mt-4 text-base leading-relaxed text-gray-200">
-        <FormatLongString text={description} />
-      </p>
+      <FormatLongString text={description} />
     </div>
   </div>
 );

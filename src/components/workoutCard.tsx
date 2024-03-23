@@ -31,6 +31,43 @@ interface Props {
   isSmall?: boolean;
 }
 
+const AddSessionModalContent = ({
+  setDate,
+  date,
+  handleSubmit,
+  setOpen,
+}: {
+  setDate: React.Dispatch<React.SetStateAction<Date>>;
+  date: Date;
+  handleSubmit: () => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => (
+  <div>
+    <label
+      htmlFor="my-modal-6"
+      className="btn btn-sm btn-circle absolute right-2 top-2"
+      onClick={() => setOpen(false)}
+    >
+      ✕
+    </label>
+    <div className="h-[26rem]">
+      <h3 className="mb-3 text-lg font-bold">Select day for your session</h3>
+      <div className="flex items-center gap-3">
+        <DateInput setDate={setDate} date={date} />
+        <div>
+          <label
+            onClick={handleSubmit}
+            htmlFor="my-modal-6"
+            className="btn-primary btn btn-sm md:btn"
+          >
+            Create session
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 export const IntesityBadge = ({ intensity, isSmall }: Props) => (
   <>
     {isSmall ? (
@@ -126,6 +163,14 @@ export const WorkoutCard = ({
 
   return (
     <>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <AddSessionModalContent
+          setDate={setDate}
+          date={date}
+          setOpen={setOpen}
+          handleSubmit={handleSubmit}
+        />
+      </Modal>
       <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
         <WorkoutModalContent
           title={title}
@@ -267,34 +312,6 @@ export const WorkoutCard = ({
           </div>
         </div>
       </div>
-      <Modal className="h-52" open={open} onClose={() => setOpen(false)}>
-        <div>
-          <label
-            htmlFor="my-modal-6"
-            className="btn btn-sm btn-circle absolute right-2 top-2"
-            onClick={() => setOpen(false)}
-          >
-            ✕
-          </label>
-          <div>
-            <h3 className="mb-3 text-lg font-bold">
-              Select day for your session
-            </h3>
-            <div className="flex gap-4">
-              <DateInput setDate={setDate} date={date} />
-              <div>
-                <label
-                  onClick={handleSubmit}
-                  htmlFor="my-modal-6"
-                  className="btn"
-                >
-                  Create session
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };
