@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Modal } from "./AddSessionModal";
-import { Intensity, Workout } from "../types/workout";
+import { Workout } from "../types/workout";
 import { DateInput } from "./DateInput";
 import { trpc } from "../utils/trpc";
 import { WorkoutModalContent } from "./Modal";
@@ -27,7 +27,7 @@ const bgs = new Map([
 ]);
 
 interface Props {
-  intensity: Intensity;
+  intensity: string;
   isSmall?: boolean;
 }
 

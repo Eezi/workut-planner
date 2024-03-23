@@ -1,8 +1,5 @@
-export type Intensity = "HARD" | "MEDIUM" | "EASY"
-export type RepUnit = "SECOND" | "KG"
-
 export interface Workout {
-    intensity: Intensity;
+    intensity: string;
     title: string;
     id: string;
     userId: string;
