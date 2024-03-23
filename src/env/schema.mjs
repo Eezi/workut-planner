@@ -8,7 +8,7 @@ import { z } from "zod";
 export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
   TURSO_DATABASE_URL: z.string(),
-  TURSO_AUTH_TOKEN: z.string().url(),
+  TURSO_AUTH_TOKEN: z.string(),
   NODE_ENV: z.enum(["development", "test", "production"]).optional(),
   NEXTAUTH_SECRET:
     process.env.NODE_ENV === "production"
