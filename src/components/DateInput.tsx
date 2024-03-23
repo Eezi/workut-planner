@@ -31,7 +31,7 @@ const options = {
     //prev: () => <span>Previous</span>,
     //next: () => <span>Next</span>,
   },
-  datepickerClassNames: "top-12 text-sm",
+  datepickerClassNames: "text-xs relative z-50",
   defaultDate: new Date(),
   language: "en",
 };
@@ -47,13 +47,11 @@ export const DateInput = ({ setDate }: Props) => {
   };
 
   return (
-    <div className="relative max-w-sm">
-      <Datepicker
-        options={options}
-        onChange={handleChange}
-        show={show}
-        setShow={handleClose}
-      />
-    </div>
+    <Datepicker
+      options={options}
+      onChange={handleChange}
+      show={show}
+      setShow={handleClose}
+    />
   );
 };
