@@ -163,7 +163,11 @@ export const WorkoutCard = ({
 
   return (
     <>
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal
+        className="min-h-[30rem]"
+        open={open}
+        onClose={() => setOpen(false)}
+      >
         <AddSessionModalContent
           setDate={setDate}
           date={date}
