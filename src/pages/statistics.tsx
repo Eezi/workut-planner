@@ -6,6 +6,8 @@ import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 import { PageTitle } from "../components/PageTitle";
 import { SessionsTable, WorkoutSessionData } from "../components/SessionsTable";
 import PageTransition from "../components/PageTransition";
+import { WorkoutSession } from "@prisma/client";
+import dayjs from "dayjs";
 
 interface Props {
   timePeriod: DateValueType;
@@ -29,11 +31,82 @@ const PeriodOfTimePicker = ({ timePeriod, setTimePeriod }: Props) => {
     </div>
   );
 };
+
+const Tabs = ({
+  showDoneSessions,
+  setShowDoneSessions,
+}: {
+  showDoneSessions: boolean;
+  setShowDoneSessions: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  return (
+    <div className="form-control pt-2">
+      <label className="label cursor-pointer">
+        <span className="label-text">Show done sessions</span>
+        <input
+          type="checkbox"
+          className="toggle-primary toggle"
+          checked={showDoneSessions}
+          onChange={() => setShowDoneSessions(!showDoneSessions)}
+        />
+      </label>
+    </div>
+  );
+};
+
+const SessionCard = ({ session }: { session: WorkoutSession }) => {
+  const { workout, reps, done, doneAt } = session;
+  const doneReps = reps?.filter(({ done: repDone }) => repDone);
+
+  return (
+    <div className="rounded-md border border-slate-800 p-4">
+      <div className="flex items-center gap-4 ">
+        <input type="checkbox" defaultChecked className="checkbox" />
+        <div>
+          <p className="text-lg font-medium">{workout.title}</p>
+          <span className="text-sm text-slate-400">
+            {dayjs(doneAt).format("DD.MM.YYYY")}
+          </span>
+        </div>
+      </div>
+      <div className="collapse-arrow join-item collapse border border-base-300">
+        <input type="checkbox" name="my-accordion-4" />
+        <div className="collapse-title text-sm font-medium">Session reps</div>
+        <div className="collapse-content">
+          <div className="overflow-x-auto">
+            <table className="table-xs table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Kg</th>
+                  <th>Seconds</th>
+                  <th>Reps</th>
+                </tr>
+              </thead>
+              <tbody>
+                {doneReps?.map((rep, index) => (
+                  <tr key={rep.id}>
+                    <th>{index + 1}</th>
+                    <td>{rep?.weightAmount}</td>
+                    <td>{rep?.secoundsAmount}</td>
+                    <td>{rep?.repsAmount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 type PageProps = {};
 const Statistics = (
   props: PageProps,
   ref: React.ForwardedRef<HTMLDivElement>
 ) => {
+  const [showDoneSessions, setShowDoneSessions] = useState(false);
   const [timePeriod, setTimePeriod] = useState<DateValueType>({
     startDate: null,
     endDate: null,
@@ -43,6 +116,10 @@ const Statistics = (
     startDate: timePeriod?.startDate || null,
     endDate: timePeriod?.endDate || null,
   });
+
+  const { data: sessionData, isLoading: sessionsLoading } =
+    trpc.workoutSession.allDoneSessions.useQuery();
+  console.log("data", sessionData);
   return (
     <PageTransition ref={ref}>
       <PageHead title="Statistics" />
@@ -53,13 +130,29 @@ const Statistics = (
           <div className="mb-4">
             <PageTitle title="Number of sessions per workout" />
           </div>
-          <PeriodOfTimePicker
-            timePeriod={timePeriod}
-            setTimePeriod={setTimePeriod}
-          />
-          <div className="pt-5">
-            <SessionsTable sessionData={data as WorkoutSessionData[]} />
+          <div className="mb-3">
+            <Tabs
+              showDoneSessions={showDoneSessions}
+              setShowDoneSessions={setShowDoneSessions}
+            />
           </div>
+          {showDoneSessions ? (
+            <div className="grid gap-4 pt-3">
+              {sessionData?.map((session) => (
+                <SessionCard key={session.id} session={session} />
+              ))}
+            </div>
+          ) : (
+            <>
+              <PeriodOfTimePicker
+                timePeriod={timePeriod}
+                setTimePeriod={setTimePeriod}
+              />
+              <div className="pt-5">
+                <SessionsTable sessionData={data as WorkoutSessionData[]} />
+              </div>
+            </>
+          )}
         </div>
       )}
     </PageTransition>

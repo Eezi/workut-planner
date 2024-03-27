@@ -214,4 +214,22 @@ export const workoutSessionRouter = router({
         console.log(error);
       }
     }),
+
+    allDoneSessions: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      return await ctx.prisma.workoutSession.findMany({
+        where: { userId: ctx.session.user.id, done: true },
+        include: {
+          workout: true,
+          reps: true
+        },
+        orderBy: {
+          done: "asc",
+        },
+      });
+    } catch (error) {
+      console.log("[allDoneSessions]: Error", error);
+    }
+  }),
+
 });

@@ -196,28 +196,6 @@ const SessionCard = ({ id, done, workout }: Session) => {
   );
 };
 
-/* const Tabs = ({
-  hideCompleted,
-  setHideCompleted,
-}: {
-  hideCompleted: boolean;
-  setHideCompleted: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-  return (
-    <div className="form-control w-40 pt-2">
-      <label className="label cursor-pointer">
-        <span className="label-text">Hide Comleted</span>
-        <input
-          type="checkbox"
-          className="toggle-primary toggle"
-          checked={hideCompleted}
-          onChange={() => setHideCompleted(!hideCompleted)}
-        />
-      </label>
-    </div>
-  );
-}; */
-
 type GroupedData = {
   [key: string]: Session[];
 };
