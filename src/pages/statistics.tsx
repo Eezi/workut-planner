@@ -6,7 +6,7 @@ import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 import { PageTitle } from "../components/PageTitle";
 import { SessionsTable, WorkoutSessionData } from "../components/SessionsTable";
 import PageTransition from "../components/PageTransition";
-import { WorkoutSession } from "@prisma/client";
+import { Rep, Workout, WorkoutSession } from "@prisma/client";
 import dayjs from "dayjs";
 
 interface Props {
@@ -54,7 +54,11 @@ const Tabs = ({
   );
 };
 
-const SessionCard = ({ session }: { session: WorkoutSession }) => {
+const SessionCard = ({
+  session,
+}: {
+  session: WorkoutSession & { workout: Workout; reps: Rep[] };
+}) => {
   const { workout, reps, done, doneAt } = session;
   const doneReps = reps?.filter(({ done: repDone }) => repDone);
 

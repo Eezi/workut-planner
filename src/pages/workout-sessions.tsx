@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import { PageHead } from "../components/Head";
 import { trpc } from "../utils/trpc";
-import { useState } from "react";
 import { IntesityBadge } from "../components/workoutCard";
 import dayjs from "dayjs";
 import type { Session } from "../types/Session";
