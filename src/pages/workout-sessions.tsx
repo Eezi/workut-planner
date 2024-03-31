@@ -147,7 +147,7 @@ const SessionCard = ({ id, done, workout }: Session) => {
         id: sessionId,
         done: checked,
       });
-    }, 500);
+    }, 800);
   };
 
   const handleRemove = () => {

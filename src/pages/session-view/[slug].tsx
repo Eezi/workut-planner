@@ -8,6 +8,7 @@ import { DateInput } from "../../components/DateInput";
 import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
 import { Workout, Rep } from "@prisma/client";
+import { SessionCard } from "../statistics";
 
 type Props = {
   rep: Rep & { repCount: string };
@@ -212,6 +213,8 @@ const SessionNotes = (
   });
   const [reps, setReps] = useState<Rep[]>([]);
   const editSession = trpc.workoutSession.editSession.useMutation();
+  const { data: latestSession } =
+    trpc.workoutSession.fetchLatestDoneSession.useQuery();
   const createRep = trpc.rep.createRep.useMutation({
     onSuccess: () => {
       refetch();
@@ -271,6 +274,9 @@ const SessionNotes = (
                 handleEditSession(session?.id, date);
               }}
             />
+          </div>
+          <div className="mt-5">
+            <SessionCard session={latestSession} />
           </div>
           <h5 className="my-4 text-xl font-bold">Reps</h5>
           <RepsTable reps={reps} workout={session?.workout} setReps={setReps} />

@@ -3,7 +3,7 @@ import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { Workout } from "@prisma/client";
 
 const generateReps = (workout: Workout | null, sessionId: string) => {
-  if (!workout) return []
+  if (!workout) return [];
   const { reps, id } = workout;
 
   const repsList = reps
@@ -14,7 +14,7 @@ const generateReps = (workout: Workout | null, sessionId: string) => {
       }))
     : [];
 
-  console.log('repsList', repsList)
+  console.log("repsList", repsList);
   return repsList;
 };
 
@@ -43,14 +43,14 @@ export const workoutSessionRouter = router({
             createdAt: new Date(),
           },
         });
-        const reps = generateReps(workout, created.id)
+        const reps = generateReps(workout, created.id);
         await Promise.all(
           reps?.map(async (rep) => {
             await ctx.prisma.rep.create({
               data: rep,
-            })
+            });
           })
-        )
+        );
       } catch (error) {
         console.log(error);
       }
@@ -199,7 +199,6 @@ export const workoutSessionRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      console.log("input", input);
       try {
         return await ctx.prisma.workoutSession.findFirst({
           where: {
@@ -215,21 +214,50 @@ export const workoutSessionRouter = router({
       }
     }),
 
-    allDoneSessions: protectedProcedure.query(async ({ ctx }) => {
+  allDoneSessions: protectedProcedure
+    .input(
+      z
+        .object({
+          workoutId: z.string().optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const sessions = await ctx.prisma.workoutSession.findMany({
+          where: {
+            userId: ctx.session.user.id,
+            done: true,
+            workoutId: input?.workoutId,
+          },
+          include: {
+            workout: true,
+            reps: true,
+          },
+          orderBy: {
+            doneAt: "desc",
+          },
+        });
+        return sessions;
+      } catch (error) {
+        console.log("[allDoneSessions]: Error", error);
+      }
+    }),
+
+  fetchLatestDoneSession: protectedProcedure.query(async ({ ctx, input }) => {
     try {
-      return await ctx.prisma.workoutSession.findMany({
+      return await ctx.prisma.workoutSession.findFirst({
         where: { userId: ctx.session.user.id, done: true },
         include: {
           workout: true,
-          reps: true
+          reps: true,
         },
         orderBy: {
-          done: "asc",
+          doneAt: "desc",
         },
       });
     } catch (error) {
-      console.log("[allDoneSessions]: Error", error);
+      console.log("[fetchLatestDoneSession]: Error", error);
     }
   }),
-
 });

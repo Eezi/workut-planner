@@ -54,18 +54,34 @@ const Tabs = ({
   );
 };
 
-const SessionCard = ({
+export const SessionCard = ({
   session,
 }: {
   session: WorkoutSession & { workout: Workout; reps: Rep[] };
 }) => {
-  const { workout, reps, done, doneAt } = session;
+  const { workout, reps, done, doneAt, id } = session;
   const doneReps = reps?.filter(({ done: repDone }) => repDone);
 
+  /* const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation();
+
+  const handleDone = () => {
+    handleSessionkDone.mutate({
+      id,
+      done: false,
+    });
+    refetch();
+  }; */
+
   return (
-    <div className="rounded-md border border-slate-800 p-4">
+    <div className="rounded-md border border-slate-800 p-2 px-3">
       <div className="flex items-center gap-4 ">
-        <input type="checkbox" defaultChecked className="checkbox" />
+        <input
+          type="checkbox"
+          defaultChecked
+          disabled
+          // onChange={handleDone}
+          className="checkbox"
+        />
         <div>
           <p className="text-lg font-medium">{workout.title}</p>
           <span className="text-sm text-slate-400">
@@ -105,6 +121,19 @@ const SessionCard = ({
   );
 };
 
+const DoneSessions = () => {
+  const { data: sessionData, isLoading: sessionsLoading } =
+    trpc.workoutSession.allDoneSessions.useQuery();
+
+  return (
+    <div className="grid gap-4 pt-3">
+      {sessionData?.map((session) => (
+        <SessionCard key={session.id} session={session} />
+      ))}
+    </div>
+  );
+};
+
 type PageProps = {};
 const Statistics = (
   props: PageProps,
@@ -121,9 +150,6 @@ const Statistics = (
     endDate: timePeriod?.endDate || null,
   });
 
-  const { data: sessionData, isLoading: sessionsLoading } =
-    trpc.workoutSession.allDoneSessions.useQuery();
-  console.log("data", sessionData);
   return (
     <PageTransition ref={ref}>
       <PageHead title="Statistics" />
@@ -141,11 +167,7 @@ const Statistics = (
             />
           </div>
           {showDoneSessions ? (
-            <div className="grid gap-4 pt-3">
-              {sessionData?.map((session) => (
-                <SessionCard key={session.id} session={session} />
-              ))}
-            </div>
+            <DoneSessions />
           ) : (
             <>
               <PeriodOfTimePicker
