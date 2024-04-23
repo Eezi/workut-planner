@@ -1,3 +1,8 @@
+
+🌼   daisyUI 4.6.1
+├─ ✔︎ 4 themes added		https://daisyui.com/docs/themes
+╰─ ★ Star daisyUI on GitHub	https://github.com/saadeghi/daisyui
+
 import { trpc } from "../../utils/trpc";
 import { z } from "zod";
 import { PageHead } from "../../components/Head";
@@ -7,7 +12,7 @@ import PageTransition from "../../components/PageTransition";
 import { DateInput } from "../../components/DateInput";
 import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
-import { Workout, Rep, WorkoutSession } from "@prisma/client";
+import type { Workout, Rep, WorkoutSession } from "@prisma/client";
 import { SessionCard } from "../statistics";
 
 type Props = {
@@ -246,7 +251,7 @@ const SessionNotes = (
   };
 
   if (error) {
-    <h1>Tapahtui virhe :(</h1>;
+    <h1>Error happened :(</h1>;
   }
 
   const formattedText = useMemo(() => {
