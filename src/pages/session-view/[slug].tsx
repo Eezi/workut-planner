@@ -1,8 +1,3 @@
-
-🌼   daisyUI 4.6.1
-├─ ✔︎ 4 themes added		https://daisyui.com/docs/themes
-╰─ ★ Star daisyUI on GitHub	https://github.com/saadeghi/daisyui
-
 import { trpc } from "../../utils/trpc";
 import { z } from "zod";
 import { PageHead } from "../../components/Head";

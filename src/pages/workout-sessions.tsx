@@ -156,12 +156,10 @@ const SessionCard = ({ id, done, workout }: Session) => {
     });
   };
 
-  const { title, description, intensity } = workout;
-
   return (
     <div
       key={id}
-      className="flex items-center gap-6 rounded-xl p-3"
+      className="flex items-center gap-6 rounded-xl px-3 py-2"
       style={{ border: "1px solid #2c2d3c" }}
     >
       <div className="grid place-content-center">
@@ -175,7 +173,7 @@ const SessionCard = ({ id, done, workout }: Session) => {
 
       <div className="flex w-full flex-col">
         <div className="flex items-center justify-between">
-          <div className="font-semibold">
+          <div className="text-sm">
             <Link
               href={{
                 pathname: "/session-view/[slug]",
@@ -210,11 +208,11 @@ const SessionCardContainer = ({
       {gropedSessions?.map((dayKey) => (
         <div key={dayKey}>
           <div className="mb-3 flex items-end gap-1">
-            <span className="mr-1 text-3xl font-bold">
+            <span className="mr-1 text-2xl font-bold">
               {dayjs(dayKey).format("D")}
             </span>
             <div className="grow">
-              <span className="text-xl font-semibold">
+              <span className="text-lg font-semibold">
                 {dayjs(dayKey).format("dddd")}
               </span>
             </div>
