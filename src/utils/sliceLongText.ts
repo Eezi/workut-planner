@@ -1,4 +1,4 @@
-const DEFAULT_SLICE = 50;
+const DEFAULT_SLICE = 40;
 
 export const sliceLongText = (text: string, sliceNumber = DEFAULT_SLICE): string => {
   if (!text) return '';

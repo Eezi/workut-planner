@@ -116,7 +116,7 @@ const LoggedInNav = () => {
 
   return (
     <>
-      <div className="hidden gap-0 font-semibold md:flex md:gap-7">
+      <div className="ml-auto hidden gap-0 font-semibold md:flex md:gap-7">
         {pages.map(({ link, name }) => {
           const isActive = pathname === link;
           return (
@@ -152,14 +152,8 @@ const LoggedInNav = () => {
 };
 
 export const Navbar = () => {
-  return null;
   return (
-    <div data-theme="nightforest" className="navbar px-0">
-      <div className="flex-1">
-        <Link href="/" className="text-lg normal-case text-slate-400">
-          Workout App
-        </Link>
-      </div>
+    <div data-theme="nightforest" className="navbar flex-row-reverse px-0">
       <LoggedInNav />
     </div>
   );

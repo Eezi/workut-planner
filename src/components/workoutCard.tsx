@@ -50,19 +50,20 @@ const AddSessionModalContent = ({
     >
       ✕
     </label>
-    <div>
+    <div className="min-h-[30rem]">
       <h3 className="mb-3 text-lg font-bold">Select day for your session</h3>
-      <div className="flex items-start gap-3">
+      <div>
         <DateInput setDate={setDate} date={date} />
-        <div>
-          <label
-            onClick={handleSubmit}
-            htmlFor="my-modal-6"
-            className="btn-primary btn btn-sm md:btn"
-          >
-            Create session
-          </label>
-        </div>
+      </div>
+
+      <div className="mt-5">
+        <label
+          onClick={handleSubmit}
+          htmlFor="my-modal-6"
+          className="btn-primary btn"
+        >
+          Create session
+        </label>
       </div>
     </div>
   </div>
@@ -163,11 +164,7 @@ export const WorkoutCard = ({
 
   return (
     <>
-      <Modal
-        className="min-h-[30rem]"
-        open={open}
-        onClose={() => setOpen(false)}
-      >
+      <Modal open={open} onClose={() => setOpen(false)}>
         <AddSessionModalContent
           setDate={setDate}
           date={date}
