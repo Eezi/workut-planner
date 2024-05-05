@@ -152,6 +152,7 @@ const LoggedInNav = () => {
 };
 
 export const Navbar = () => {
+  return null;
   return (
     <div data-theme="nightforest" className="navbar px-0">
       <div className="flex-1">

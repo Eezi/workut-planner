@@ -7,7 +7,8 @@ import PageTransition from "../../components/PageTransition";
 import { DateInput } from "../../components/DateInput";
 import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
-import type { Workout, Rep, WorkoutSession } from "@prisma/client";
+import type { Workout, Rep } from "@prisma/client";
+import { SessionProps } from "../statistics";
 import { SessionCard } from "../statistics";
 
 type Props = {
@@ -276,7 +277,7 @@ const SessionNotes = (
             />
           </div>
           <div className="mt-5">
-            <SessionCard session={latestSession as WorkoutSession} />
+            <SessionCard session={latestSession as SessionProps} />
           </div>
           <h5 className="my-4 text-xl font-bold">Reps</h5>
           <RepsTable reps={reps} workout={session?.workout} setReps={setReps} />

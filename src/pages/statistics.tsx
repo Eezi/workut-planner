@@ -54,11 +54,9 @@ const Tabs = ({
   );
 };
 
-export const SessionCard = ({
-  session,
-}: {
-  session: WorkoutSession & { workout: Workout; reps: Rep[] };
-}) => {
+export type SessionProps = WorkoutSession & { workout: Workout; reps: Rep[] };
+
+export const SessionCard = ({ session }: { session: SessionProps }) => {
   const { workout, reps, done, doneAt, id } = session;
   const doneReps = reps?.filter(({ done: repDone }) => repDone);
 

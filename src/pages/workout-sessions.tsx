@@ -159,8 +159,8 @@ const SessionCard = ({ id, done, workout }: Session) => {
   return (
     <div
       key={id}
-      className="flex items-center gap-6 rounded-xl px-3 py-2"
-      style={{ border: "1px solid #2c2d3c" }}
+      className="flex items-center gap-3 rounded-xl px-3 py-2"
+      // style={{ border: "1px solid #2c2d3c" }}
     >
       <div className="grid place-content-center">
         <input
@@ -173,7 +173,8 @@ const SessionCard = ({ id, done, workout }: Session) => {
 
       <div className="flex w-full flex-col">
         <div className="flex items-center justify-between">
-          <div className="text-sm">
+          <div className="flex items-center gap-3 text-sm font-medium">
+            <IntesityBadge isSmall intensity={workout?.intensity} />
             <Link
               href={{
                 pathname: "/session-view/[slug]",
@@ -184,7 +185,6 @@ const SessionCard = ({ id, done, workout }: Session) => {
             </Link>
           </div>
           <div className="flex flex-col justify-between">
-            <IntesityBadge isSmall intensity={workout?.intensity} />
             <ActionList handleRemove={handleRemove} sessionId={id} />
           </div>
         </div>
@@ -217,7 +217,7 @@ const SessionCardContainer = ({
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
             {nextSevenDaysSessions[dayKey]?.map((session) => (
               <SessionCard key={session.id} {...session} />
             ))}
