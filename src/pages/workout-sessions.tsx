@@ -264,7 +264,7 @@ const WorkoutSessions: NextPage = (
       {isLoading ? (
         <div>Fetching sessions...</div>
       ) : (
-        <div className="flex flex-col gap-6 px-4 py-1">
+        <div className="flex flex-col gap-6">
           <PageTitle title="Upcoming sessions" />
           <div className="mb-16 flex flex-col gap-10">
             <SessionCardContainer

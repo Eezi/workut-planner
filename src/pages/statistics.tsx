@@ -71,7 +71,7 @@ export const SessionCard = ({ session }: { session: SessionProps }) => {
   }; */
 
   return (
-    <div className="rounded-md border border-slate-800 p-2 px-3">
+    <div className="rounded-md border border-slate-800">
       <div className="flex items-center gap-4 ">
         <input
           type="checkbox"
@@ -154,7 +154,7 @@ const Statistics = (
       {isLoading ? (
         <div>Fetching workouts...</div>
       ) : (
-        <div className="mb-20 px-5">
+        <div className="mb-20">
           <div className="mb-4">
             <PageTitle title="Number of sessions per workout" />
           </div>
