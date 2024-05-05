@@ -71,7 +71,7 @@ export const SessionCard = ({ session }: { session: SessionProps }) => {
   }; */
 
   return (
-    <div className="rounded-md border border-slate-800">
+    <div className="p- rounded-md border border-slate-800 p-3">
       <div className="flex items-center gap-4 ">
         <input
           type="checkbox"

@@ -215,7 +215,9 @@ const SessionNotes = (
   const [reps, setReps] = useState<Rep[]>([]);
   const editSession = trpc.workoutSession.editSession.useMutation();
   const { data: latestSession } =
-    trpc.workoutSession.fetchLatestDoneSession.useQuery();
+    trpc.workoutSession.fetchLatestDoneSession.useQuery({
+      workoutId: session?.workoutId,
+    });
   const createRep = trpc.rep.createRep.useMutation({
     onSuccess: () => {
       refetch();
@@ -276,9 +278,11 @@ const SessionNotes = (
               }}
             />
           </div>
-          <div className="mt-5">
-            <SessionCard session={latestSession as SessionProps} />
-          </div>
+          {latestSession && (
+            <div className="mt-5">
+              <SessionCard session={latestSession as SessionProps} />
+            </div>
+          )}
           <h5 className="my-4 text-xl font-bold">Reps</h5>
           <RepsTable reps={reps} workout={session?.workout} setReps={setReps} />
           {/*<div className="grid gap-4 pb-5">

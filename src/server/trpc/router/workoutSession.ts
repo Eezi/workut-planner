@@ -244,20 +244,27 @@ export const workoutSessionRouter = router({
       }
     }),
 
-  fetchLatestDoneSession: protectedProcedure.query(async ({ ctx, input }) => {
-    try {
-      return await ctx.prisma.workoutSession.findFirst({
-        where: { userId: ctx.session.user.id, done: true },
-        include: {
-          workout: true,
-          reps: true,
-        },
-        orderBy: {
-          doneAt: "desc",
-        },
-      });
-    } catch (error) {
-      console.log("[fetchLatestDoneSession]: Error", error);
-    }
-  }),
+  fetchLatestDoneSession: protectedProcedure
+    .input(
+      z.object({
+        workoutId: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      console.log('inoput', input)
+      try {
+        return await ctx.prisma.workoutSession.findFirst({
+          where: { userId: ctx.session.user.id,  done: true, workoutId: input.workoutId },
+          include: {
+            workout: true,
+            reps: true,
+          },
+          orderBy: {
+            doneAt: "desc",
+          },
+        });
+      } catch (error) {
+        console.log("[fetchLatestDoneSession]: Error", error);
+      }
+    }),
 });
