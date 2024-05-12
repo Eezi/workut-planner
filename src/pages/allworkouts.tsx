@@ -31,7 +31,7 @@ const AllWorkouts: NextPage = (
                 pathname: "/create-workout/[slug]",
                 query: { slug: "create" },
               }}
-              className="btn-primary btn btn-sm md:btn"
+              className="btn-neutral btn md:btn"
             >
               Create workout
             </Link>
