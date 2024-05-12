@@ -183,10 +183,12 @@ export const WorkoutCard = ({
         data-theme="nightforest"
         className="card-border w-full rounded-md bg-neutral shadow-xl"
       >
-        <div className="p-4">
-          <div className="flex gap-2">
+        <div className="p-3">
+          <div className="flex gap-3">
             <IntesityBadge isSmall intensity={intensity} />
-            <h2 className="text-white md:text-xl">{sliceLongText(title)}</h2>
+            <h2 className="text-sm font-medium text-white">
+              {sliceLongText(title)}
+            </h2>
             <div className={dropdownClassName}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
