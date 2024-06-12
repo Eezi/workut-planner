@@ -4,13 +4,15 @@
 
 :root {
   --main-color: #000212;
+  --main-bg: #0e1217;
 }
 
-html, body {
+html,
+body {
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--main-color) !important;
+  background-color: var(--main-bg) !important;
 }
 
-.btn{
+.btn {
   text-transform: none;
 }

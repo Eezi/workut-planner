@@ -31,16 +31,20 @@ interface Props {
   isSmall?: boolean;
 }
 
-const AddSessionModalContent = ({
+export const AddSessionModalContent = ({
   setDate,
   date,
   handleSubmit,
   setOpen,
+  workouts,
+  setSelectedWorkoutId,
 }: {
   setDate: React.Dispatch<React.SetStateAction<Date>>;
   date: Date;
   handleSubmit: () => void;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  workouts?: Workout[];
+  setSelectedWorkoutId?: React.Dispatch<React.SetStateAction<string | null>>;
 }) => (
   <div>
     <label
@@ -55,6 +59,24 @@ const AddSessionModalContent = ({
       <div>
         <DateInput setDate={setDate} date={date} />
       </div>
+      {workouts && (
+        <div className="mt-4">
+          <select
+            onChange={(event) => {
+              if (typeof setSelectedWorkoutId === "function") {
+                setSelectedWorkoutId(event?.target.value);
+              }
+            }}
+            className="select-bordered select w-full max-w-xs"
+          >
+            {workouts?.map(({ title, id }) => (
+              <option key={id} value={id}>
+                {title}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="mt-5">
         <label

@@ -12,6 +12,7 @@ type Props = {
   className?: string;
 };
 
+// TODO: Tähän vois lisätä workout selectin jos propsien avulla?
 export const Modal = ({
   children,
   open,

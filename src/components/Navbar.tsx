@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { trpc } from "../utils/trpc";
+import { Modal } from "./AddSessionModal";
+import { AddSessionModalContent } from "./workoutCard";
+import { useState } from "react";
 
 const pages = [
   {
@@ -160,28 +164,107 @@ export const Navbar = () => {
 };
 
 export const BottomNavBar = () => {
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date>(new Date());
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState<string | null>(
+    null
+  );
   const { data: sessionData } = useSession();
+  const { data: workouts } = trpc.workout.getAllWorkouts.useQuery();
   const pathname = usePathname();
+  const utils = trpc.useContext();
+  const postWorkoutSession = trpc.workoutSession.postWorkoutSession.useMutation(
+    {
+      onMutate: () => {
+        utils.workoutSession.getAllWorkoutSessions.cancel();
+        const optimisticUpdate =
+          utils.workoutSession.getAllWorkoutSessions.getData();
+
+        if (optimisticUpdate) {
+          utils.workoutSession.getAllWorkoutSessions.setData(
+            undefined,
+            optimisticUpdate
+          );
+        }
+      },
+      onSettled: () => {
+        utils.workoutSession.getAllWorkoutSessions.invalidate();
+      },
+    }
+  );
+
+  const handleSubmit = () => {
+    if (!selectedWorkoutId || !sessionData?.user) return;
+    postWorkoutSession.mutate({
+      workoutId: selectedWorkoutId,
+      userId: sessionData?.user?.id as string,
+      date: date,
+      done: false,
+    });
+    setOpen(false);
+  };
   if (!sessionData) return null;
 
+  console.log("open", selectedWorkoutId);
   return (
-    <div
-      data-theme="nightforest"
-      className="btm-nav fixed bottom-0 h-16 p-2 pb-5 md:hidden"
-    >
-      {pages.map(({ name, link, icon }) => {
-        const isActive = pathname === link;
-        return (
-          <Link
-            key={link}
-            className={isActive ? "text-primary" : "text-white"}
-            href={link}
+    <>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <AddSessionModalContent
+          workouts={workouts}
+          setDate={setDate}
+          date={date}
+          setOpen={setOpen}
+          handleSubmit={handleSubmit}
+          setSelectedWorkoutId={setSelectedWorkoutId}
+        />
+      </Modal>
+
+      <div
+        data-theme="nightforest"
+        style={{
+          boxShadow: "7px 55px 126px -46px rgba(29,36,46,1)",
+          borderBottom: "1px solid #080b0e",
+          borderRight: "1px solid #080b0e",
+          borderLeft: "1px solid #080b0e",
+        }}
+        className="late-700 btm-nav fixed  bottom-3 h-16 rounded-xl border-t p-2 md:hidden"
+      >
+        {pages.map(({ name, link, icon }) => {
+          const isActive = pathname === link;
+          return (
+            <Link
+              key={link}
+              className={isActive ? "text-primary" : "text-slate-300"}
+              href={link}
+            >
+              {icon}
+              <span className="btm-nav-label text-xs">{name}</span>
+            </Link>
+          );
+        })}
+
+        <div>
+          <button
+            onClick={() => setOpen(true)}
+            className="late-700 btn-outline btn btn-square btn-xs border"
           >
-            {icon}
-            <span className="btm-nav-label text-xs">{name}</span>
-          </Link>
-        );
-      })}
-    </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="late-700 h-4 w-4 "
+              viewBox="0 0 512 512"
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="32"
+                d="M256 112v288m144-144H112"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </>
   );
 };
