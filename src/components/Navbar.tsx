@@ -243,27 +243,29 @@ export const BottomNavBar = () => {
           );
         })}
 
-        <div>
-          <button
-            onClick={() => setOpen(true)}
-            className="late-700 btn-outline btn btn-square btn-xs border"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="late-700 h-4 w-4 "
-              viewBox="0 0 512 512"
+        {workouts && workouts?.length > 0 && (
+          <div>
+            <button
+              onClick={() => setOpen(true)}
+              className="late-700 btn-outline btn btn-square btn-xs border"
             >
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="32"
-                d="M256 112v288m144-144H112"
-              />
-            </svg>
-          </button>
-        </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="late-700 h-4 w-4 "
+                viewBox="0 0 512 512"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="32"
+                  d="M256 112v288m144-144H112"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
