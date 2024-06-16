@@ -227,7 +227,7 @@ export const BottomNavBar = () => {
           borderRight: "1px solid #080b0e",
           borderLeft: "1px solid #080b0e",
         }}
-        className="late-700 btm-nav fixed  bottom-3 h-16 rounded-xl border-t p-2 md:hidden"
+        className="late-700 btm-nav fixed bottom-0 h-16 rounded-xl border-t p-2 md:hidden"
       >
         {pages.map(({ name, link, icon }) => {
           const isActive = pathname === link;

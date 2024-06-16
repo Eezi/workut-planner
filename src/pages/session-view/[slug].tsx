@@ -54,13 +54,6 @@ const RepCheckbox = (props: Props) => {
     validateAmount.safeParse(newSecAmount);
     validateAmount.safeParse(newWeightAmount);
     validateAmount.safeParse(newRepsAmount);
-    editRep.mutate({
-      id,
-      done: checked,
-      secoundsAmount: newSecAmount,
-      weightAmount: newWeightAmount,
-      repsAmount: newRepsAmount,
-    });
     setReps((prev) =>
       prev.map((rep) => {
         if (rep.id === id) {
@@ -75,12 +68,19 @@ const RepCheckbox = (props: Props) => {
         return rep;
       })
     );
+    editRep.mutate({
+      id,
+      done: checked,
+      secoundsAmount: newSecAmount,
+      weightAmount: newWeightAmount,
+      repsAmount: newRepsAmount,
+    });
   };
   const handleRemoveRep = () => {
+    setReps((prev) => prev.filter((rep) => rep.id !== id));
     removeRep.mutate({
       id,
     });
-    setReps((prev) => prev.filter((rep) => rep.id !== id));
   };
 
   const { includeSeconds, includeWeight, includeReps } = workout || {};
@@ -92,6 +92,7 @@ const RepCheckbox = (props: Props) => {
           <input
             type="checkbox"
             checked={isDone}
+            disabled={!id}
             onChange={({ target }) => {
               setIsDone(target.checked);
               handleEditRep(target.checked);
@@ -105,6 +106,7 @@ const RepCheckbox = (props: Props) => {
           <input
             onBlur={() => handleEditRep(isDone)}
             value={weightAmount}
+            disabled={!id}
             name="weightAmount"
             onChange={({ target }) => setWeightAmount(target.value)}
             className="input-bordered input input-sm w-14 "
@@ -117,6 +119,7 @@ const RepCheckbox = (props: Props) => {
             onBlur={() => handleEditRep(isDone)}
             value={secoundsAmount}
             name="secoundsAmount"
+            disabled={!id}
             onChange={({ target }) => setSecondsAmount(target.value)}
             className="input-bordered input input-sm w-14 max-w-xs "
           />
@@ -127,6 +130,7 @@ const RepCheckbox = (props: Props) => {
           <input
             onBlur={() => handleEditRep(isDone)}
             value={repsAmount}
+            disabled={!id}
             name="repsAmount"
             onChange={({ target }) => setRepsAmount(target.value)}
             className="input-bordered input input-sm w-14 max-w-xs "
@@ -136,6 +140,7 @@ const RepCheckbox = (props: Props) => {
       <td>
         <button
           onClick={handleRemoveRep}
+          disabled={!id}
           className="btn-outline btn btn-square btn-xs"
         >
           <svg
@@ -229,6 +234,7 @@ const SessionNotes = (
       setReps(session.reps);
     }
   }, [session, isLoading]);
+  console.log("session.reps", session?.reps);
 
   const handleEditSession = (sessionId: string | undefined, date: Date) => {
     if (sessionId) {
@@ -240,6 +246,16 @@ const SessionNotes = (
   };
 
   const handleCreateRep = () => {
+    const newRep: Rep = {
+      id: "",
+      done: false,
+      workoutId: session?.workoutId as string,
+      secoundsAmount: null,
+      weightAmount: null,
+      repsAmount: null,
+      workoutSessionId: session?.id as string,
+    };
+    setReps([...reps, newRep]);
     if (session) {
       createRep.mutate({
         workoutSessionId: session.id,
@@ -247,6 +263,7 @@ const SessionNotes = (
       });
     }
   };
+  console.log("reps", reps, reps.length);
 
   if (error) {
     <h1>Error happened :(</h1>;

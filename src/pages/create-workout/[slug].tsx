@@ -140,7 +140,7 @@ const AllWorkouts: NextPage = (
     <PageTransition ref={ref}>
       <PageHead title="Create Workout" />
       <PageTitle title="Create new workout" />
-      <div className="mt-5 mb-14 flex flex-col gap-6">
+      <div className="mt-5 flex flex-col gap-6 pb-16">
         <input
           type="text"
           value={title}
