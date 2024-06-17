@@ -81,6 +81,11 @@ export const workoutRouter = router({
             workoutId: input.id,
           },
         });
+        await ctx.prisma.note.deleteMany({
+          where: {
+            workoutId: input.id,
+          },
+        });
       } catch (error) {
         console.log(error);
       }

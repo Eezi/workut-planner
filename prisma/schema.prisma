@@ -65,7 +65,7 @@ model Rep {
   secoundsAmount   Int?
   weightAmount     Int?
   repsAmount       Int?
-  WorkoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id])
+  WorkoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
   workoutSessionId String?
   workoutId        String
 }
@@ -93,7 +93,7 @@ model Note {
   workoutId        String
   userId           String
   workoutSessionId String?         @unique
-  Workout          Workout         @relation(fields: [workoutId], references: [id])
+  Workout          Workout         @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   WorkoutSession   WorkoutSession?
 }
 
@@ -106,8 +106,8 @@ model WorkoutSession {
   done      Boolean   @default(false)
   doneAt    DateTime?
   notes     String?
-  workout   Workout   @relation(fields: [workoutId], references: [id])
+  workout   Workout   @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   reps      Rep[]
-  note      Note?     @relation(fields: [noteId], references: [id])
+  note      Note?     @relation(fields: [noteId], references: [id], onDelete: Cascade)
   noteId    String?   @unique
 }
