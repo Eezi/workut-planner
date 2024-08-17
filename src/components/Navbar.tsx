@@ -1,10 +1,7 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { trpc } from "../utils/trpc";
-import { Modal } from "./AddSessionModal";
-import { AddSessionModalContent } from "./workoutCard";
-import { useState } from "react";
+import { AddSessionButton } from "./AddSessionButton";
 
 const pages = [
   {
@@ -135,6 +132,7 @@ const LoggedInNav = () => {
             </Link>
           );
         })}
+        <AddSessionButton />
       </div>
       <div className="dropdown-end dropdown ml-4">
         <label tabIndex={0} className="btn-ghost btn btn-circle avatar">
@@ -164,61 +162,12 @@ export const Navbar = () => {
 };
 
 export const BottomNavBar = () => {
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date>(new Date());
-  const [selectedWorkoutId, setSelectedWorkoutId] = useState<string | null>(
-    null
-  );
   const { data: sessionData } = useSession();
-  const { data: workouts } = trpc.workout.getAllWorkouts.useQuery();
   const pathname = usePathname();
-  const utils = trpc.useContext();
-  const postWorkoutSession = trpc.workoutSession.postWorkoutSession.useMutation(
-    {
-      onMutate: () => {
-        utils.workoutSession.getAllWorkoutSessions.cancel();
-        const optimisticUpdate =
-          utils.workoutSession.getAllWorkoutSessions.getData();
-
-        if (optimisticUpdate) {
-          utils.workoutSession.getAllWorkoutSessions.setData(
-            undefined,
-            optimisticUpdate
-          );
-        }
-      },
-      onSettled: () => {
-        utils.workoutSession.getAllWorkoutSessions.invalidate();
-      },
-    }
-  );
-
-  const handleSubmit = () => {
-    if (!selectedWorkoutId || !sessionData?.user) return;
-    postWorkoutSession.mutate({
-      workoutId: selectedWorkoutId,
-      userId: sessionData?.user?.id as string,
-      date: date,
-      done: false,
-    });
-    setOpen(false);
-  };
   if (!sessionData) return null;
 
-  console.log("open", selectedWorkoutId);
   return (
     <>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <AddSessionModalContent
-          workouts={workouts}
-          setDate={setDate}
-          date={date}
-          setOpen={setOpen}
-          handleSubmit={handleSubmit}
-          setSelectedWorkoutId={setSelectedWorkoutId}
-        />
-      </Modal>
-
       <div
         data-theme="nightforest"
         style={{
@@ -242,30 +191,7 @@ export const BottomNavBar = () => {
             </Link>
           );
         })}
-
-        {workouts && workouts?.length > 0 && (
-          <div>
-            <button
-              onClick={() => setOpen(true)}
-              className="late-700 btn-outline btn btn-square btn-xs border"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="late-700 h-4 w-4 "
-                viewBox="0 0 512 512"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="32"
-                  d="M256 112v288m144-144H112"
-                />
-              </svg>
-            </button>
-          </div>
-        )}
+        <AddSessionButton />
       </div>
     </>
   );

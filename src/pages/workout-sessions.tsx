@@ -203,26 +203,40 @@ const SessionCardContainer = ({
 }: {
   nextSevenDaysSessions: GroupedData;
 }) => {
-  const gropedSessions = Object.keys(nextSevenDaysSessions);
+  const groupedSessions = Object.keys(nextSevenDaysSessions);
+  console.log("nextSevenDaysSessions", nextSevenDaysSessions);
   return (
     <>
-      {gropedSessions?.map((dayKey) => (
+      {groupedSessions?.map((dayKey, index) => (
         <div key={dayKey}>
-          <div className="mb-3 flex items-end gap-1">
-            <span className="mr-1 text-2xl font-bold">
-              {dayjs(dayKey).format("D")}
-            </span>
-            <div className="grow">
-              <span className="text-lg font-semibold">
-                {dayjs(dayKey).format("dddd")}
-              </span>
+          {index === 0 || index === groupedSessions.length - 1 ? (
+            <div className="mb-3">
+              <span className="text-2xl font-bold">{dayKey}</span>
+              <div className="flex flex-col gap-3">
+                {nextSevenDaysSessions[dayKey]?.map((session) => (
+                  <SessionCard key={session.id} {...session} />
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col gap-3">
-            {nextSevenDaysSessions[dayKey]?.map((session) => (
-              <SessionCard key={session.id} {...session} />
-            ))}
-          </div>
+          ) : (
+            <>
+              <div className="mb-3 flex items-end gap-1">
+                <span className="mr-1 text-2xl font-bold">
+                  {dayjs(dayKey).format("D")}
+                </span>
+                <div className="grow">
+                  <span className="text-lg font-semibold">
+                    {dayjs(dayKey).format("dddd")}
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-3">
+                {nextSevenDaysSessions[dayKey]?.map((session) => (
+                  <SessionCard key={session.id} {...session} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       ))}
     </>
@@ -236,11 +250,15 @@ const WorkoutSessions: NextPage = (
 ) => {
   const { data: sessions, isLoading } =
     trpc.workoutSession.getAllWorkoutSessions.useQuery();
+  console.log("sessions", sessions);
 
   const groupByNextSevenDays = (sessions: any): GroupedData => {
-    const nextSevenDays = Array.from({ length: 7 }, (_, i) =>
+    const late = "Late";
+    const upcoming = "Upcoming";
+    const sevenDays = Array.from({ length: 7 }, (_, i) =>
       dayjs().add(i, "day").format("YYYY-MM-DD")
     );
+    const nextSevenDays = [late, ...sevenDays, upcoming];
 
     const acc: GroupedData = nextSevenDays.reduce<GroupedData>((acc, date) => {
       acc[date] = [];
@@ -249,6 +267,18 @@ const WorkoutSessions: NextPage = (
 
     sessions?.forEach((item: any) => {
       const date = dayjs(item.date).format("YYYY-MM-DD");
+      const sessionIsPast = dayjs(item.date).isBefore(dayjs());
+      console.log("sessionIsPast", sessionIsPast, item);
+      if (sessionIsPast) {
+        return acc[late]?.push(item);
+      }
+      const upcomingDate = sevenDays[sevenDays.length - 1];
+      const sessionIsFarInFuture = dayjs(item.date).isAfter(upcomingDate);
+
+      if (sessionIsFarInFuture) {
+        return acc[upcoming]?.push(item);
+      }
+
       if (acc[date]) {
         acc[date]?.push(item);
       }
