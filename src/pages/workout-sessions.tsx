@@ -97,7 +97,13 @@ const ActionList = ({
   );
 };
 
-const SessionCard = ({ id, done, workout }: Session) => {
+const SessionCard = ({
+  id,
+  done,
+  workout,
+  date,
+  noDateSection,
+}: Session & { noDateSection?: boolean }) => {
   const utils = trpc.useContext();
 
   const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
@@ -176,14 +182,21 @@ const SessionCard = ({ id, done, workout }: Session) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-sm font-medium">
             <IntesityBadge isSmall intensity={workout?.intensity} />
-            <Link
-              href={{
-                pathname: "/session-view/[slug]",
-                query: { slug: id },
-              }}
-            >
-              {sliceLongText(workout?.title)}
-            </Link>
+            <div>
+              <Link
+                href={{
+                  pathname: "/session-view/[slug]",
+                  query: { slug: id },
+                }}
+              >
+                {sliceLongText(workout?.title)}
+              </Link>
+              {noDateSection && (
+                <p className="text-xs font-normal text-gray-200">
+                  {dayjs(date).format("DD.MM")}
+                </p>
+              )}
+            </div>
           </div>
           <div className="flex flex-col justify-between">
             <ActionList handleRemove={handleRemove} sessionId={id} />
@@ -214,7 +227,7 @@ const SessionCardContainer = ({
               <span className="text-2xl font-bold">{dayKey}</span>
               <div className="flex flex-col gap-3">
                 {nextSevenDaysSessions[dayKey]?.map((session) => (
-                  <SessionCard key={session.id} {...session} />
+                  <SessionCard noDateSection key={session.id} {...session} />
                 ))}
               </div>
             </div>
