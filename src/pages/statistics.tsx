@@ -9,6 +9,42 @@ import PageTransition from "../components/PageTransition";
 import { Rep, Workout, WorkoutSession } from "@prisma/client";
 import dayjs from "dayjs";
 
+export const DoneRepsTable = ({ doneReps }: { doneReps: Rep[] }) => {
+  if (!doneReps || doneReps?.length <= 0) {
+    return null;
+  }
+  return (
+    <div className="collapse-arrow join-item collapse">
+      <input type="checkbox" name="my-accordion-4" />
+      <div className="collapse-title text-sm font-medium">Session reps</div>
+      <div className="collapse-content">
+        <div className="overflow-x-auto">
+          <table className="table-xs table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Kg</th>
+                <th>Seconds</th>
+                <th>Reps</th>
+              </tr>
+            </thead>
+            <tbody>
+              {doneReps?.map((rep, index) => (
+                <tr key={rep.id}>
+                  <th>{index + 1}</th>
+                  <td>{rep?.weightAmount}</td>
+                  <td>{rep?.secoundsAmount}</td>
+                  <td>{rep?.repsAmount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 interface Props {
   timePeriod: DateValueType;
   setTimePeriod: React.Dispatch<React.SetStateAction<DateValueType>>;
@@ -81,40 +117,13 @@ export const SessionCard = ({ session }: { session: SessionProps }) => {
           className="checkbox"
         />
         <div>
-          <p className="text-lg font-medium">{workout.title}</p>
+          <p className="text-mase font-medium">{workout.title}</p>
           <span className="text-sm text-slate-400">
             {dayjs(doneAt).format("DD.MM.YYYY")}
           </span>
         </div>
       </div>
-      <div className="collapse-arrow join-item collapse border border-base-300">
-        <input type="checkbox" name="my-accordion-4" />
-        <div className="collapse-title text-sm font-medium">Session reps</div>
-        <div className="collapse-content">
-          <div className="overflow-x-auto">
-            <table className="table-xs table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Kg</th>
-                  <th>Seconds</th>
-                  <th>Reps</th>
-                </tr>
-              </thead>
-              <tbody>
-                {doneReps?.map((rep, index) => (
-                  <tr key={rep.id}>
-                    <th>{index + 1}</th>
-                    <td>{rep?.weightAmount}</td>
-                    <td>{rep?.secoundsAmount}</td>
-                    <td>{rep?.repsAmount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <DoneRepsTable doneReps={doneReps} />
     </div>
   );
 };

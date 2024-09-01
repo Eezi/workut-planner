@@ -240,7 +240,7 @@ const SessionCardContainer = ({
         <div key={dayKey}>
           {showLateOrUpcomingHeader(dayKey) ? (
             <div className="mb-3" style={{ borderBottom: "1px solid #2c2d3c" }}>
-              <span className="text-2xl font-bold">{dayKey}</span>
+              <span className="text-base font-semibold">{dayKey}</span>
               <div className="flex flex-col gap-3">
                 {nextSevenDaysSessions[dayKey]?.map((session) => (
                   <SessionCard noDateSection key={session.id} {...session} />
@@ -250,11 +250,11 @@ const SessionCardContainer = ({
           ) : (
             <>
               <div className="mb-3 flex items-end gap-1">
-                <span className="mr-1 text-2xl font-bold">
+                <span className="mr-1 text-base font-semibold">
                   {dayjs(dayKey).format("D")}
                 </span>
                 <div className="grow">
-                  <span className="text-lg font-semibold">
+                  <span className="text-base font-semibold">
                     {dayjs(dayKey).format("dddd")}
                   </span>
                 </div>
