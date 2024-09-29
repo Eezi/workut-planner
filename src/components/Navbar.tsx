@@ -9,7 +9,7 @@ const pages = [
     name: "Statics",
     icon: (
       <svg
-        className="h-5 w-5"
+        className="h-4 w-4"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -74,7 +74,7 @@ const pages = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
+        className="h-4 w-4"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -94,7 +94,7 @@ const pages = [
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
+        className="h-4 w-4"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -176,7 +176,7 @@ export const BottomNavBar = () => {
           borderRight: "1px solid #080b0e",
           borderLeft: "1px solid #080b0e",
         }}
-        className="late-700 btm-nav fixed bottom-0 h-16 rounded-xl border-t p-2 pb-4 md:hidden"
+        className="late-700 btm-nav fixed bottom-0 h-20 rounded-xl border-t px-1 pt-2 pb-5 md:hidden"
       >
         {pages.map(({ name, link, icon }) => {
           const isActive = pathname === link;
