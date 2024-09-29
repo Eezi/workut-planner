@@ -30,7 +30,7 @@ export const Modal = ({
 
   const modalClass = cn({
     modal: true,
-    // "modal-bottom": true,
+    //  "modal-bottom": true,
     "sm:modal-middle": true,
     "modal-open": open,
     [className]: className,

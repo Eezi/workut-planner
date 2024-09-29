@@ -1,15 +1,14 @@
 import { trpc } from "../../utils/trpc";
 import { z } from "zod";
 import { PageHead } from "../../components/Head";
-import { PageTitle } from "../../components/PageTitle";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
 import PageTransition from "../../components/PageTransition";
 import { DateInput } from "../../components/DateInput";
 import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
 import type { Workout, Rep } from "@prisma/client";
-import { SessionProps } from "../statistics";
-import { SessionCard } from "../statistics";
+import { DoneRepsTable } from "../statistics";
 
 type Props = {
   rep: Rep & { repCount: string };
@@ -101,8 +100,8 @@ const RepCheckbox = (props: Props) => {
           />
         </label>
       </th>
-      {includeWeight && (
-        <td>
+      <td>
+        {includeWeight && (
           <input
             onBlur={() => handleEditRep(isDone)}
             value={weightAmount}
@@ -111,10 +110,10 @@ const RepCheckbox = (props: Props) => {
             onChange={({ target }) => setWeightAmount(target.value)}
             className="input-bordered input input-sm w-14 "
           />
-        </td>
-      )}
-      {includeSeconds && (
-        <td>
+        )}
+      </td>
+      <td>
+        {includeSeconds && (
           <input
             onBlur={() => handleEditRep(isDone)}
             value={secoundsAmount}
@@ -123,10 +122,10 @@ const RepCheckbox = (props: Props) => {
             onChange={({ target }) => setSecondsAmount(target.value)}
             className="input-bordered input input-sm w-14 max-w-xs "
           />
-        </td>
-      )}
-      {includeReps && (
-        <td>
+        )}
+      </td>
+      <td>
+        {includeReps && (
           <input
             onBlur={() => handleEditRep(isDone)}
             value={repsAmount}
@@ -135,8 +134,8 @@ const RepCheckbox = (props: Props) => {
             onChange={({ target }) => setRepsAmount(target.value)}
             className="input-bordered input input-sm w-14 max-w-xs "
           />
-        </td>
-      )}
+        )}
+      </td>
       <td>
         <button
           onClick={handleRemoveRep}
@@ -217,6 +216,7 @@ const SessionNotes = (
   } = trpc.workoutSession.sessionById.useQuery({
     id: slug as string,
   });
+  //TODO: Lisää seding field to reps when user remove or adds rep
   const [reps, setReps] = useState<Rep[]>([]);
   const editSession = trpc.workoutSession.editSession.useMutation();
   const { data: latestSession } =
@@ -228,13 +228,13 @@ const SessionNotes = (
       refetch();
     },
   });
+  const doneReps = latestSession?.reps?.filter(({ done: repDone }) => repDone);
 
   useEffect(() => {
     if (!isLoading && session && session?.reps?.length > 0) {
       setReps(session.reps);
     }
   }, [session, isLoading]);
-  console.log("session.reps", session?.reps);
 
   const handleEditSession = (sessionId: string | undefined, date: Date) => {
     if (sessionId) {
@@ -263,7 +263,6 @@ const SessionNotes = (
       });
     }
   };
-  console.log("reps", reps, reps.length);
 
   if (error) {
     <h1>Error happened :(</h1>;
@@ -276,13 +275,18 @@ const SessionNotes = (
   return (
     <PageTransition ref={ref}>
       <PageHead title="Session" />
-      <PageTitle title="Session view" />
       {isLoading ? (
         <div>Fetching session...</div>
       ) : (
         <div className="mb-16">
-          <h1 className="mb-4 text-2xl font-bold">{session?.workout?.title}</h1>
-          <p className="mb-6 max-w-[45ch] text-xl">
+          <h1 className="mb-2 text-xl font-bold">{session?.workout?.title}</h1>
+          {latestSession && (
+            <div className="text-slate-400">
+              Last done - {dayjs(latestSession?.doneAt).format("DD.MM.YYYY")}
+            </div>
+          )}
+          <DoneRepsTable doneReps={doneReps as Rep[]} />
+          <p className="my-3  max-w-[45ch] text-xl">
             <div
               dangerouslySetInnerHTML={{ __html: formattedText as string }}
             />
@@ -295,12 +299,7 @@ const SessionNotes = (
               }}
             />
           </div>
-          {latestSession && (
-            <div className="mt-5">
-              <SessionCard session={latestSession as SessionProps} />
-            </div>
-          )}
-          <h5 className="my-4 text-xl font-bold">Reps</h5>
+          <h5 className="my-4 text-base font-bold">Reps</h5>
           <RepsTable reps={reps} workout={session?.workout} setReps={setReps} />
           {/*<div className="grid gap-4 pb-5">
             {reps.map((rep, index) => (

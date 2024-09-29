@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { protectedProcedure, router } from "../trpc";
 import { Workout } from "@prisma/client";
 
 const generateReps = (workout: Workout | null, sessionId: string) => {
@@ -110,18 +110,18 @@ export const workoutSessionRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.prisma.workoutSession.delete({
-          where: {
-            id: input.id,
-          },
-        });
         await ctx.prisma.rep.deleteMany({
           where: {
             workoutSessionId: input.id,
           },
         });
+        await ctx.prisma.workoutSession.delete({
+          where: {
+            id: input.id,
+          },
+        });
       } catch (error) {
-        console.log(error);
+        console.warn("Error [removeSession]", error);
       }
     }),
 
@@ -251,10 +251,13 @@ export const workoutSessionRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      console.log('inoput', input)
       try {
         return await ctx.prisma.workoutSession.findFirst({
-          where: { userId: ctx.session.user.id,  done: true, workoutId: input.workoutId },
+          where: {
+            userId: ctx.session.user.id,
+            done: true,
+            workoutId: input.workoutId,
+          },
           include: {
             workout: true,
             reps: true,

@@ -46,28 +46,30 @@ export const AddSessionModalContent = ({
   workouts?: Workout[];
   setSelectedWorkoutId?: React.Dispatch<React.SetStateAction<string | null>>;
 }) => (
-  <div>
+  <div style={{ width: `max('320px', '100%')` }}>
     <label
       htmlFor="my-modal-6"
-      className="btn btn-sm btn-circle absolute right-2 top-2"
+      className="btn btn-sm btn-circle absolute right-1 top-1"
       onClick={() => setOpen(false)}
     >
       ✕
     </label>
-    <div className="min-h-[34rem]">
-      <h3 className="mb-3 text-lg font-bold">Select day for your session</h3>
+    <div className="min-h-[34rem] px-3">
+      <h3 className="mb-3 mt-2 text-lg font-bold">
+        Select day and workout for session
+      </h3>
       <div>
         <DateInput setDate={setDate} date={date} />
       </div>
       {workouts && (
-        <div className="mt-4">
+        <div className="mt-6">
           <select
             onChange={(event) => {
               if (typeof setSelectedWorkoutId === "function") {
                 setSelectedWorkoutId(event?.target.value);
               }
             }}
-            className="select-bordered select w-full max-w-xs"
+            className="select-bordered select w-full"
           >
             {workouts?.map(({ title, id }) => (
               <option key={id} value={id}>
@@ -78,7 +80,7 @@ export const AddSessionModalContent = ({
         </div>
       )}
 
-      <div className="mt-5">
+      <div className="mt-6">
         <label
           onClick={handleSubmit}
           htmlFor="my-modal-6"
