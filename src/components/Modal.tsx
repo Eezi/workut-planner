@@ -28,8 +28,8 @@ export const WorkoutModalContent = ({
   description,
   intensity,
 }: Props) => (
-  <div>
-    <p className="mt-2 mb-2 text-xl font-semibold leading-none tracking-tighter text-white lg:text-3xl">
+  <div className="px-3">
+    <p className="mb-3 text-xl font-semibold leading-none tracking-tighter text-white lg:text-2xl">
       {title}
     </p>
     <IntesityBadge intensity={intensity} />

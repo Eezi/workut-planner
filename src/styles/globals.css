@@ -11,6 +11,7 @@ html,
 body {
   -webkit-tap-highlight-color: transparent;
   background-color: var(--main-bg) !important;
+  min-height: 100vh;
 }
 
 .btn {

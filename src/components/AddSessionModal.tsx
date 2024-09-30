@@ -12,7 +12,6 @@ type Props = {
   className?: string;
 };
 
-// TODO: Tähän vois lisätä workout selectin jos propsien avulla?
 export const Modal = ({
   children,
   open,
@@ -31,7 +30,7 @@ export const Modal = ({
   const modalClass = cn({
     modal: true,
     //  "modal-bottom": true,
-    "sm:modal-middle": true,
+    // "sm:modal-middle": true,
     "modal-open": open,
     [className]: className,
   });

@@ -2,16 +2,19 @@ import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { Modal } from "./AddSessionModal";
 import { AddSessionModalContent } from "./workoutCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const AddSessionButton = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
-  const [selectedWorkoutId, setSelectedWorkoutId] = useState<string | null>(
-    null
-  );
+  const { data: workouts, isLoading } = trpc.workout.getAllWorkouts.useQuery();
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState<string>("");
+  useEffect(() => {
+    if (workouts && workouts?.length > 0 && !isLoading) {
+      setSelectedWorkoutId(workouts?.[0]?.id || "");
+    }
+  }, [workouts, isLoading]);
   const { data: sessionData } = useSession();
-  const { data: workouts } = trpc.workout.getAllWorkouts.useQuery();
   const utils = trpc.useContext();
   const postWorkoutSession = trpc.workoutSession.postWorkoutSession.useMutation(
     {
@@ -58,6 +61,7 @@ export const AddSessionButton = () => {
           setOpen={setOpen}
           handleSubmit={handleSubmit}
           setSelectedWorkoutId={setSelectedWorkoutId}
+          selectedWorkoutId={selectedWorkoutId}
         />
       </Modal>
 
@@ -74,9 +78,9 @@ export const AddSessionButton = () => {
             <path
               fill="none"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="32"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="32"
               d="M256 112v288m144-144H112"
             />
           </svg>

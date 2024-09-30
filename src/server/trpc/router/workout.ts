@@ -70,16 +70,6 @@ export const workoutRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.prisma.workoutSession.deleteMany({
-          where: {
-            workoutId: input.id,
-          },
-        });
-        await ctx.prisma.note.deleteMany({
-          where: {
-            workoutId: input.id,
-          },
-        });
         await ctx.prisma.workout.delete({
           where: {
             id: input.id,

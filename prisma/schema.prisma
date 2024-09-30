@@ -31,6 +31,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -39,6 +40,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -68,6 +71,8 @@ model Rep {
   WorkoutSession   WorkoutSession? @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
   workoutSessionId String?
   workoutId        String
+
+  @@index([workoutSessionId])
 }
 
 model Workout {
@@ -95,6 +100,8 @@ model Note {
   workoutSessionId String?         @unique
   Workout          Workout         @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   WorkoutSession   WorkoutSession?
+
+  @@index([workoutId])
 }
 
 model WorkoutSession {
@@ -110,4 +117,6 @@ model WorkoutSession {
   reps      Rep[]
   note      Note?     @relation(fields: [noteId], references: [id], onDelete: Cascade)
   noteId    String?   @unique
+
+  @@index([workoutId])
 }

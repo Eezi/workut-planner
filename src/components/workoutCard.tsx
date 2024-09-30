@@ -38,13 +38,15 @@ export const AddSessionModalContent = ({
   setOpen,
   workouts,
   setSelectedWorkoutId,
+  selectedWorkoutId,
 }: {
   setDate: React.Dispatch<React.SetStateAction<Date>>;
   date: Date;
   handleSubmit: () => void;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   workouts?: Workout[];
-  setSelectedWorkoutId?: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedWorkoutId?: React.Dispatch<React.SetStateAction<string>>;
+  selectedWorkoutId?: string;
 }) => (
   <div style={{ width: `max('320px', '100%')` }}>
     <label
@@ -64,6 +66,7 @@ export const AddSessionModalContent = ({
       {workouts && (
         <div className="mt-6">
           <select
+            defaultValue={selectedWorkoutId}
             onChange={(event) => {
               if (typeof setSelectedWorkoutId === "function") {
                 setSelectedWorkoutId(event?.target.value);
@@ -107,7 +110,7 @@ export const IntesityBadge = ({ intensity, isSmall }: Props) => (
             fill={colors.get(intensity)}
             fillRule="evenodd"
             d="m6 15.235l6 3.333l6-3.333v-6.47l-6-3.333l-6 3.333v6.47ZM12 2L3 7v10l9 5l9-5V7l-9-5Z"
-            clip-rule="evenodd"
+            clipRule="evenodd"
           />
         </svg>
       </div>
@@ -183,7 +186,7 @@ export const WorkoutCard = ({
     dropdown: true,
     "dropdown-left": true,
     "dropdown-end": true,
-    "ml-auto": true,
+    // "ml-auto": true,
   });
 
   return (
@@ -208,11 +211,13 @@ export const WorkoutCard = ({
         className="card-border w-full rounded-md bg-neutral shadow-xl"
       >
         <div className="p-3">
-          <div className="flex gap-3">
-            <IntesityBadge isSmall intensity={intensity} />
-            <h2 className="text-sm font-medium text-white">
-              {sliceLongText(title)}
-            </h2>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <IntesityBadge isSmall intensity={intensity} />
+              <h2 className="text-sm font-medium text-white">
+                {sliceLongText(title)}
+              </h2>
+            </div>
             <div className={dropdownClassName}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -230,7 +235,12 @@ export const WorkoutCard = ({
                 tabIndex={0}
                 className="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
               >
-                <li onClick={() => setOpen(true)}>
+                <li
+                  onClick={() => {
+                    setOpen(true);
+                    setOpenWorkout(false);
+                  }}
+                >
                   <a>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
