@@ -196,7 +196,7 @@ const SessionCard = ({
               </Link>
               {noDateSection && (
                 <p className="text-xs font-normal text-slate-400">
-                  {dayjs(date).format("DD.MM")}
+                  {dayjs(date).format("DD.MM.")}
                 </p>
               )}
             </div>

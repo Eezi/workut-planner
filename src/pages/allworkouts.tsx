@@ -36,7 +36,7 @@ const AllWorkouts: NextPage = (
               Create workout
             </Link>
           </div>
-          <div className="mb-20 flex flex-col gap-5">
+          <div className="mb-20 flex min-h-[60vh]  flex-col gap-5">
             {workouts?.map((workout) => {
               return (
                 <WorkoutCard key={workout.id} {...workout} refetch={refetch} />
