@@ -53,11 +53,15 @@ const AllWorkouts: NextPage = (
   const {
     query: { slug },
   } = router;
-  const { data: workout, isLoading } = trpc.workout.workoutById.useQuery({
-    id: slug as string,
-  });
-
   const isCreateForm = slug === CREATE_MODE;
+  const { data: workout, isLoading } = trpc.workout.workoutById.useQuery(
+    {
+      id: slug as string,
+    },
+    {
+      enabled: !isCreateForm && !!slug,
+    }
+  );
 
   useEffect(() => {
     if (!isLoading && workout) {
