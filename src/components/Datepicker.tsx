@@ -1,6 +1,5 @@
 "use client";
-
-import * as React from "react";
+import React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 
@@ -12,10 +11,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { SelectSingleEventHandler } from "react-day-picker";
 
-export function DatePickerDemo() {
-  const [date, setDate] = React.useState<Date>();
-
+type TSetDate = (date: Date) => void;
+export type SetDate = TSetDate | React.Dispatch<React.SetStateAction<Date>>;
+export function DatePicker({
+  date,
+  setDate,
+}: {
+  date: Date;
+  setDate: SetDate;
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -34,8 +40,7 @@ export function DatePickerDemo() {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
-          initialFocus
+          onSelect={setDate as SelectSingleEventHandler | undefined}
         />
       </PopoverContent>
     </Popover>

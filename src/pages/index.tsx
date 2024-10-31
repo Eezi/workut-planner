@@ -4,8 +4,6 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { PageHead } from "../components/Head";
 import PageTransition from "../components/PageTransition";
-import { AlertDialogDemo } from "@/components/AlertDialog";
-import { DatePickerDemo } from "@/components/Datepicker";
 
 type PageProps = {};
 
@@ -22,8 +20,6 @@ const Home: NextPage = (
           <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Workout <span className="text-primary">Plan</span> App
           </h1>
-          <AlertDialogDemo />
-          <DatePickerDemo />
           {status === "loading" ? (
             <span className="loading loading-spinner text-info"></span>
           ) : (

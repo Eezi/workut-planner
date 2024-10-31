@@ -155,7 +155,7 @@ const LoggedInNav = () => {
 
 export const Navbar = () => {
   return (
-    <div data-theme="nightforest" className="navbar flex-row-reverse px-0">
+    <div className="navbar flex-row-reverse px-0">
       <LoggedInNav />
     </div>
   );
@@ -169,7 +169,6 @@ export const BottomNavBar = () => {
   return (
     <>
       <div
-        data-theme="nightforest"
         style={{
           boxShadow: "7px 55px 126px -46px rgba(29,36,46,1)",
           borderBottom: "1px solid #080b0e",

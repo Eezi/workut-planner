@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Modal } from "./AddSessionModal";
+import { Modal, ReusableAlertDialog } from "./AddSessionModal";
 import { Workout } from "../types/workout";
-import { DateInput } from "./DateInput";
 import { trpc } from "../utils/trpc";
 import { WorkoutModalContent } from "./Modal";
 import Link from "next/link";
 import cn from "classnames";
 import { sliceLongText } from "../utils/sliceLongText";
+import { DatePicker } from "./Datepicker";
 
 const colors = new Map([
   ["HARD", "#ff4b3f"],
@@ -34,35 +34,19 @@ interface Props {
 export const AddSessionModalContent = ({
   setDate,
   date,
-  handleSubmit,
-  setOpen,
   workouts,
   setSelectedWorkoutId,
   selectedWorkoutId,
 }: {
   setDate: React.Dispatch<React.SetStateAction<Date>>;
   date: Date;
-  handleSubmit: () => void;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   workouts?: Workout[];
   setSelectedWorkoutId?: React.Dispatch<React.SetStateAction<string>>;
   selectedWorkoutId?: string;
 }) => (
-  <div style={{ width: `max('320px', '100%')` }}>
-    <label
-      htmlFor="my-modal-6"
-      className="btn btn-sm btn-circle absolute right-1 top-1"
-      onClick={() => setOpen(false)}
-    >
-      ✕
-    </label>
-    <div className="min-h-[34rem] px-3">
-      <h3 className="mb-3 mt-2 text-lg font-bold">
-        Select day and workout for session
-      </h3>
-      <div>
-        <DateInput setDate={setDate} date={date} />
-      </div>
+  <div>
+    <div className="px-2">
+      <DatePicker setDate={setDate} date={date} />
       {workouts && (
         <div className="mt-6">
           <select
@@ -82,16 +66,6 @@ export const AddSessionModalContent = ({
           </select>
         </div>
       )}
-
-      <div className="mt-6">
-        <label
-          onClick={handleSubmit}
-          htmlFor="my-modal-6"
-          className="btn-primary btn"
-        >
-          Create session
-        </label>
-      </div>
     </div>
   </div>
 );
@@ -191,14 +165,17 @@ export const WorkoutCard = ({
 
   return (
     <>
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <AddSessionModalContent
-          setDate={setDate}
-          date={date}
-          setOpen={setOpen}
-          handleSubmit={handleSubmit}
-        />
-      </Modal>
+      <ReusableAlertDialog
+        title="Select day and workout for session"
+        description=""
+        cancelText="Cancel"
+        actionText="Create"
+        onConfirm={handleSubmit}
+        open={open}
+        onCancel={() => setOpen(false)}
+      >
+        <AddSessionModalContent setDate={setDate} date={date} />
+      </ReusableAlertDialog>
       <Modal open={openWorkout} onClose={() => setOpenWorkout(false)}>
         <WorkoutModalContent
           title={title}
@@ -206,10 +183,7 @@ export const WorkoutCard = ({
           intensity={intensity}
         />
       </Modal>
-      <div
-        data-theme="nightforest"
-        className="card-border w-full rounded-md bg-neutral shadow-xl"
-      >
+      <div className="w-full rounded-md bg-cardbg">
         <div className="p-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
