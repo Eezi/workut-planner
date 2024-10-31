@@ -4,7 +4,7 @@ import { PageHead } from "../../components/Head";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import PageTransition from "../../components/PageTransition";
-import { DateInput } from "../../components/DateInput";
+import { DatePicker } from "../../components/Datepicker";
 import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
 import type { Workout, Rep } from "@prisma/client";
@@ -218,6 +218,9 @@ const SessionNotes = (
   });
   //TODO: Lisää seding field to reps when user remove or adds rep
   const [reps, setReps] = useState<Rep[]>([]);
+  const [sessionDate, setSessionDate] = useState<Date>(
+    session?.date || new Date()
+  );
   const editSession = trpc.workoutSession.editSession.useMutation();
   const { data: latestSession } =
     trpc.workoutSession.fetchLatestDoneSession.useQuery({
@@ -235,15 +238,6 @@ const SessionNotes = (
       setReps(session.reps);
     }
   }, [session, isLoading]);
-
-  const handleEditSession = (sessionId: string | undefined, date: Date) => {
-    if (sessionId) {
-      editSession.mutate({
-        id: sessionId,
-        date,
-      });
-    }
-  };
 
   const handleCreateRep = () => {
     const newRep: Rep = {
@@ -272,6 +266,16 @@ const SessionNotes = (
     return session?.workout?.description?.split("\n").join("<br />");
   }, [session?.workout?.description]);
 
+  const handleUpdateDate = (newDate: Date) => {
+    setSessionDate(new Date(newDate));
+    if (session?.id) {
+      editSession.mutate({
+        id: session?.id,
+        date: new Date(newDate),
+      });
+    }
+  };
+
   return (
     <PageTransition ref={ref}>
       <PageHead title="Session" />
@@ -292,12 +296,7 @@ const SessionNotes = (
             />
           </p>
           <div className="mt-1">
-            <DateInput
-              date={session?.date || new Date()}
-              setDate={(date: Date) => {
-                handleEditSession(session?.id, date);
-              }}
-            />
+            <DatePicker date={sessionDate} setDate={handleUpdateDate} />
           </div>
           <h5 className="my-4 text-base font-bold">Reps</h5>
           <RepsTable reps={reps} workout={session?.workout} setReps={setReps} />

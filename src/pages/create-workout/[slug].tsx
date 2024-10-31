@@ -6,6 +6,17 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { PageTitle } from "../../components/PageTitle";
 import PageTransition from "../../components/PageTransition";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const CREATE_MODE = "create";
 
@@ -22,11 +33,11 @@ const UnitCheckbox = ({
     <div className="form-control mb-2">
       <label className="label cursor-pointer">
         <span className="label-text">{label}</span>
-        <input
-          type="checkbox"
+        <Checkbox
           checked={value}
-          onChange={({ currentTarget }) => onChange(currentTarget.checked)}
-          className="checkbox-primary checkbox"
+          onChange={(e) =>
+            onChange((e.currentTarget as HTMLInputElement).checked)
+          }
         />
       </label>
     </div>
@@ -145,7 +156,7 @@ const AllWorkouts: NextPage = (
       <PageHead title="Create Workout" />
       <PageTitle title="Create new workout" />
       <div className="mt-5 flex flex-col gap-6 pb-20">
-        <input
+        <Input
           type="text"
           value={title}
           placeholder="Your workout name..."
@@ -156,33 +167,37 @@ const AllWorkouts: NextPage = (
             setTitle(event.target.value);
             setErrors({ title: null });
           }}
-          className="input-bordered input-primary input"
         />
         {errors.title && <span>{errors.title}</span>}
-        <select
-          onChange={(event) => setIntensity(event.target.value)}
-          className="select-primary select"
-          value={intensity}
-        >
-          <option disabled selected>
-            Intesity of workout
-          </option>
-          <option value="HARD">Hard</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="EASY">Easy</option>
-        </select>
-        <input
-          type="number"
-          value={numberOfReps}
-          placeholder="Set number of reps"
-          required
-          minLength={1}
-          maxLength={2}
-          onChange={(event) => {
-            setNumberOfReps(event.target.value);
-          }}
-          className="input-bordered input-primary input"
-        />
+        <div className="flex gap-4">
+          <Select>
+            <SelectTrigger
+              value={intensity}
+              onChange={(event) =>
+                setIntensity((event.target as HTMLInputElement).value)
+              }
+              className="w-[180px]"
+            >
+              <SelectValue placeholder="Intesity of workout" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="HARD">Hard</SelectItem>
+              <SelectItem value="MEDIUM">Medium</SelectItem>
+              <SelectItem value="EASY">Easy</SelectItem>
+            </SelectContent>
+          </Select>
+          <Input
+            type="number"
+            value={numberOfReps}
+            placeholder="Set number of reps"
+            required
+            minLength={1}
+            maxLength={2}
+            onChange={(event) => {
+              setNumberOfReps(event.target.value);
+            }}
+          />
+        </div>
         <div>
           <UnitCheckbox
             value={includeSeconds}
@@ -201,16 +216,16 @@ const AllWorkouts: NextPage = (
           />
         </div>
 
-        <textarea
+        <Textarea
           value={description}
           rows={4}
           placeholder="Description..."
           onChange={(event) => setDescription(event.target.value)}
           className="textarea-primary textarea"
         />
-        <button onClick={handleSubmit} className="btn-success btn">
+        <Button onClick={handleSubmit}>
           {isCreateForm ? "Create" : "Update"}
-        </button>
+        </Button>
       </div>
     </PageTransition>
   );

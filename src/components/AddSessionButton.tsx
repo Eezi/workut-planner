@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
-import { Modal } from "./AddSessionModal";
+import { ReusableAlertDialog } from "./AddSessionModal";
 import { AddSessionModalContent } from "./workoutCard";
 import { useState, useEffect } from "react";
 
@@ -53,17 +53,23 @@ export const AddSessionButton = () => {
 
   return (
     <>
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <ReusableAlertDialog
+        title="Select day and workout for session"
+        description=""
+        cancelText="Cancel"
+        actionText="Create"
+        onConfirm={handleSubmit}
+        open={open}
+        onCancel={() => setOpen(false)}
+      >
         <AddSessionModalContent
           workouts={workouts}
           setDate={setDate}
           date={date}
-          setOpen={setOpen}
-          handleSubmit={handleSubmit}
           setSelectedWorkoutId={setSelectedWorkoutId}
           selectedWorkoutId={selectedWorkoutId}
         />
-      </Modal>
+      </ReusableAlertDialog>
 
       <div>
         <button
