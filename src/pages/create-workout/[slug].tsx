@@ -13,6 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -34,10 +35,8 @@ const UnitCheckbox = ({
       <label className="label cursor-pointer">
         <span className="label-text">{label}</span>
         <Checkbox
+          onCheckedChange={(newValue) => onChange(newValue)}
           checked={value}
-          onChange={(e) =>
-            onChange((e.currentTarget as HTMLInputElement).checked)
-          }
         />
       </label>
     </div>
@@ -170,21 +169,20 @@ const AllWorkouts: NextPage = (
         />
         {errors.title && <span>{errors.title}</span>}
         <div className="flex gap-4">
-          <Select>
-            <SelectTrigger
-              value={intensity}
-              onChange={(event) =>
-                setIntensity((event.target as HTMLInputElement).value)
-              }
-              className="w-[180px]"
-            >
+          <Select
+            value={intensity}
+            onValueChange={(event) => setIntensity(event)}
+          >
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Intesity of workout" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="HARD">Hard</SelectItem>
-              <SelectItem value="MEDIUM">Medium</SelectItem>
-              <SelectItem value="EASY">Easy</SelectItem>
-            </SelectContent>
+            <SelectGroup>
+              <SelectContent>
+                <SelectItem value="HARD">Hard</SelectItem>
+                <SelectItem value="MEDIUM">Medium</SelectItem>
+                <SelectItem value="EASY">Easy</SelectItem>
+              </SelectContent>
+            </SelectGroup>
           </Select>
           <Input
             type="number"
