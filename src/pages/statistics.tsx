@@ -8,6 +8,14 @@ import { SessionsTable, WorkoutSessionData } from "../components/SessionsTable";
 import PageTransition from "../components/PageTransition";
 import { Rep, Workout, WorkoutSession } from "@prisma/client";
 import dayjs from "dayjs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export const DoneRepsTable = ({ doneReps }: { doneReps: Rep[] }) => {
   if (!doneReps || doneReps?.length <= 0) {
@@ -18,28 +26,26 @@ export const DoneRepsTable = ({ doneReps }: { doneReps: Rep[] }) => {
       <input type="checkbox" name="my-accordion-4" />
       <div className="collapse-title text-sm font-medium">Session reps</div>
       <div className="collapse-content">
-        <div className="overflow-x-auto">
-          <table className="table-xs table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Kg</th>
-                <th>Seconds</th>
-                <th>Reps</th>
-              </tr>
-            </thead>
-            <tbody>
-              {doneReps?.map((rep, index) => (
-                <tr key={rep.id}>
-                  <th>{index + 1}</th>
-                  <td>{rep?.weightAmount}</td>
-                  <td>{rep?.secoundsAmount}</td>
-                  <td>{rep?.repsAmount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead></TableHead>
+              <TableHead>Kg</TableHead>
+              <TableHead>Seconds</TableHead>
+              <TableHead>Reps</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {doneReps?.map((rep, index) => (
+              <TableRow key={rep.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{rep?.weightAmount}</TableCell>
+                <TableCell>{rep?.secoundsAmount}</TableCell>
+                <TableCell>{rep?.repsAmount}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

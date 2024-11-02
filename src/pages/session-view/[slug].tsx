@@ -9,6 +9,16 @@ import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
 import type { Workout, Rep } from "@prisma/client";
 import { DoneRepsTable } from "../statistics";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type Props = {
   rep: Rep & { repCount: string };
@@ -27,22 +37,57 @@ const RepCheckbox = (props: Props) => {
   const [secoundsAmount, setSecondsAmount] = useState("");
   const [weightAmount, setWeightAmount] = useState("");
   const [repsAmount, setRepsAmount] = useState("");
+  const [initialDataSetted, setInitialDataSetted] = useState(false);
 
   useEffect(() => {
-    const { secoundsAmount, weightAmount, repsAmount, done } = rep;
-    if (done !== null) {
-      setIsDone(done);
+    if (rep && !initialDataSetted) {
+      const { secoundsAmount, weightAmount, repsAmount, done } = rep;
+      if (done !== null) {
+        setIsDone(done);
+      }
+      if (weightAmount !== null) {
+        setWeightAmount(weightAmount.toString() || "");
+      }
+      if (secoundsAmount !== null) {
+        setSecondsAmount(secoundsAmount.toString() || "");
+      }
+      if (repsAmount !== null) {
+        setRepsAmount(repsAmount.toString() || "");
+      }
+      setInitialDataSetted(true);
     }
-    if (weightAmount !== null) {
-      setWeightAmount(weightAmount.toString() || "");
-    }
-    if (secoundsAmount !== null) {
-      setSecondsAmount(secoundsAmount.toString() || "");
-    }
-    if (repsAmount !== null) {
-      setRepsAmount(repsAmount.toString() || "");
-    }
-  }, [rep]);
+  }, [rep, initialDataSetted]);
+
+  /*
+  const handleEditRep = (key, value) => {
+      // Update the field with the provided key-value pair
+      setFields((prevFields) => ({ ...prevFields, [key]: value }));
+
+      const updatedFields = {
+        ...fields,
+        [key]: value,
+        secoundsAmount: fields.secoundsAmount ? Number(fields.secoundsAmount) : undefined,
+        weightAmount: fields.weightAmount ? Number(fields.weightAmount) : undefined,
+        repsAmount: fields.repsAmount ? Number(fields.repsAmount) : undefined,
+      };
+
+      // Validate the fields
+      Object.values(updatedFields).forEach((amount) => validateAmount.safeParse(amount));
+
+      // Update the reps in the parent component state
+      setReps((prev) =>
+        prev.map((rep) => (rep.id === id ? { ...rep, done: isDone, ...updatedFields } : rep))
+      );
+
+      // Send the mutation with the updated values
+      editRep.mutate({
+        id,
+        done: isDone,
+        ...updatedFields,
+      });
+    };
+
+  */
 
   const handleEditRep = (checked: boolean) => {
     const newSecAmount =
@@ -84,63 +129,61 @@ const RepCheckbox = (props: Props) => {
 
   const { includeSeconds, includeWeight, includeReps } = workout || {};
   return (
-    <tr>
-      <th>
+    <TableRow>
+      <TableCell>
         <label className="flex gap-3">
           <p>{repCount}</p>
-          <input
-            type="checkbox"
+          <Checkbox
             checked={isDone}
             disabled={!id}
-            onChange={({ target }) => {
-              setIsDone(target.checked);
-              handleEditRep(target.checked);
+            onCheckedChange={(newValue) => {
+              setIsDone(newValue as boolean);
+              handleEditRep(newValue as boolean);
             }}
-            className="checkbox-primary checkbox"
           />
         </label>
-      </th>
-      <td>
+      </TableCell>
+      <TableCell>
         {includeWeight && (
-          <input
+          <Input
             onBlur={() => handleEditRep(isDone)}
             value={weightAmount}
             disabled={!id}
             name="weightAmount"
             onChange={({ target }) => setWeightAmount(target.value)}
-            className="input-bordered input input-sm w-14 "
+            className="h-8 w-14"
           />
         )}
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         {includeSeconds && (
-          <input
+          <Input
             onBlur={() => handleEditRep(isDone)}
             value={secoundsAmount}
             name="secoundsAmount"
             disabled={!id}
             onChange={({ target }) => setSecondsAmount(target.value)}
-            className="input-bordered input input-sm w-14 max-w-xs "
+            className="h-8 w-14 max-w-xs"
           />
         )}
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         {includeReps && (
-          <input
+          <Input
             onBlur={() => handleEditRep(isDone)}
             value={repsAmount}
             disabled={!id}
             name="repsAmount"
             onChange={({ target }) => setRepsAmount(target.value)}
-            className="input-bordered input input-sm w-14 max-w-xs "
+            className="w-14 max-w-xs "
           />
         )}
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         <button
           onClick={handleRemoveRep}
           disabled={!id}
-          className="btn-outline btn btn-square btn-xs"
+          className="rounded-md border border-solid p-[0.3rem]"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -157,8 +200,8 @@ const RepCheckbox = (props: Props) => {
             />
           </svg>
         </button>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -174,17 +217,16 @@ const RepsTable = ({
   const { includeSeconds, includeReps, includeWeight } = workout || {};
   return (
     <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
-          <tr>
-            <th></th>
-            {includeWeight && <th>Kg</th>}
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>{""}</TableHead>
+            {includeWeight && <TableHead>Kg</TableHead>}
             {includeSeconds && <th>Secounds</th>}
-            {includeReps && <th>Reps</th>}
-          </tr>
-        </thead>
-        <tbody>
+            {includeReps && <TableHead>Reps</TableHead>}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {reps.map((rep, index) => (
             <RepCheckbox
               setReps={setReps}
@@ -193,8 +235,8 @@ const RepsTable = ({
               rep={{ ...rep, repCount: `${index + 1}` }}
             />
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 };

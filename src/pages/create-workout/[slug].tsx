@@ -35,7 +35,7 @@ const UnitCheckbox = ({
       <label className="label cursor-pointer">
         <span className="label-text">{label}</span>
         <Checkbox
-          onCheckedChange={(newValue) => onChange(newValue)}
+          onCheckedChange={(newValue) => onChange(newValue as boolean)}
           checked={value}
         />
       </label>
