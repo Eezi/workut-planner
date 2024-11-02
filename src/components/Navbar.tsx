@@ -170,23 +170,22 @@ export const BottomNavBar = () => {
     <>
       <div
         style={{
-          boxShadow: "7px 55px 126px -46px rgba(29,36,46,1)",
-          borderBottom: "1px solid #080b0e",
-          borderRight: "1px solid #080b0e",
-          borderLeft: "1px solid #080b0e",
+          backgroundColor: "rgb(3 7 18)",
         }}
-        className="late-700 btm-nav fixed bottom-0 h-20 rounded-xl border-t px-1 pt-2 pb-5 md:hidden"
+        className="bg-gray-950 fixed bottom-0 left-0 right-0 flex w-full items-center justify-around px-1 pt-2 pb-5 md:hidden"
       >
         {pages.map(({ name, link, icon }) => {
           const isActive = pathname === link;
           return (
             <Link
               key={link}
-              className={isActive ? "text-primary" : "text-slate-300"}
+              className={`grid place-items-center ${
+                isActive ? "text-cyan-600" : "text-slate-400"
+              }`}
               href={link}
             >
               {icon}
-              <span className="btm-nav-label text-xs">{name}</span>
+              <span className="text-xs">{name}</span>
             </Link>
           );
         })}
