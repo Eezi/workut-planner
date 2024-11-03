@@ -219,7 +219,6 @@ const AllWorkouts: NextPage = (
           rows={4}
           placeholder="Description..."
           onChange={(event) => setDescription(event.target.value)}
-          className="textarea-primary textarea"
         />
         <Button onClick={handleSubmit}>
           {isCreateForm ? "Create" : "Update"}

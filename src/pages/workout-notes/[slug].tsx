@@ -54,12 +54,12 @@ const SessionNotes = (
               <>
                 {notes?.map((session) => (
                   <div key={session.id} className="chat chat-start">
-                    <div className="chat-header">
+                    <div className="chat-bubble">{session.description}</div>
+                    <div className="chat-footer">
                       <time className="text-xs opacity-50">
                         {dayjs(session?.createdAt).format("DD.MM.YYYY")}
                       </time>
                     </div>
-                    <div className="chat-bubble">{session.description}</div>
                   </div>
                 ))}
               </>

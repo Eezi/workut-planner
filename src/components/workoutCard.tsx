@@ -183,8 +183,8 @@ export const WorkoutCard = ({
           intensity={intensity}
         />
       </Modal>
-      <div className="w-full rounded-md bg-cardbg">
-        <div className="p-3">
+      <div className="w-full rounded-md ">
+        <div className="py-1">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <IntesityBadge isSmall intensity={intensity} />

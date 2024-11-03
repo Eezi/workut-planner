@@ -172,7 +172,7 @@ export const BottomNavBar = () => {
         style={{
           backgroundColor: "rgb(3 7 18)",
         }}
-        className="bg-gray-950 fixed bottom-0 left-0 right-0 flex w-full items-center justify-around px-1 pt-2 pb-5 md:hidden"
+        className="bg-gray-950 fixed bottom-0 left-0 right-0 flex w-full items-center justify-around px-1 pt-3 pb-6 md:hidden"
       >
         {pages.map(({ name, link, icon }) => {
           const isActive = pathname === link;

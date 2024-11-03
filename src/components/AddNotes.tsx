@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { trpc } from "../utils/trpc";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 export const AddNotes = ({
   workoutId,
@@ -30,15 +32,15 @@ export const AddNotes = ({
   };
   return (
     <div>
-      <textarea
-        className="textarea-primary textarea mb-4 w-full"
+      <Textarea
+        className="mb-4 w-full"
         placeholder="Add note"
         value={currentNote}
         onChange={({ currentTarget }) => setCurrentNote(currentTarget.value)}
-      ></textarea>
-      <button onClick={handlePostNote} className="btn-primary btn-outline btn">
+      />
+      <Button variant="outline" onClick={handlePostNote}>
         Add note
-      </button>
+      </Button>
     </div>
   );
 };

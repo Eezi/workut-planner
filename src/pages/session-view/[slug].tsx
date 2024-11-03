@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   rep: Rep & { repCount: string };
@@ -339,9 +340,9 @@ const SessionNotes = (
             ))}
             </div>*/}
           <div className="mb-6">
-            <button onClick={handleCreateRep} className="btn-neutral btn">
+            <Button variant="outline" onClick={handleCreateRep}>
               Create rep
-            </button>
+            </Button>
           </div>
           <div>
             <AddNotes
