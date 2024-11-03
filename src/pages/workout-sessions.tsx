@@ -9,6 +9,7 @@ import { sliceLongText } from "../utils/sliceLongText";
 import { PageTitle } from "../components/PageTitle";
 import PageTransition from "../components/PageTransition";
 import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ActionList = ({
   handleRemove,
@@ -179,11 +180,11 @@ const SessionCard = ({
       }}
     >
       <div className="grid place-content-center">
-        <input
-          type="checkbox"
-          className="checkbox-primary checkbox"
-          defaultChecked={done}
-          onChange={({ target }) => handleMarkDone(id, target.checked)}
+        <Checkbox
+          checked={done}
+          onCheckedChange={(newValue) =>
+            handleMarkDone(id, newValue as boolean)
+          }
         />
       </div>
 
