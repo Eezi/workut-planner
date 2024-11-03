@@ -29,97 +29,76 @@ type Props = {
 const RepCheckbox = (props: Props) => {
   const validateAmount = z.number().nonnegative();
   const { rep, setReps, workout } = props;
-  const { id, repCount } = rep;
+  const { id, repCount, workoutSessionId, workoutId } = rep;
 
   const editRep = trpc.rep.editRep.useMutation();
   const removeRep = trpc.rep.removeRep.useMutation();
-  const [isDone, setIsDone] = useState(false);
-  const [secoundsAmount, setSecondsAmount] = useState("");
-  const [weightAmount, setWeightAmount] = useState("");
-  const [repsAmount, setRepsAmount] = useState("");
   const [initialDataSetted, setInitialDataSetted] = useState(false);
+  const [fields, setFields] = useState({
+    secoundsAmount: "",
+    weightAmount: "",
+    repsAmount: "",
+    done: false,
+  });
 
   useEffect(() => {
     if (rep && !initialDataSetted) {
       const { secoundsAmount, weightAmount, repsAmount, done } = rep;
-      if (done !== null) {
-        setIsDone(done);
-      }
-      if (weightAmount !== null) {
-        setWeightAmount(weightAmount.toString() || "");
-      }
-      if (secoundsAmount !== null) {
-        setSecondsAmount(secoundsAmount.toString() || "");
-      }
-      if (repsAmount !== null) {
-        setRepsAmount(repsAmount.toString() || "");
-      }
+      setFields({
+        weightAmount: weightAmount ? weightAmount.toString() : "",
+        secoundsAmount: secoundsAmount ? secoundsAmount.toString() : "",
+        repsAmount: repsAmount ? repsAmount.toString() : "",
+        done,
+      });
       setInitialDataSetted(true);
     }
   }, [rep, initialDataSetted]);
 
-  /*
-  const handleEditRep = (key, value) => {
-      // Update the field with the provided key-value pair
-      setFields((prevFields) => ({ ...prevFields, [key]: value }));
-
-      const updatedFields = {
-        ...fields,
-        [key]: value,
-        secoundsAmount: fields.secoundsAmount ? Number(fields.secoundsAmount) : undefined,
-        weightAmount: fields.weightAmount ? Number(fields.weightAmount) : undefined,
-        repsAmount: fields.repsAmount ? Number(fields.repsAmount) : undefined,
-      };
-
-      // Validate the fields
-      Object.values(updatedFields).forEach((amount) => validateAmount.safeParse(amount));
-
-      // Update the reps in the parent component state
-      setReps((prev) =>
-        prev.map((rep) => (rep.id === id ? { ...rep, done: isDone, ...updatedFields } : rep))
-      );
-
-      // Send the mutation with the updated values
-      editRep.mutate({
-        id,
-        done: isDone,
-        ...updatedFields,
-      });
+  const handleEditRep = (
+    key: "done" | "secoundsAmount" | "weightAmount" | "repsAmount",
+    value: string | boolean
+  ) => {
+    const updatedFields = {
+      ...fields,
+      [key]: key === "done" ? Boolean(value) : Number(value),
+      secoundsAmount: fields.secoundsAmount
+        ? Number(fields.secoundsAmount)
+        : undefined,
+      weightAmount: fields.weightAmount
+        ? Number(fields.weightAmount)
+        : undefined,
+      repsAmount: fields.repsAmount ? Number(fields.repsAmount) : undefined,
     };
 
-  */
+    Object.values(updatedFields).forEach((amount) =>
+      validateAmount.safeParse(amount)
+    );
 
-  const handleEditRep = (checked: boolean) => {
-    const newSecAmount =
-      secoundsAmount === "" ? undefined : Number(secoundsAmount);
-    const newWeightAmount =
-      weightAmount === "" ? undefined : Number(weightAmount);
-    const newRepsAmount = repsAmount === "" ? undefined : Number(repsAmount);
-    validateAmount.safeParse(newSecAmount);
-    validateAmount.safeParse(newWeightAmount);
-    validateAmount.safeParse(newRepsAmount);
     setReps((prev) =>
       prev.map((rep) => {
         if (rep.id === id) {
           return {
             ...rep,
-            done: checked,
-            secoundsAmount: newSecAmount || null,
-            weightAmount: newWeightAmount || null,
-            repsAmount: newRepsAmount || null,
+            done: fields.done,
+            secoundsAmount: fields.secoundsAmount
+              ? Number(fields.secoundsAmount)
+              : null,
+            weightAmount: fields.weightAmount
+              ? Number(fields.weightAmount)
+              : null,
+            repsAmount: fields.repsAmount ? Number(fields.repsAmount) : null,
           };
         }
         return rep;
       })
     );
+
     editRep.mutate({
       id,
-      done: checked,
-      secoundsAmount: newSecAmount,
-      weightAmount: newWeightAmount,
-      repsAmount: newRepsAmount,
+      ...updatedFields,
     });
   };
+
   const handleRemoveRep = () => {
     setReps((prev) => prev.filter((rep) => rep.id !== id));
     removeRep.mutate({
@@ -134,11 +113,11 @@ const RepCheckbox = (props: Props) => {
         <label className="flex gap-3">
           <p>{repCount}</p>
           <Checkbox
-            checked={isDone}
+            checked={fields.done}
             disabled={!id}
             onCheckedChange={(newValue) => {
-              setIsDone(newValue as boolean);
-              handleEditRep(newValue as boolean);
+              setFields({ ...fields, done: newValue as boolean });
+              handleEditRep("done", newValue);
             }}
           />
         </label>
@@ -146,11 +125,13 @@ const RepCheckbox = (props: Props) => {
       <TableCell>
         {includeWeight && (
           <Input
-            onBlur={() => handleEditRep(isDone)}
-            value={weightAmount}
+            onBlur={({ target }) => handleEditRep("weightAmount", target.value)}
+            value={fields.weightAmount}
             disabled={!id}
             name="weightAmount"
-            onChange={({ target }) => setWeightAmount(target.value)}
+            onChange={({ target }) =>
+              setFields({ ...fields, weightAmount: target.value })
+            }
             className="h-8 w-14"
           />
         )}
@@ -158,11 +139,15 @@ const RepCheckbox = (props: Props) => {
       <TableCell>
         {includeSeconds && (
           <Input
-            onBlur={() => handleEditRep(isDone)}
-            value={secoundsAmount}
+            onBlur={({ target }) =>
+              handleEditRep("secoundsAmount", target.value)
+            }
+            value={fields.secoundsAmount}
             name="secoundsAmount"
             disabled={!id}
-            onChange={({ target }) => setSecondsAmount(target.value)}
+            onChange={({ target }) =>
+              setFields({ ...fields, secoundsAmount: target.value })
+            }
             className="h-8 w-14 max-w-xs"
           />
         )}
@@ -170,11 +155,13 @@ const RepCheckbox = (props: Props) => {
       <TableCell>
         {includeReps && (
           <Input
-            onBlur={() => handleEditRep(isDone)}
-            value={repsAmount}
+            onBlur={({ target }) => handleEditRep("repsAmount", target.value)}
+            value={fields.repsAmount}
             disabled={!id}
             name="repsAmount"
-            onChange={({ target }) => setRepsAmount(target.value)}
+            onChange={({ target }) =>
+              setFields({ ...fields, repsAmount: target.value })
+            }
             className="w-14 max-w-xs "
           />
         )}
@@ -258,7 +245,6 @@ const SessionNotes = (
   } = trpc.workoutSession.sessionById.useQuery({
     id: slug as string,
   });
-  //TODO: Lisää seding field to reps when user remove or adds rep
   const [reps, setReps] = useState<Rep[]>([]);
   const [sessionDate, setSessionDate] = useState<Date>(
     session?.date || new Date()
