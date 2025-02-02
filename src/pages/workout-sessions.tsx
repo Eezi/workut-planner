@@ -156,12 +156,10 @@ const SessionCard = ({
   });
 
   const handleMarkDone = (sessionId: string, checked: boolean) => {
-    setTimeout(() => {
-      handleSessionkDone.mutate({
-        id: sessionId,
-        done: checked,
-      });
-    }, 800);
+    handleSessionkDone.mutate({
+      id: sessionId,
+      done: checked,
+    });
   };
 
   const handleRemove = () => {

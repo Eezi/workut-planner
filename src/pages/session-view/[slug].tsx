@@ -22,18 +22,52 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 
 type Props = {
-  rep: Rep & { repCount: string };
+  rep: Rep | undefined;
   workout: Workout | undefined;
-  setReps: React.Dispatch<React.SetStateAction<Rep[]>>;
+  refetch: any;
 };
 
 const RepCheckbox = (props: Props) => {
   const validateAmount = z.number().nonnegative();
-  const { rep, setReps, workout } = props;
-  const { id, repCount, workoutSessionId, workoutId } = rep;
+  const { rep, workout, refetch } = props;
+  const { id } = rep || {};
 
-  const editRep = trpc.rep.editRep.useMutation();
-  const removeRep = trpc.rep.removeRep.useMutation();
+  const utils = trpc.useContext();
+  const router = useRouter();
+  const {
+    query: { slug },
+  } = router;
+
+  const editRep = trpc.rep.editRep.useMutation({
+    onMutate: async (newEntry: any) => {
+      await utils.workoutSession.sessionById.cancel();
+      utils.workoutSession.sessionById.setData(
+        { id: slug as string },
+        (prevEntries: any) => {
+          if (prevEntries && newEntry) {
+            const newData = {
+              ...prevEntries,
+              reps: prevEntries?.reps?.map((item) => {
+                if (item.id === newEntry.id) {
+                  return newEntry;
+                }
+                return item;
+              }),
+            };
+            return newData;
+          }
+        }
+      );
+    },
+    onSettled: async () => {
+      await utils.workoutSession.sessionById.invalidate();
+    },
+  });
+  const removeRep = trpc.rep.removeRep.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
   const [initialDataSetted, setInitialDataSetted] = useState(false);
   const [fields, setFields] = useState({
     secoundsAmount: "",
@@ -55,13 +89,17 @@ const RepCheckbox = (props: Props) => {
     }
   }, [rep, initialDataSetted]);
 
+  const handleFieldValue = (value: string | boolean) => {
+    if (value === "") return undefined;
+    return Number(value);
+  };
+
   const handleEditRep = (
     key: "done" | "secoundsAmount" | "weightAmount" | "repsAmount",
     value: string | boolean
   ) => {
     const updatedFields = {
       ...fields,
-      [key]: key === "done" ? Boolean(value) : Number(value),
       secoundsAmount: fields.secoundsAmount
         ? Number(fields.secoundsAmount)
         : undefined,
@@ -69,29 +107,11 @@ const RepCheckbox = (props: Props) => {
         ? Number(fields.weightAmount)
         : undefined,
       repsAmount: fields.repsAmount ? Number(fields.repsAmount) : undefined,
+      [key]: key === "done" ? Boolean(value) : handleFieldValue(value),
     };
 
     Object.values(updatedFields).forEach((amount) =>
       validateAmount.safeParse(amount)
-    );
-
-    setReps((prev) =>
-      prev.map((rep) => {
-        if (rep.id === id) {
-          return {
-            ...rep,
-            done: fields.done,
-            secoundsAmount: fields.secoundsAmount
-              ? Number(fields.secoundsAmount)
-              : null,
-            weightAmount: fields.weightAmount
-              ? Number(fields.weightAmount)
-              : null,
-            repsAmount: fields.repsAmount ? Number(fields.repsAmount) : null,
-          };
-        }
-        return rep;
-      })
     );
 
     editRep.mutate({
@@ -100,8 +120,7 @@ const RepCheckbox = (props: Props) => {
     });
   };
 
-  const handleRemoveRep = () => {
-    setReps((prev) => prev.filter((rep) => rep.id !== id));
+  const handleRemoveRep = async () => {
     removeRep.mutate({
       id,
     });
@@ -110,21 +129,18 @@ const RepCheckbox = (props: Props) => {
   const { includeSeconds, includeWeight, includeReps } = workout || {};
   return (
     <TableRow>
-      <TableCell>
-        <label className="flex gap-3">
-          <p>{repCount}</p>
-          <Checkbox
-            checked={fields.done}
-            disabled={!id}
-            onCheckedChange={(newValue) => {
-              setFields({ ...fields, done: newValue as boolean });
-              handleEditRep("done", newValue);
-            }}
-          />
-        </label>
+      <TableCell className="flex items-center justify-center">
+        <Checkbox
+          checked={fields.done}
+          disabled={!id}
+          onCheckedChange={(newValue) => {
+            setFields({ ...fields, done: newValue as boolean });
+            handleEditRep("done", newValue);
+          }}
+        />
       </TableCell>
-      <TableCell>
-        {includeWeight && (
+      {includeWeight && (
+        <TableCell>
           <Input
             onBlur={({ target }) => handleEditRep("weightAmount", target.value)}
             value={fields.weightAmount}
@@ -135,10 +151,10 @@ const RepCheckbox = (props: Props) => {
             }
             className="h-8 w-14"
           />
-        )}
-      </TableCell>
-      <TableCell>
-        {includeSeconds && (
+        </TableCell>
+      )}
+      {includeSeconds && (
+        <TableCell>
           <Input
             onBlur={({ target }) =>
               handleEditRep("secoundsAmount", target.value)
@@ -151,10 +167,10 @@ const RepCheckbox = (props: Props) => {
             }
             className="h-8 w-14 max-w-xs"
           />
-        )}
-      </TableCell>
-      <TableCell>
-        {includeReps && (
+        </TableCell>
+      )}
+      {includeReps && (
+        <TableCell>
           <Input
             onBlur={({ target }) => handleEditRep("repsAmount", target.value)}
             value={fields.repsAmount}
@@ -165,8 +181,8 @@ const RepCheckbox = (props: Props) => {
             }
             className="w-14 max-w-xs "
           />
-        )}
-      </TableCell>
+        </TableCell>
+      )}
       <TableCell>
         <button
           onClick={handleRemoveRep}
@@ -196,11 +212,11 @@ const RepCheckbox = (props: Props) => {
 const RepsTable = ({
   reps,
   workout,
-  setReps,
+  refetch,
 }: {
-  reps: Rep[];
+  reps: Rep[] | undefined;
   workout: Workout | undefined;
-  setReps: React.Dispatch<React.SetStateAction<Rep[]>>;
+  refetch: any;
 }) => {
   const { includeSeconds, includeReps, includeWeight } = workout || {};
   return (
@@ -212,15 +228,16 @@ const RepsTable = ({
             {includeWeight && <TableHead>Kg</TableHead>}
             {includeSeconds && <th>Secounds</th>}
             {includeReps && <TableHead>Reps</TableHead>}
+            <TableHead>{""}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {reps.map((rep, index) => (
+          {reps?.map((rep) => (
             <RepCheckbox
-              setReps={setReps}
               key={rep.id}
+              refetch={refetch}
               workout={workout}
-              rep={{ ...rep, repCount: `${index + 1}` }}
+              rep={rep}
             />
           ))}
         </TableBody>
@@ -246,7 +263,6 @@ const SessionNotes = (
   } = trpc.workoutSession.sessionById.useQuery({
     id: slug as string,
   });
-  const [reps, setReps] = useState<Rep[]>([]);
   const [sessionDate, setSessionDate] = useState<Date>(
     session?.date || new Date()
   );
@@ -262,23 +278,7 @@ const SessionNotes = (
   });
   const doneReps = latestSession?.reps?.filter(({ done: repDone }) => repDone);
 
-  useEffect(() => {
-    if (!isLoading && session && session?.reps?.length > 0) {
-      setReps(session.reps);
-    }
-  }, [session, isLoading]);
-
   const handleCreateRep = () => {
-    const newRep: Rep = {
-      id: "",
-      done: false,
-      workoutId: session?.workoutId as string,
-      secoundsAmount: null,
-      weightAmount: null,
-      repsAmount: null,
-      workoutSessionId: session?.id as string,
-    };
-    setReps([...reps, newRep]);
     if (session) {
       createRep.mutate({
         workoutSessionId: session.id,
@@ -314,7 +314,7 @@ const SessionNotes = (
         <div className="mb-16">
           <h1 className="mb-2 text-xl font-bold">{session?.workout?.title}</h1>
           {latestSession && (
-            <div className="text-slate-400">
+            <div className="text-sm text-slate-400">
               Last done - {dayjs(latestSession?.doneAt).format("DD.MM.YYYY")}
             </div>
           )}
@@ -328,17 +328,11 @@ const SessionNotes = (
             <DatePicker date={sessionDate} setDate={handleUpdateDate} />
           </div>
           <h5 className="my-4 text-base font-bold">Reps</h5>
-          <RepsTable reps={reps} workout={session?.workout} setReps={setReps} />
-          {/*<div className="grid gap-4 pb-5">
-            {reps.map((rep, index) => (
-              <RepCheckbox
-                rep={{ ...rep, repCount: `${index + 1}` }}
-                workout={session?.workout}
-                setReps={setReps}
-                key={rep.id}
-              />
-            ))}
-            </div>*/}
+          <RepsTable
+            refetch={refetch}
+            reps={session?.reps}
+            workout={session?.workout}
+          />
           <div className="mb-6">
             <Button variant="outline" onClick={handleCreateRep}>
               Create rep
