@@ -11,7 +11,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SelectSingleEventHandler } from "react-day-picker";
 
 type TSetDate = (date: Date) => void;
 export type SetDate = TSetDate | React.Dispatch<React.SetStateAction<Date>>;
@@ -37,11 +36,7 @@ export function DatePicker({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate as SelectSingleEventHandler | undefined}
-        />
+        <Calendar mode="single" selected={date} onSelect={setDate as any} />
       </PopoverContent>
     </Popover>
   );

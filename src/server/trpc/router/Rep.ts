@@ -13,6 +13,7 @@ export const repRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log("INPUT", input);
       try {
         await ctx.prisma.rep.update({
           where: {
@@ -40,9 +41,9 @@ export const repRouter = router({
       try {
         await ctx.prisma.rep.create({
           data: {
-              workoutId: input.workoutId,
-              workoutSessionId: input.workoutSessionId,
-              done: false,
+            workoutId: input.workoutId,
+            workoutSessionId: input.workoutSessionId,
+            done: false,
           },
         });
       } catch (error) {

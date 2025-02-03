@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const DoneRepsTable = ({ doneReps }: { doneReps: Rep[] }) => {
   if (!doneReps || doneReps?.length <= 0) {
@@ -115,13 +116,7 @@ export const SessionCard = ({ session }: { session: SessionProps }) => {
   return (
     <div className="p- rounded-md border border-slate-800 p-3">
       <div className="flex items-center gap-4 ">
-        <input
-          type="checkbox"
-          defaultChecked
-          disabled
-          // onChange={handleDone}
-          className="checkbox"
-        />
+        <Checkbox defaultChecked disabled />
         <div>
           <p className="text-mase font-medium">{workout.title}</p>
           <span className="text-sm text-slate-400">

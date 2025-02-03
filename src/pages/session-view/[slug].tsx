@@ -7,7 +7,7 @@ import PageTransition from "../../components/PageTransition";
 import { DatePicker } from "../../components/Datepicker";
 import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
-import type { Workout, Rep } from "@prisma/client";
+import type { Workout, Rep, Session, WorkoutSession } from "@prisma/client";
 import { DoneRepsTable } from "../statistics";
 import {
   Table,
@@ -47,7 +47,7 @@ const RepCheckbox = (props: Props) => {
           if (prevEntries && newEntry) {
             const newData = {
               ...prevEntries,
-              reps: prevEntries?.reps?.map((item) => {
+              reps: prevEntries?.reps?.map((item: any) => {
                 if (item.id === newEntry.id) {
                   return newEntry;
                 }
@@ -114,16 +114,20 @@ const RepCheckbox = (props: Props) => {
       validateAmount.safeParse(amount)
     );
 
-    editRep.mutate({
-      id,
-      ...updatedFields,
-    });
+    if (id) {
+      editRep.mutate({
+        id,
+        ...updatedFields,
+      });
+    }
   };
 
   const handleRemoveRep = async () => {
-    removeRep.mutate({
-      id,
-    });
+    if (id) {
+      removeRep.mutate({
+        id,
+      });
+    }
   };
 
   const { includeSeconds, includeWeight, includeReps } = workout || {};
