@@ -1,9 +1,8 @@
 import { trpc } from "../utils/trpc";
 import { useState } from "react";
 import { PageHead } from "../components/Head";
-import Datepicker from "react-tailwindcss-datepicker";
-import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 import { PageTitle } from "../components/PageTitle";
+import { DateRange } from "react-day-picker";
 import { SessionsTable, WorkoutSessionData } from "../components/SessionsTable";
 import PageTransition from "../components/PageTransition";
 import { Rep, Workout, WorkoutSession } from "@prisma/client";
@@ -17,6 +16,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DatePickerWithRange } from "@/components/ui/datepickerRange";
+import { addDays } from "date-fns";
 
 export const DoneRepsTable = ({ doneReps }: { doneReps: Rep[] }) => {
   if (!doneReps || doneReps?.length <= 0) {
@@ -48,29 +49,6 @@ export const DoneRepsTable = ({ doneReps }: { doneReps: Rep[] }) => {
           </TableBody>
         </Table>
       </div>
-    </div>
-  );
-};
-
-interface Props {
-  timePeriod: DateValueType;
-  setTimePeriod: React.Dispatch<React.SetStateAction<DateValueType>>;
-}
-
-const PeriodOfTimePicker = ({ timePeriod, setTimePeriod }: Props) => {
-  const handleValueChange = (newValue: DateValueType) => {
-    setTimePeriod(newValue);
-  };
-
-  return (
-    <div className="max-w-xs">
-      <Datepicker
-        placeholder={"Select Time Range"}
-        value={timePeriod}
-        onChange={handleValueChange}
-        showShortcuts={true}
-        useRange={false}
-      />
     </div>
   );
 };
@@ -148,14 +126,15 @@ const Statistics = (
   ref: React.ForwardedRef<HTMLDivElement>
 ) => {
   const [showDoneSessions, setShowDoneSessions] = useState(false);
-  const [timePeriod, setTimePeriod] = useState<DateValueType>({
-    startDate: null,
-    endDate: null,
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 20),
   });
 
+  console.log("datel", date);
   const { data, isLoading } = trpc.workout.sessionCountsPerWorkout.useQuery({
-    startDate: timePeriod?.startDate || null,
-    endDate: timePeriod?.endDate || null,
+    startDate: date?.from || null,
+    endDate: date?.to || null,
   });
 
   return (
@@ -178,10 +157,7 @@ const Statistics = (
             <DoneSessions />
           ) : (
             <>
-              <PeriodOfTimePicker
-                timePeriod={timePeriod}
-                setTimePeriod={setTimePeriod}
-              />
+              <DatePickerWithRange date={date} setDate={setDate} />
               <div className="pt-5">
                 <SessionsTable sessionData={data as WorkoutSessionData[]} />
               </div>
