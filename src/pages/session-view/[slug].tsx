@@ -133,8 +133,9 @@ const RepCheckbox = (props: Props) => {
   const { includeSeconds, includeWeight, includeReps } = workout || {};
   return (
     <TableRow>
-      <TableCell className="flex items-center justify-center">
+      <TableCell className="w-12">
         <Checkbox
+          className="mb-2.5 ml-2"
           checked={fields.done}
           disabled={!id}
           onCheckedChange={(newValue) => {
@@ -230,7 +231,7 @@ const RepsTable = ({
           <TableRow>
             <TableHead>{""}</TableHead>
             {includeWeight && <TableHead>Kg</TableHead>}
-            {includeSeconds && <th>Secounds</th>}
+            {includeSeconds && <TableHead>Secounds</TableHead>}
             {includeReps && <TableHead>Reps</TableHead>}
             <TableHead>{""}</TableHead>
           </TableRow>
