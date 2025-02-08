@@ -10,7 +10,7 @@
 html,
 body {
   -webkit-tap-highlight-color: transparent;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .btn {
