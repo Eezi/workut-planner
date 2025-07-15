@@ -1,7 +1,6 @@
 "use client";
 import { type NextPage } from "next";
 import { trpc } from "../utils/trpc";
-import Link from "next/link";
 import { WorkoutCard } from "../components/workoutCard";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
@@ -38,7 +37,7 @@ const AllWorkouts: NextPage = (
               Create workout
             </Button>
           </div>
-          <div className="mb-20 flex min-h-[60vh]  flex-col gap-5">
+          <div className="flex flex-col gap-5 pb-8">
             {workouts?.map((workout) => {
               return (
                 <WorkoutCard key={workout.id} {...workout} refetch={refetch} />

@@ -7,7 +7,7 @@ import PageTransition from "../../components/PageTransition";
 import { DatePicker } from "../../components/Datepicker";
 import { useState, useEffect, useMemo } from "react";
 import { AddNotes } from "../../components/AddNotes";
-import type { Workout, Rep, Session, WorkoutSession } from "@prisma/client";
+import type { Workout, Rep } from "@prisma/client";
 import { DoneRepsTable } from "../statistics";
 import {
   Table,
@@ -25,11 +25,12 @@ type Props = {
   rep: Rep | undefined;
   workout: Workout | undefined;
   refetch: any;
+  repCount: number;
 };
 
 const RepCheckbox = (props: Props) => {
   const validateAmount = z.number().nonnegative();
-  const { rep, workout, refetch } = props;
+  const { rep, workout, refetch, repCount } = props;
   const { id } = rep || {};
 
   const utils = trpc.useContext();
@@ -134,6 +135,7 @@ const RepCheckbox = (props: Props) => {
   return (
     <TableRow>
       <TableCell className="w-12">
+        <span>{repCount}</span>
         <Checkbox
           className="mb-2.5 ml-2"
           checked={fields.done}
@@ -144,8 +146,8 @@ const RepCheckbox = (props: Props) => {
           }}
         />
       </TableCell>
-      {includeWeight && (
-        <TableCell>
+      <TableCell>
+        {includeWeight && (
           <Input
             onBlur={({ target }) => handleEditRep("weightAmount", target.value)}
             value={fields.weightAmount}
@@ -156,10 +158,10 @@ const RepCheckbox = (props: Props) => {
             }
             className="h-8 w-14"
           />
-        </TableCell>
-      )}
-      {includeSeconds && (
-        <TableCell>
+        )}
+      </TableCell>
+      <TableCell>
+        {includeSeconds && (
           <Input
             onBlur={({ target }) =>
               handleEditRep("secoundsAmount", target.value)
@@ -172,10 +174,10 @@ const RepCheckbox = (props: Props) => {
             }
             className="h-8 w-14 max-w-xs"
           />
-        </TableCell>
-      )}
-      {includeReps && (
-        <TableCell>
+        )}
+      </TableCell>
+      <TableCell>
+        {includeReps && (
           <Input
             onBlur={({ target }) => handleEditRep("repsAmount", target.value)}
             value={fields.repsAmount}
@@ -186,8 +188,8 @@ const RepCheckbox = (props: Props) => {
             }
             className="w-14 max-w-xs "
           />
-        </TableCell>
-      )}
+        )}
+      </TableCell>
       <TableCell>
         <button
           onClick={handleRemoveRep}
@@ -237,8 +239,9 @@ const RepsTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {reps?.map((rep) => (
+          {reps?.map((rep, index) => (
             <RepCheckbox
+              repCount={index + 1}
               key={rep.id}
               refetch={refetch}
               workout={workout}
@@ -324,7 +327,7 @@ const SessionNotes = (
             </div>
           )}
           <DoneRepsTable doneReps={doneReps as Rep[]} />
-          <p className="my-3  max-w-[45ch] text-xl">
+          <p className="my-3 max-w-[45ch] text-xl">
             <div
               dangerouslySetInnerHTML={{ __html: formattedText as string }}
             />
