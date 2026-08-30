@@ -5,15 +5,11 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
-import PageTransition from "../components/PageTransition";
 import { WorkoutCard } from "../components/workoutCard";
 import { trpc } from "../utils/trpc";
 
 type PageProps = {};
-const AllWorkouts: NextPage = (
-	props: PageProps,
-	ref: React.ForwardedRef<HTMLDivElement>,
-) => {
+const AllWorkouts: NextPage = (props: PageProps) => {
 	const { status } = useSession();
 	const {
 		data: workouts,
@@ -26,7 +22,7 @@ const AllWorkouts: NextPage = (
 	const router = useRouter();
 
 	return (
-		<PageTransition ref={ref}>
+		<>
 			<PageHead title="All Workouts" />
 			{isLoading ? (
 				<div>Fetching workouts...</div>
@@ -50,7 +46,7 @@ const AllWorkouts: NextPage = (
 					</div>
 				</>
 			)}
-		</PageTransition>
+		</>
 	);
 };
 

@@ -1,12 +1,17 @@
-import cn from "classnames";
 import dayjs from "dayjs";
+import { Loader2 } from "lucide-react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
-import PageTransition from "../components/PageTransition";
 import { IntesityBadge } from "../components/workoutCard";
 import type { Session } from "../types/Session";
 import { sliceLongText } from "../utils/sliceLongText";
@@ -21,31 +26,25 @@ const ActionList = ({
 	sessionId: string;
 	removeIsPending: boolean;
 }) => {
-	const dropdownClassName = cn({
-		dropdown: true,
-		"dropdown-left": true,
-		"dropdown-end": true,
-	});
-
 	return (
-		<div className={dropdownClassName}>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="27"
-				tabIndex={0}
-				height="27"
-				viewBox="0 0 512 512"
-			>
-				<path
-					d="M136 216c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40zm240 0c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40zm-120 0c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40z"
-					fill="currentColor"
-				/>
-			</svg>
-			<ul
-				tabIndex={0}
-				className="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
-			>
-				<li>
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<button type="button" aria-label="Session actions">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="27"
+						height="27"
+						viewBox="0 0 512 512"
+					>
+						<path
+							d="M136 216c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40zm240 0c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40zm-120 0c-22.002 0-40 17.998-40 40s17.998 40 40 40 40-17.998 40-40-17.998-40-40-40z"
+							fill="currentColor"
+						/>
+					</svg>
+				</button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end" className="w-52">
+				<DropdownMenuItem asChild>
 					<Link
 						href={{
 							pathname: "/session-view/[slug]",
@@ -75,33 +74,36 @@ const ActionList = ({
 						</svg>
 						Details
 					</Link>
-				</li>
-				<li onClick={handleRemove}>
+				</DropdownMenuItem>
+				<DropdownMenuItem
+					onSelect={(event) => {
+						event.preventDefault();
+						handleRemove();
+					}}
+				>
 					{removeIsPending ? (
-						<span className="loading loading-dots loading-xs" />
+						<Loader2 className="h-4 w-4 animate-spin" />
 					) : (
-						<a>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								viewBox="0 0 24 24"
-							>
-								<g fill="currentColor">
-									<path
-										fillRule="evenodd"
-										d="M17 5V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7h1a1 1 0 1 0 0-2h-3Zm-2-1H9v1h6V4Zm2 3H7v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7Z"
-										clipRule="evenodd"
-									/>
-									<path d="M9 9h2v8H9V9Zm4 0h2v8h-2V9Z" />
-								</g>
-							</svg>
-							Remove
-						</a>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+						>
+							<g fill="currentColor">
+								<path
+									fillRule="evenodd"
+									d="M17 5V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V7h1a1 1 0 1 0 0-2h-3Zm-2-1H9v1h6V4Zm2 3H7v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7Z"
+									clipRule="evenodd"
+								/>
+								<path d="M9 9h2v8H9V9Zm4 0h2v8h-2V9Z" />
+							</g>
+						</svg>
 					)}
-				</li>
-			</ul>
-		</div>
+					Remove
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 };
 
@@ -250,7 +252,7 @@ const SessionCardContainer = ({
 				<div key={dayKey}>
 					{showLateOrUpcomingHeader(dayKey) ? (
 						<div className="mb-3" style={{ borderBottom: "1px solid #2c2d3c" }}>
-							<span className="text-base font-semibold">{dayKey}</span>
+							<span className="text-base font-medium">{dayKey}</span>
 							<div className="flex flex-col gap-3">
 								{nextSevenDaysSessions[dayKey]?.map((session) => (
 									<SessionCard noDateSection key={session.id} {...session} />
@@ -264,7 +266,7 @@ const SessionCardContainer = ({
 									{dayjs(dayKey).format("D")}
 								</span>
 								<div className="grow">
-									<span className="text-base font-semibold">
+									<span className="text-base font-medium">
 										{dayjs(dayKey).format("dddd")}
 									</span>
 								</div>
@@ -283,10 +285,7 @@ const SessionCardContainer = ({
 };
 
 type PageProps = {};
-const WorkoutSessions: NextPage = (
-	props: PageProps,
-	ref: React.ForwardedRef<HTMLDivElement>,
-) => {
+const WorkoutSessions: NextPage = (props: PageProps) => {
 	const { status } = useSession();
 	const { data: sessions, isLoading } =
 		trpc.workoutSession.getAllWorkoutSessions.useQuery(undefined, {
@@ -338,7 +337,7 @@ const WorkoutSessions: NextPage = (
 	const nextSevenDaysSessions = groupByNextSevenDays(sessions);
 
 	return (
-		<PageTransition ref={ref}>
+		<>
 			<PageHead title="Sessions" />
 			{isLoading ? (
 				<div>Fetching sessions...</div>
@@ -359,7 +358,7 @@ const WorkoutSessions: NextPage = (
 					</div>
 				</div>
 			)}
-		</PageTransition>
+		</>
 	);
 };
 

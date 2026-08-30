@@ -1,9 +1,17 @@
 import { addDays } from "date-fns";
 import dayjs from "dayjs";
 import { useState } from "react";
-import type { DateRange } from "react-day-picker";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
+import type { DateRange } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DatePickerWithRange } from "@/components/ui/datepickerRange";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
 	Table,
 	TableBody,
@@ -14,7 +22,6 @@ import {
 } from "@/components/ui/table";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
-import PageTransition from "../components/PageTransition";
 import {
 	SessionsTable,
 	type WorkoutSessionData,
@@ -27,32 +34,35 @@ export const DoneRepsTable = ({ doneReps }: { doneReps: Rep[] }) => {
 		return null;
 	}
 	return (
-		<div className="collapse-arrow join-item collapse">
-			<input type="checkbox" name="my-accordion-4" />
-			<div className="collapse-title text-sm font-medium">Session reps</div>
-			<div className="collapse-content">
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead></TableHead>
-							<TableHead>Kg</TableHead>
-							<TableHead>Seconds</TableHead>
-							<TableHead>Reps</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{doneReps?.map((rep, index) => (
-							<TableRow key={rep.id}>
-								<TableCell>{index + 1}</TableCell>
-								<TableCell>{rep?.weightAmount}</TableCell>
-								<TableCell>{rep?.secoundsAmount}</TableCell>
-								<TableCell>{rep?.repsAmount}</TableCell>
+		<Accordion type="single" collapsible className="w-full">
+			<AccordionItem value="session-reps" className="border-none">
+				<AccordionTrigger className="text-sm font-medium">
+					Session reps
+				</AccordionTrigger>
+				<AccordionContent>
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead></TableHead>
+								<TableHead>Kg</TableHead>
+								<TableHead>Seconds</TableHead>
+								<TableHead>Reps</TableHead>
 							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</div>
-		</div>
+						</TableHeader>
+						<TableBody>
+							{doneReps?.map((rep, index) => (
+								<TableRow key={rep.id}>
+									<TableCell>{index + 1}</TableCell>
+									<TableCell>{rep?.weightAmount}</TableCell>
+									<TableCell>{rep?.secoundsAmount}</TableCell>
+									<TableCell>{rep?.repsAmount}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</AccordionContent>
+			</AccordionItem>
+		</Accordion>
 	);
 };
 
@@ -64,16 +74,15 @@ const Tabs = ({
 	setShowDoneSessions: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
 	return (
-		<div className="form-control pt-2">
-			<label className="label cursor-pointer">
-				<span className="label-text">Show done sessions</span>
-				<input
-					type="checkbox"
-					className="toggle-primary toggle"
-					checked={showDoneSessions}
-					onChange={() => setShowDoneSessions(!showDoneSessions)}
-				/>
-			</label>
+		<div className="flex items-center justify-between pt-2">
+			<Label htmlFor="show-done-sessions" className="cursor-pointer">
+				Show done sessions
+			</Label>
+			<Switch
+				id="show-done-sessions"
+				checked={showDoneSessions}
+				onCheckedChange={() => setShowDoneSessions(!showDoneSessions)}
+			/>
 		</div>
 	);
 };
@@ -124,10 +133,7 @@ const DoneSessions = () => {
 };
 
 type PageProps = {};
-const Statistics = (
-	props: PageProps,
-	ref: React.ForwardedRef<HTMLDivElement>,
-) => {
+const Statistics = (props: PageProps) => {
 	const [showDoneSessions, setShowDoneSessions] = useState(false);
 	const [date, setDate] = useState<DateRange | undefined>({
 		from: new Date(),
@@ -140,7 +146,7 @@ const Statistics = (
 	});
 
 	return (
-		<PageTransition ref={ref}>
+		<>
 			<PageHead title="Statistics" />
 			{isLoading ? (
 				<div>Fetching workouts...</div>
@@ -167,7 +173,7 @@ const Statistics = (
 					)}
 				</div>
 			)}
-		</PageTransition>
+		</>
 	);
 };
 
