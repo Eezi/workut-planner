@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
 import { ReusableAlertDialog } from "./AddSessionModal";
+import { Button } from "./ui/button";
 import { AddSessionModalContent } from "./workoutCard";
 
 export const AddSessionButton = () => {
@@ -75,13 +76,15 @@ export const AddSessionButton = () => {
 			</ReusableAlertDialog>
 
 			<div>
-				<button
+				<Button
+					variant="outline"
+					size="icon"
 					onClick={() => setOpen(true)}
-					className="late-700 btn-outline btn btn-square btn-xs border"
+					className="h-8 w-8"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						className="late-700 h-4 w-4 "
+						className="h-4 w-4"
 						viewBox="0 0 512 512"
 					>
 						<path
@@ -93,7 +96,7 @@ export const AddSessionButton = () => {
 							d="M256 112v288m144-144H112"
 						/>
 					</svg>
-				</button>
+				</Button>
 			</div>
 		</>
 	);
