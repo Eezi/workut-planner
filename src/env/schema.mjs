@@ -6,25 +6,23 @@ import { z } from "zod";
  * This way you can ensure the app isn't built with invalid env vars.
  */
 export const serverSchema = z.object({
-  DATABASE_URL: z.string().url(),
-  TURSO_DATABASE_URL: z.string(),
-  TURSO_AUTH_TOKEN: z.string(),
-  NODE_ENV: z.enum(["development", "test", "production"]).optional(),
-  NEXTAUTH_SECRET:
-    process.env.NODE_ENV === "production"
-      ? z.string().min(1)
-      : z.string().min(1).optional(),
-  NEXTAUTH_URL: z.preprocess(
-    // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-    // Since NextAuth.js automatically uses the VERCEL_URL if present.
-    (str) => process.env.VERCEL_URL ?? str,
-    // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string() : z.string().url(),
-  ),
-  DISCORD_CLIENT_ID: z.string(),
-  DISCORD_CLIENT_SECRET: z.string(),
-  GOOGLE_CLIENT_ID: z.string(),
-  GOOGLE_CLIENT_SECRET: z.string(),
+	NODE_ENV: z.enum(["development", "test", "production"]).optional(),
+	// Required in every environment. Without a stable secret, NextAuth derives
+	// an ephemeral one that changes between restarts/config changes, which
+	// invalidates existing session cookies and causes JWT_SESSION_ERROR
+	// ("decryption operation failed").
+	NEXTAUTH_SECRET: z.string().min(1),
+	NEXTAUTH_URL: z.preprocess(
+		// This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
+		// Since NextAuth.js automatically uses the VERCEL_URL if present.
+		(str) => process.env.VERCEL_URL ?? str,
+		// VERCEL_URL doesn't include `https` so it cant be validated as a URL
+		process.env.VERCEL ? z.string() : z.string().url(),
+	),
+	DISCORD_CLIENT_ID: z.string(),
+	DISCORD_CLIENT_SECRET: z.string(),
+	GOOGLE_CLIENT_ID: z.string(),
+	GOOGLE_CLIENT_SECRET: z.string(),
 });
 
 /**
@@ -33,7 +31,7 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string(),
+	NEXT_PUBLIC_CONVEX_URL: z.string().url(),
 });
 
 /**
@@ -43,5 +41,5 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+	NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
 };
