@@ -8,9 +8,8 @@
 # testing
 /coverage
 
-# database
-/prisma/db.sqlite
-/prisma/db.sqlite-journal
+# local npm cache
+/.npm-cache
 
 # next.js
 /.next/
