@@ -1,13 +1,13 @@
 import { addDays } from "date-fns";
 import dayjs from "dayjs";
 import { useState } from "react";
-import type { DateRange } from "react-day-picker";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import type { DateRange } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DatePickerWithRange } from "@/components/ui/datepickerRange";
 import { Label } from "@/components/ui/label";
@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/table";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
-import PageTransition from "../components/PageTransition";
 import {
 	SessionsTable,
 	type WorkoutSessionData,
@@ -134,10 +133,7 @@ const DoneSessions = () => {
 };
 
 type PageProps = {};
-const Statistics = (
-	props: PageProps,
-	ref: React.ForwardedRef<HTMLDivElement>,
-) => {
+const Statistics = (props: PageProps) => {
 	const [showDoneSessions, setShowDoneSessions] = useState(false);
 	const [date, setDate] = useState<DateRange | undefined>({
 		from: new Date(),
@@ -150,7 +146,7 @@ const Statistics = (
 	});
 
 	return (
-		<PageTransition ref={ref}>
+		<>
 			<PageHead title="Statistics" />
 			{isLoading ? (
 				<div>Fetching workouts...</div>
@@ -177,7 +173,7 @@ const Statistics = (
 					)}
 				</div>
 			)}
-		</PageTransition>
+		</>
 	);
 };
 

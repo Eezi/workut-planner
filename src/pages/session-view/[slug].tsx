@@ -16,7 +16,6 @@ import {
 import { AddNotes } from "../../components/AddNotes";
 import { DatePicker } from "../../components/Datepicker";
 import { PageHead } from "../../components/Head";
-import PageTransition from "../../components/PageTransition";
 import type { Rep, Workout } from "../../types/models";
 import { trpc } from "../../utils/trpc";
 import { DoneRepsTable } from "../statistics";
@@ -255,10 +254,7 @@ const RepsTable = ({
 };
 
 type PageProps = {};
-const SessionNotes = (
-	props: PageProps,
-	ref: React.ForwardedRef<HTMLDivElement>,
-) => {
+const SessionNotes = (props: PageProps) => {
 	const router = useRouter();
 	const {
 		query: { slug },
@@ -316,7 +312,7 @@ const SessionNotes = (
 	};
 
 	return (
-		<PageTransition ref={ref}>
+		<>
 			<PageHead title="Session" />
 			{isLoading ? (
 				<div>Fetching session...</div>
@@ -356,7 +352,7 @@ const SessionNotes = (
 					</div>
 				</div>
 			)}
-		</PageTransition>
+		</>
 	);
 };
 

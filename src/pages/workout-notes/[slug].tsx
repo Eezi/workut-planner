@@ -4,14 +4,10 @@ import { useState } from "react";
 import { AddNotes } from "../../components/AddNotes";
 import { PageHead } from "../../components/Head";
 import { PageTitle } from "../../components/PageTitle";
-import PageTransition from "../../components/PageTransition";
 import { trpc } from "../../utils/trpc";
 
 type PageProps = {};
-const SessionNotes = (
-	props: PageProps,
-	ref: React.ForwardedRef<HTMLDivElement>,
-) => {
+const SessionNotes = (props: PageProps) => {
 	const [currentNote, setCurrentNote] = useState("");
 	const router = useRouter();
 	const {
@@ -40,7 +36,7 @@ const SessionNotes = (
 	};
 
 	return (
-		<PageTransition ref={ref}>
+		<>
 			<PageHead title="All Workouts" />
 			<PageTitle title="Workout notes" />
 			<div className="relative min-h-[70vh]">
@@ -73,7 +69,7 @@ const SessionNotes = (
 					</div>
 				)}
 			</div>
-		</PageTransition>
+		</>
 	);
 };
 

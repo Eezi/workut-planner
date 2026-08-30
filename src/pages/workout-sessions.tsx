@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
-import PageTransition from "../components/PageTransition";
 import { IntesityBadge } from "../components/workoutCard";
 import type { Session } from "../types/Session";
 import { sliceLongText } from "../utils/sliceLongText";
@@ -253,7 +252,7 @@ const SessionCardContainer = ({
 				<div key={dayKey}>
 					{showLateOrUpcomingHeader(dayKey) ? (
 						<div className="mb-3" style={{ borderBottom: "1px solid #2c2d3c" }}>
-							<span className="text-base font-semibold">{dayKey}</span>
+							<span className="text-base font-medium">{dayKey}</span>
 							<div className="flex flex-col gap-3">
 								{nextSevenDaysSessions[dayKey]?.map((session) => (
 									<SessionCard noDateSection key={session.id} {...session} />
@@ -267,7 +266,7 @@ const SessionCardContainer = ({
 									{dayjs(dayKey).format("D")}
 								</span>
 								<div className="grow">
-									<span className="text-base font-semibold">
+									<span className="text-base font-medium">
 										{dayjs(dayKey).format("dddd")}
 									</span>
 								</div>
@@ -286,10 +285,7 @@ const SessionCardContainer = ({
 };
 
 type PageProps = {};
-const WorkoutSessions: NextPage = (
-	props: PageProps,
-	ref: React.ForwardedRef<HTMLDivElement>,
-) => {
+const WorkoutSessions: NextPage = (props: PageProps) => {
 	const { status } = useSession();
 	const { data: sessions, isLoading } =
 		trpc.workoutSession.getAllWorkoutSessions.useQuery(undefined, {
@@ -341,7 +337,7 @@ const WorkoutSessions: NextPage = (
 	const nextSevenDaysSessions = groupByNextSevenDays(sessions);
 
 	return (
-		<PageTransition ref={ref}>
+		<>
 			<PageHead title="Sessions" />
 			{isLoading ? (
 				<div>Fetching sessions...</div>
@@ -362,7 +358,7 @@ const WorkoutSessions: NextPage = (
 					</div>
 				</div>
 			)}
-		</PageTransition>
+		</>
 	);
 };
 

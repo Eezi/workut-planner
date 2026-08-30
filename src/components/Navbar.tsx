@@ -123,7 +123,7 @@ const LoggedInNav = () => {
 
 	return (
 		<>
-			<div className="ml-auto hidden gap-0 font-semibold md:flex md:gap-7">
+			<div className="ml-auto hidden gap-0 font-medium md:flex md:gap-7">
 				{pages.map(({ link, name }) => {
 					const isActive = pathname === link;
 					return (
@@ -177,30 +177,28 @@ export const BottomNavBar = () => {
 	if (!sessionData) return null;
 
 	return (
-		<>
-			<div
-				style={{
-					backgroundColor: "rgb(3 7 18)",
-				}}
-				className="bg-gray-950 fixed bottom-0 left-0 right-0 flex w-full items-center justify-around px-1 pt-3 pb-6 md:hidden"
-			>
-				{pages.map(({ name, link, icon }) => {
-					const isActive = pathname === link;
-					return (
-						<Link
-							key={link}
-							className={`grid place-items-center ${
-								isActive ? "text-cyan-600" : "text-slate-400"
-							}`}
-							href={link}
-						>
-							{icon}
-							<span className="text-xs">{name}</span>
-						</Link>
-					);
-				})}
-				<AddSessionButton />
-			</div>
-		</>
+		<div
+			style={{
+				backgroundColor: "hsl(240 5% 4%)",
+			}}
+			className="bg-gray-950 fixed bottom-0 left-0 right-0 flex w-full items-center justify-around px-1 pt-3 pb-6 md:hidden"
+		>
+			{pages.map(({ name, link, icon }) => {
+				const isActive = pathname === link;
+				return (
+					<Link
+						key={link}
+						className={`grid place-items-center ${
+							isActive ? "text-slate-100" : "text-slate-400"
+						}`}
+						href={link}
+					>
+						{icon}
+						<span className="text-xs">{name}</span>
+					</Link>
+				);
+			})}
+			<AddSessionButton />
+		</div>
 	);
 };
