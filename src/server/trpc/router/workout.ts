@@ -38,7 +38,6 @@ export const workoutRouter = router({
 
 	getAllWorkouts: protectedProcedure.query(async ({ ctx }) => {
 		try {
-			console.log("ctx.session.user.id", ctx.session.user.id);
 			const workouts = await ctx.convex.query(api.workouts.getAllWorkouts, {
 				userId: ctx.session.user.id,
 			});

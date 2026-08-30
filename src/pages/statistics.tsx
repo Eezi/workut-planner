@@ -134,7 +134,6 @@ const Statistics = (
 		to: addDays(new Date(), 20),
 	});
 
-	console.log("datel", date);
 	const { data, isLoading } = trpc.workout.sessionCountsPerWorkout.useQuery({
 		startDate: date?.from || null,
 		endDate: date?.to || null,
