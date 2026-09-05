@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { AnimatePresence, motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -172,9 +173,21 @@ const SessionCard = ({
 	};
 
 	return (
-		<div
+		<motion.div
 			key={id}
-			className="flex items-center gap-3 px-3 py-2"
+			layout
+			initial={{ opacity: 0, y: -12, scale: 0.96 }}
+			animate={{ opacity: done ? 0.55 : 1, y: 0, scale: 1 }}
+			exit={{
+				opacity: 0,
+				x: -48,
+				scale: 0.9,
+				height: 0,
+				paddingTop: 0,
+				paddingBottom: 0,
+			}}
+			transition={{ duration: 0.25, ease: "easeOut" }}
+			className="flex items-center gap-3 overflow-hidden px-3 py-2"
 			style={{
 				// GborderTop: "1px solid #2c2d3c",
 				borderBottom: "1px solid #2c2d3c",
@@ -218,7 +231,7 @@ const SessionCard = ({
 					</div>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 
@@ -254,9 +267,11 @@ const SessionCardContainer = ({
 						<div className="mb-3" style={{ borderBottom: "1px solid #2c2d3c" }}>
 							<span className="text-base font-medium">{dayKey}</span>
 							<div className="flex flex-col gap-3">
-								{nextSevenDaysSessions[dayKey]?.map((session) => (
-									<SessionCard noDateSection key={session.id} {...session} />
-								))}
+								<AnimatePresence mode="popLayout" initial={false}>
+									{nextSevenDaysSessions[dayKey]?.map((session) => (
+										<SessionCard noDateSection key={session.id} {...session} />
+									))}
+								</AnimatePresence>
 							</div>
 						</div>
 					) : (
@@ -272,9 +287,11 @@ const SessionCardContainer = ({
 								</div>
 							</div>
 							<div className="flex flex-col gap-3">
-								{nextSevenDaysSessions[dayKey]?.map((session) => (
-									<SessionCard key={session.id} {...session} />
-								))}
+								<AnimatePresence mode="popLayout" initial={false}>
+									{nextSevenDaysSessions[dayKey]?.map((session) => (
+										<SessionCard key={session.id} {...session} />
+									))}
+								</AnimatePresence>
 							</div>
 						</>
 					)}
