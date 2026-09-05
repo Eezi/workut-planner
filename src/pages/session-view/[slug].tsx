@@ -23,13 +23,12 @@ import { DoneRepsTable } from "../statistics";
 type Props = {
 	rep: Rep | undefined;
 	workout: Workout | undefined;
-	refetch: any;
 	repCount: number;
 };
 
 const RepCheckbox = (props: Props) => {
 	const validateAmount = z.number().nonnegative();
-	const { rep, workout, refetch, repCount } = props;
+	const { rep, workout, repCount } = props;
 	const { id } = rep || {};
 
 	const utils = trpc.useContext();
@@ -64,8 +63,25 @@ const RepCheckbox = (props: Props) => {
 		},
 	});
 	const removeRep = trpc.rep.removeRep.useMutation({
-		onSuccess: () => {
-			refetch();
+		onMutate: async (removedEntry: any) => {
+			await utils.workoutSession.sessionById.cancel();
+			utils.workoutSession.sessionById.setData(
+				{ id: slug as string },
+				(prevEntries: any) => {
+					if (prevEntries && removedEntry) {
+						return {
+							...prevEntries,
+							reps: prevEntries?.reps?.filter(
+								(item: any) => item.id !== removedEntry.id,
+							),
+						};
+					}
+					return prevEntries;
+				},
+			);
+		},
+		onSettled: async () => {
+			await utils.workoutSession.sessionById.invalidate();
 		},
 	});
 	const [initialDataSetted, setInitialDataSetted] = useState(false);
@@ -218,11 +234,9 @@ const RepCheckbox = (props: Props) => {
 const RepsTable = ({
 	reps,
 	workout,
-	refetch,
 }: {
 	reps: Rep[] | undefined;
 	workout: Workout | undefined;
-	refetch: any;
 }) => {
 	const { includeSeconds, includeReps, includeWeight } = workout || {};
 	return (
@@ -242,7 +256,6 @@ const RepsTable = ({
 						<RepCheckbox
 							repCount={index + 1}
 							key={rep.id}
-							refetch={refetch}
 							workout={workout}
 							rep={rep}
 						/>
@@ -263,7 +276,6 @@ const SessionNotes = (props: PageProps) => {
 		data: session,
 		error,
 		isLoading,
-		refetch,
 	} = trpc.workoutSession.sessionById.useQuery({
 		id: slug as string,
 	});
@@ -275,9 +287,34 @@ const SessionNotes = (props: PageProps) => {
 		trpc.workoutSession.fetchLatestDoneSession.useQuery({
 			workoutId: session?.workoutId,
 		});
+	const utils = trpc.useContext();
 	const createRep = trpc.rep.createRep.useMutation({
-		onSuccess: () => {
-			refetch();
+		onMutate: async (newEntry) => {
+			await utils.workoutSession.sessionById.cancel();
+			const optimisticRep: Rep = {
+				id: `optimistic-${Date.now()}`,
+				done: false,
+				secoundsAmount: null,
+				weightAmount: null,
+				repsAmount: null,
+				workoutSessionId: newEntry.workoutSessionId,
+				workoutId: newEntry.workoutId,
+			};
+			utils.workoutSession.sessionById.setData(
+				{ id: slug as string },
+				(prevEntries: any) => {
+					if (prevEntries) {
+						return {
+							...prevEntries,
+							reps: [...(prevEntries.reps ?? []), optimisticRep],
+						};
+					}
+					return prevEntries;
+				},
+			);
+		},
+		onSettled: async () => {
+			await utils.workoutSession.sessionById.invalidate();
 		},
 	});
 	const doneReps = latestSession?.reps?.filter(
@@ -334,11 +371,7 @@ const SessionNotes = (props: PageProps) => {
 						<DatePicker date={sessionDate} setDate={handleUpdateDate} />
 					</div>
 					<h5 className="my-4 text-base font-bold">Reps</h5>
-					<RepsTable
-						refetch={refetch}
-						reps={session?.reps}
-						workout={session?.workout}
-					/>
+					<RepsTable reps={session?.reps} workout={session?.workout} />
 					<div className="mb-6">
 						<Button variant="outline" onClick={handleCreateRep}>
 							Create rep

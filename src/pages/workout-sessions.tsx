@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	DropdownMenu,
@@ -114,7 +115,8 @@ const SessionCard = ({
 	workout,
 	date,
 	noDateSection,
-}: Session & { noDateSection?: boolean }) => {
+	animationsReady,
+}: Session & { noDateSection?: boolean; animationsReady?: boolean }) => {
 	const utils = trpc.useContext();
 
 	const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
@@ -175,8 +177,8 @@ const SessionCard = ({
 	return (
 		<motion.div
 			key={id}
-			layout
-			initial={{ opacity: 0, y: -12, scale: 0.96 }}
+			layout={animationsReady}
+			initial={animationsReady ? { opacity: 0, y: -12, scale: 0.96 } : false}
 			animate={{ opacity: done ? 0.55 : 1, y: 0, scale: 1 }}
 			exit={{
 				opacity: 0,
@@ -247,6 +249,12 @@ const SessionCardContainer = ({
 }: {
 	nextSevenDaysSessions: GroupedData;
 }) => {
+	const [animationsReady, setAnimationsReady] = useState(false);
+	useEffect(() => {
+		const raf = requestAnimationFrame(() => setAnimationsReady(true));
+		return () => cancelAnimationFrame(raf);
+	}, []);
+
 	const groupedSessions = Object.keys(nextSevenDaysSessions);
 	const showLateOrUpcomingHeader = (
 		groupKey: keyof typeof nextSevenDaysSessions,
@@ -269,7 +277,12 @@ const SessionCardContainer = ({
 							<div className="flex flex-col gap-3">
 								<AnimatePresence mode="popLayout" initial={false}>
 									{nextSevenDaysSessions[dayKey]?.map((session) => (
-										<SessionCard noDateSection key={session.id} {...session} />
+										<SessionCard
+											noDateSection
+											key={session.id}
+											{...session}
+											animationsReady={animationsReady}
+										/>
 									))}
 								</AnimatePresence>
 							</div>
@@ -289,7 +302,11 @@ const SessionCardContainer = ({
 							<div className="flex flex-col gap-3">
 								<AnimatePresence mode="popLayout" initial={false}>
 									{nextSevenDaysSessions[dayKey]?.map((session) => (
-										<SessionCard key={session.id} {...session} />
+										<SessionCard
+											key={session.id}
+											{...session}
+											animationsReady={animationsReady}
+										/>
 									))}
 								</AnimatePresence>
 							</div>

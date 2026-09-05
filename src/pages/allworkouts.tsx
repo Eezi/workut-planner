@@ -37,13 +37,23 @@ const AllWorkouts: NextPage = (props: PageProps) => {
 							Create workout
 						</Button>
 					</div>
-					<div className="flex flex-col gap-5 pb-8">
-						{workouts?.map((workout) => {
-							return (
+					{workouts && workouts.length === 0 ? (
+						<div className="flex flex-col items-center justify-center pt-32 text-center">
+							<p className="text-lg mb-2 font-semibold">No workouts yet</p>
+							<p className="text-sm mb-4 text-muted-foreground">
+								Create your first workout to get started
+							</p>
+							<Button onClick={() => router.push("/create-workout/create")}>
+								Create workout
+							</Button>
+						</div>
+					) : (
+						<div className="flex flex-col gap-5 pb-8">
+							{workouts?.map((workout) => (
 								<WorkoutCard key={workout.id} {...workout} refetch={refetch} />
-							);
-						})}
-					</div>
+							))}
+						</div>
+					)}
 				</>
 			)}
 		</>
