@@ -22,7 +22,7 @@ import { Modal, ReusableAlertDialog } from "./AddSessionModal";
 import { DatePicker } from "./Datepicker";
 import { WorkoutModalContent } from "./Modal";
 
-const colors = new Map([
+export const intensityColors = new Map([
 	["HARD", "#ff4b3f"],
 	["MEDIUM", "#ff9a14"],
 	["EASY", "#5297ff"],
@@ -99,7 +99,7 @@ export const IntesityBadge = ({ intensity, isSmall }: Props) => (
 					viewBox="0 0 24 24"
 				>
 					<path
-						fill={colors.get(intensity)}
+						fill={intensityColors.get(intensity)}
 						fillRule="evenodd"
 						d="m6 15.235l6 3.333l6-3.333v-6.47l-6-3.333l-6 3.333v6.47ZM12 2L3 7v10l9 5l9-5V7l-9-5Z"
 						clipRule="evenodd"

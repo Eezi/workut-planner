@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
-import { IntesityBadge } from "../components/workoutCard";
+import { intensityColors } from "../components/workoutCard";
 import type { Session } from "../types/Session";
 import { sliceLongText } from "../utils/sliceLongText";
 import { trpc } from "../utils/trpc";
@@ -174,6 +174,8 @@ const SessionCard = ({
 		});
 	};
 
+	const accent = intensityColors.get(workout?.intensity ?? "") ?? "#6b7280";
+
 	return (
 		<motion.div
 			key={id}
@@ -189,49 +191,41 @@ const SessionCard = ({
 				paddingBottom: 0,
 			}}
 			transition={{ duration: 0.25, ease: "easeOut" }}
-			className="flex items-center gap-3 overflow-hidden px-3 py-2"
-			style={{
-				// GborderTop: "1px solid #2c2d3c",
-				borderBottom: "1px solid #2c2d3c",
-			}}
+			className="flex items-center gap-4 overflow-hidden py-1.5"
 		>
-			<div className="grid place-content-center">
-				<Checkbox
-					checked={done}
-					onCheckedChange={(newValue) =>
-						handleMarkDone(id, newValue as boolean)
-					}
-				/>
-			</div>
+			<Checkbox
+				checked={done}
+				onCheckedChange={(newValue) => handleMarkDone(id, newValue as boolean)}
+				className="h-6 w-6 shrink-0 rounded-md border-2 shadow-none"
+				style={{
+					borderColor: accent,
+					backgroundColor: done ? accent : `${accent}26`,
+					color: "#09090b",
+				}}
+			/>
 
-			<div className="flex w-full flex-col">
-				<div className="flex items-center justify-between">
-					<div className="flex items-center gap-3 text-sm font-medium">
-						<IntesityBadge isSmall intensity={workout?.intensity} />
-						<div>
-							<Link
-								href={{
-									pathname: "/session-view/[slug]",
-									query: { slug: id },
-								}}
-							>
-								{sliceLongText(workout?.title)}
-							</Link>
-							{noDateSection && (
-								<p className="text-xs font-normal text-slate-400">
-									{dayjs(date).format("DD.MM.")}
-								</p>
-							)}
-						</div>
-					</div>
-					<div className="flex flex-col justify-between">
-						<ActionList
-							handleRemove={handleRemove}
-							removeIsPending={removeSession.isLoading}
-							sessionId={id}
-						/>
-					</div>
+			<div className="flex min-w-0 grow items-center justify-between gap-3">
+				<div className="min-w-0">
+					<Link
+						className="text-lg font-normal text-white"
+						href={{
+							pathname: "/session-view/[slug]",
+							query: { slug: id },
+						}}
+					>
+						{sliceLongText(workout?.title)}
+					</Link>
+					{noDateSection && (
+						<p className="text-xs font-normal text-slate-400">
+							{dayjs(date).format("DD.MM.")}
+						</p>
+					)}
 				</div>
+				<ActionList
+					handleRemove={handleRemove}
+					removeIsPending={removeSession.isLoading}
+					sessionId={id}
+				/>
 			</div>
 		</motion.div>
 	);
@@ -256,6 +250,12 @@ const SessionCardContainer = ({
 	}, []);
 
 	const groupedSessions = Object.keys(nextSevenDaysSessions);
+	const getDayLabel = (dateKey: string) => {
+		const day = dayjs(dateKey);
+		if (day.isSame(dayjs(), "day")) return "Today";
+		if (day.isSame(dayjs().add(1, "day"), "day")) return "Tomorrow";
+		return day.format("dddd");
+	};
 	const showLateOrUpcomingHeader = (
 		groupKey: keyof typeof nextSevenDaysSessions,
 	) => {
@@ -269,12 +269,17 @@ const SessionCardContainer = ({
 	};
 	return (
 		<>
-			{groupedSessions?.map((dayKey, index) => (
+			{groupedSessions?.map((dayKey) => (
 				<div key={dayKey}>
 					{showLateOrUpcomingHeader(dayKey) ? (
-						<div className="mb-3" style={{ borderBottom: "1px solid #2c2d3c" }}>
-							<span className="text-base font-medium">{dayKey}</span>
-							<div className="flex flex-col gap-3">
+						<>
+							<div className="mb-3 flex items-center gap-3">
+								<span className="text-lg font-medium text-white/50">
+									{dayKey}
+								</span>
+								<div className="h-px grow bg-white/10" />
+							</div>
+							<div className="flex flex-col">
 								<AnimatePresence mode="popLayout" initial={false}>
 									{nextSevenDaysSessions[dayKey]?.map((session) => (
 										<SessionCard
@@ -286,20 +291,19 @@ const SessionCardContainer = ({
 									))}
 								</AnimatePresence>
 							</div>
-						</div>
+						</>
 					) : (
 						<>
-							<div className="mb-3 flex items-end gap-1">
-								<span className="mr-1 text-base font-semibold">
+							<div className="mb-3 flex items-center gap-3">
+								<span className="text-3xl font-bold text-white">
 									{dayjs(dayKey).format("D")}
 								</span>
-								<div className="grow">
-									<span className="text-base font-medium">
-										{dayjs(dayKey).format("dddd")}
-									</span>
-								</div>
+								<span className="text-lg font-medium text-white/50">
+									{getDayLabel(dayKey)}
+								</span>
+								<div className="h-px grow bg-white/10" />
 							</div>
-							<div className="flex flex-col gap-3">
+							<div className="flex flex-col">
 								<AnimatePresence mode="popLayout" initial={false}>
 									{nextSevenDaysSessions[dayKey]?.map((session) => (
 										<SessionCard
