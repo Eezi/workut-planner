@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -125,7 +126,8 @@ export const WorkoutCard = ({
 	id,
 	userId,
 	refetch,
-}: Workout & { refetch: () => void }) => {
+	animationsReady,
+}: Workout & { refetch: () => void; animationsReady?: boolean }) => {
 	const [open, setOpen] = useState(false);
 	const [openWorkout, setOpenWorkout] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
@@ -194,7 +196,21 @@ export const WorkoutCard = ({
 					intensity={intensity}
 				/>
 			</Modal>
-			<div className="w-full rounded-md ">
+			<motion.div
+				layout={animationsReady}
+				initial={animationsReady ? { opacity: 0, y: -12, scale: 0.96 } : false}
+				animate={{ opacity: 1, y: 0, scale: 1 }}
+				exit={{
+					opacity: 0,
+					x: -48,
+					scale: 0.9,
+					height: 0,
+					paddingTop: 0,
+					paddingBottom: 0,
+				}}
+				transition={{ duration: 0.25, ease: "easeOut" }}
+				className="w-full overflow-hidden rounded-md "
+			>
 				<div className="py-1">
 					<div className="flex items-center justify-between gap-3">
 						<div className="flex items-center gap-3">
@@ -336,7 +352,7 @@ export const WorkoutCard = ({
 						</DropdownMenu>
 					</div>
 				</div>
-			</div>
+			</motion.div>
 		</>
 	);
 };

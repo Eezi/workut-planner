@@ -1,12 +1,47 @@
 "use client";
+import { AnimatePresence } from "framer-motion";
 import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
 import { WorkoutCard } from "../components/workoutCard";
+import type { Workout } from "../types/workout";
 import { trpc } from "../utils/trpc";
+
+const WorkoutCardContainer = ({
+	workouts,
+	refetch,
+}: {
+	workouts: Workout[];
+	refetch: () => void;
+}) => {
+	// Skip the enter animation on the initial mount (e.g. when navigating to the
+	// page) and only enable it once the first frame has painted, so that only
+	// cards created afterwards animate in.
+	const [animationsReady, setAnimationsReady] = useState(false);
+	useEffect(() => {
+		const raf = requestAnimationFrame(() => setAnimationsReady(true));
+		return () => cancelAnimationFrame(raf);
+	}, []);
+
+	return (
+		<div className="flex flex-col gap-5 pb-8">
+			<AnimatePresence mode="popLayout" initial={false}>
+				{workouts.map((workout) => (
+					<WorkoutCard
+						key={workout.id}
+						{...workout}
+						refetch={refetch}
+						animationsReady={animationsReady}
+					/>
+				))}
+			</AnimatePresence>
+		</div>
+	);
+};
 
 type PageProps = {};
 const AllWorkouts: NextPage = (props: PageProps) => {
@@ -48,11 +83,7 @@ const AllWorkouts: NextPage = (props: PageProps) => {
 							</Button>
 						</div>
 					) : (
-						<div className="flex flex-col gap-5 pb-8">
-							{workouts?.map((workout) => (
-								<WorkoutCard key={workout.id} {...workout} refetch={refetch} />
-							))}
-						</div>
+						<WorkoutCardContainer workouts={workouts ?? []} refetch={refetch} />
 					)}
 				</>
 			)}
