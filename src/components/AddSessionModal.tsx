@@ -67,10 +67,21 @@ export function ReusableAlertDialog({
 	open: boolean;
 }) {
 	return (
-		<AlertDialog open={open}>
-			<AlertDialogTrigger asChild>
-				{triggerText && <Button variant="outline">{triggerText}</Button>}
-			</AlertDialogTrigger>
+		<AlertDialog
+			open={open}
+			onOpenChange={(isOpen) => {
+				// Route Escape / outside interactions through onCancel so Radix can
+				// run its close lifecycle and clean up the body pointer-events lock.
+				if (!isOpen) {
+					onCancel();
+				}
+			}}
+		>
+			{triggerText ? (
+				<AlertDialogTrigger asChild>
+					<Button variant="outline">{triggerText}</Button>
+				</AlertDialogTrigger>
+			) : null}
 			<AlertDialogContent>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{title}</AlertDialogTitle>
