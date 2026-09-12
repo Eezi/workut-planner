@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { PageHead } from "../components/Head";
 import { PageTitle } from "../components/PageTitle";
+import { SessionCalendar } from "../components/SessionCalendar";
 import { intensityColors } from "../components/workoutCard";
 import type { Session } from "../types/Session";
 import { sliceLongText } from "../utils/sliceLongText";
@@ -322,8 +323,46 @@ const SessionCardContainer = ({
 	);
 };
 
+type SessionView = "week" | "month";
+
+const viewOptions: { value: SessionView; label: string }[] = [
+	{ value: "week", label: "Viikko" },
+	{ value: "month", label: "Kuukausi" },
+];
+
+const ViewTabs = ({
+	view,
+	setView,
+}: {
+	view: SessionView;
+	setView: (view: SessionView) => void;
+}) => (
+	<div className="flex w-fit items-center gap-1 rounded-full bg-white/5 p-1">
+		{viewOptions.map(({ value, label }) => (
+			<button
+				key={value}
+				type="button"
+				onClick={() => setView(value)}
+				className={`relative rounded-full px-4 py-1.5 text-sm transition-colors ${
+					view === value ? "text-black" : "text-slate-400 hover:text-white"
+				}`}
+			>
+				{view === value && (
+					<motion.span
+						layoutId="session-view-tab"
+						className="absolute inset-0 rounded-full bg-white"
+						transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+					/>
+				)}
+				<span className="relative">{label}</span>
+			</button>
+		))}
+	</div>
+);
+
 type PageProps = {};
 const WorkoutSessions: NextPage = (props: PageProps) => {
+	const [view, setView] = useState<SessionView>("week");
 	const { status } = useSession();
 	const { data: sessions, isLoading } =
 		trpc.workoutSession.getAllWorkoutSessions.useQuery(undefined, {
@@ -389,11 +428,18 @@ const WorkoutSessions: NextPage = (props: PageProps) => {
 					className="border-1 flex flex-col gap-6 "
 				>
 					<PageTitle title="Upcoming sessions" />
-					<div className="mb-16 flex flex-col gap-10">
-						<SessionCardContainer
-							nextSevenDaysSessions={nextSevenDaysSessions}
-						/>
-					</div>
+					<ViewTabs view={view} setView={setView} />
+					{view === "week" ? (
+						<div className="mb-16 flex flex-col gap-10">
+							<SessionCardContainer
+								nextSevenDaysSessions={nextSevenDaysSessions}
+							/>
+						</div>
+					) : (
+						<div className="mb-16">
+							<SessionCalendar sessions={sessions} />
+						</div>
+					)}
 				</div>
 			)}
 		</>
