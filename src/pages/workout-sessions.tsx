@@ -337,7 +337,7 @@ const ViewTabs = ({
 	view: SessionView;
 	setView: (view: SessionView) => void;
 }) => (
-	<div className="flex w-fit items-center gap-1 rounded-full bg-white/5 p-1">
+	<div className="flex mb-2 w-fit items-center gap-1 rounded-full bg-white/5 p-1">
 		{viewOptions.map(({ value, label }) => (
 			<button
 				key={value}
@@ -419,26 +419,17 @@ const WorkoutSessions: NextPage = (props: PageProps) => {
 			{isLoading ? (
 				<div>Fetching sessions...</div>
 			) : (
-				<div
-					/*style={{
-            width: "100vw",
-            position: "absolute",
-            left: -20,
-            }} */
-					className="border-1 flex flex-col gap-6 "
-				>
+				<div className="border-1 flex flex-col gap-1">
 					<PageTitle title="Upcoming sessions" />
 					<ViewTabs view={view} setView={setView} />
 					{view === "week" ? (
-						<div className="mb-16 flex flex-col gap-10">
+						<div className="flex flex-col gap-10">
 							<SessionCardContainer
 								nextSevenDaysSessions={nextSevenDaysSessions}
 							/>
 						</div>
 					) : (
-						<div className="mb-16">
-							<SessionCalendar sessions={sessions} />
-						</div>
+						<SessionCalendar sessions={sessions} />
 					)}
 				</div>
 			)}

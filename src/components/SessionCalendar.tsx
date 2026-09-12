@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Session } from "../types/Session";
 import { trpc } from "../utils/trpc";
 import { ReusableAlertDialog } from "./AddSessionModal";
+import { DaySessionsPopover } from "./DaySessionsPopover";
 import { Button } from "./ui/button";
 import { AddSessionModalContent, intensityColors } from "./workoutCard";
 
@@ -21,6 +22,7 @@ const MAX_DOTS = 3;
 export const SessionCalendar = ({ sessions }: { sessions?: Session[] }) => {
 	const [month, setMonth] = useState<Dayjs>(() => dayjs().startOf("month"));
 	const [open, setOpen] = useState(false);
+	const [openDay, setOpenDay] = useState<string | null>(null);
 	const [date, setDate] = useState<Date>(new Date());
 	const [selectedWorkoutId, setSelectedWorkoutId] = useState<string>("");
 
@@ -74,7 +76,7 @@ export const SessionCalendar = ({ sessions }: { sessions?: Session[] }) => {
 	const canAddSessions =
 		Boolean(sessionData?.user) && Boolean(workouts && workouts.length > 0);
 
-	const handleDayClick = (day: Dayjs) => {
+	const openAddDialog = (day: Dayjs) => {
 		if (!canAddSessions) return;
 		setDate(day.hour(12).minute(0).second(0).toDate());
 		setOpen(true);
@@ -173,17 +175,22 @@ export const SessionCalendar = ({ sessions }: { sessions?: Session[] }) => {
 				))}
 
 				{days.map((day) => {
-					const daySessions = sessionsByDay.get(day.format("YYYY-MM-DD")) ?? [];
+					const dayKey = day.format("YYYY-MM-DD");
+					const daySessions = sessionsByDay.get(dayKey) ?? [];
+					const hasSessions = daySessions.length > 0;
 					const isToday = day.isSame(dayjs(), "day");
 					const overflow = daySessions.length - MAX_DOTS;
 
-					return (
+					const dayCell = (
 						<button
-							key={day.format("YYYY-MM-DD")}
 							type="button"
-							onClick={() => handleDayClick(day)}
-							aria-label={`Add session on ${day.format("DD.MM.YYYY")}`}
-							className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl bg-white/5 transition-colors hover:bg-white/15 ${
+							onClick={hasSessions ? undefined : () => openAddDialog(day)}
+							aria-label={
+								hasSessions
+									? `View sessions on ${day.format("DD.MM.YYYY")}`
+									: `Add session on ${day.format("DD.MM.YYYY")}`
+							}
+							className={`flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-xl bg-white/5 transition-colors hover:bg-white/15 ${
 								isToday ? "ring-1 ring-white/60" : ""
 							}`}
 						>
@@ -214,6 +221,27 @@ export const SessionCalendar = ({ sessions }: { sessions?: Session[] }) => {
 								)}
 							</div>
 						</button>
+					);
+
+					if (!hasSessions) {
+						return <div key={dayKey}>{dayCell}</div>;
+					}
+
+					return (
+						<DaySessionsPopover
+							key={dayKey}
+							day={day}
+							sessions={daySessions}
+							open={openDay === dayKey}
+							onOpenChange={(isOpen) => setOpenDay(isOpen ? dayKey : null)}
+							canAddSessions={canAddSessions}
+							onAddSession={() => {
+								setOpenDay(null);
+								openAddDialog(day);
+							}}
+						>
+							{dayCell}
+						</DaySessionsPopover>
 					);
 				})}
 			</div>

@@ -159,7 +159,7 @@ export function ReusableAlertDialog({
 					<Button variant="outline">{triggerText}</Button>
 				</DrawerTrigger>
 			) : null}
-			<DrawerContent>
+			<DrawerContent className="pb-5">
 				<DrawerHeader className="text-left">
 					<DrawerTitle>{title}</DrawerTitle>
 					{description ? (
