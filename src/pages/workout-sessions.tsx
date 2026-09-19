@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	DropdownMenu,
@@ -110,14 +110,15 @@ const ActionList = ({
 	);
 };
 
-const SessionCard = ({
-	id,
-	done,
-	workout,
-	date,
-	noDateSection,
-	animationsReady,
-}: Session & { noDateSection?: boolean; animationsReady?: boolean }) => {
+// Forwards the ref from AnimatePresence's popLayout mode to the motion.div
+// so exiting cards can be measured and popped out of the layout.
+const SessionCard = forwardRef<
+	HTMLDivElement,
+	Session & { noDateSection?: boolean; animationsReady?: boolean }
+>(function SessionCard(
+	{ id, done, workout, date, noDateSection, animationsReady },
+	ref,
+) {
 	const utils = trpc.useContext();
 
 	const handleSessionkDone = trpc.workoutSession.markSessionDone.useMutation({
@@ -179,6 +180,7 @@ const SessionCard = ({
 
 	return (
 		<motion.div
+			ref={ref}
 			key={id}
 			layout={animationsReady}
 			initial={animationsReady ? { opacity: 0, y: -12, scale: 0.96 } : false}
@@ -230,7 +232,7 @@ const SessionCard = ({
 			</div>
 		</motion.div>
 	);
-};
+});
 
 const late = "Late";
 const upcoming = "Upcoming";

@@ -291,9 +291,10 @@ const SessionNotes = (props: PageProps) => {
 		data: session,
 		error,
 		isLoading,
-	} = trpc.workoutSession.sessionById.useQuery({
-		id: slug as string,
-	});
+	} = trpc.workoutSession.sessionById.useQuery(
+		{ id: slug as string },
+		{ enabled: typeof slug === "string" },
+	);
 	const [sessionDate, setSessionDate] = useState<Date>(
 		session?.date || new Date(),
 	);

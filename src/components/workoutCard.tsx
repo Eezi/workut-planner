@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
 	DropdownMenu,
@@ -119,15 +119,15 @@ export const IntesityBadge = ({ intensity, isSmall }: Props) => (
 	</>
 );
 
-export const WorkoutCard = ({
-	title,
-	description,
-	intensity,
-	id,
-	userId,
-	refetch,
-	animationsReady,
-}: Workout & { refetch: () => void; animationsReady?: boolean }) => {
+// Forwards the ref from AnimatePresence's popLayout mode to the motion.div
+// so exiting cards can be measured and popped out of the layout.
+export const WorkoutCard = forwardRef<
+	HTMLDivElement,
+	Workout & { refetch: () => void; animationsReady?: boolean }
+>(function WorkoutCard(
+	{ title, description, intensity, id, userId, refetch, animationsReady },
+	ref,
+) {
 	const [open, setOpen] = useState(false);
 	const [openWorkout, setOpenWorkout] = useState(false);
 	const [date, setDate] = useState<Date>(new Date());
@@ -197,6 +197,7 @@ export const WorkoutCard = ({
 				/>
 			</Modal>
 			<motion.div
+				ref={ref}
 				layout={animationsReady}
 				initial={animationsReady ? { opacity: 0, y: -12, scale: 0.96 } : false}
 				animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -215,9 +216,16 @@ export const WorkoutCard = ({
 					<div className="flex items-center justify-between gap-3">
 						<div className="flex items-center gap-3">
 							<IntesityBadge isSmall intensity={intensity} />
-							<h2 className="text-sm font-medium text-white">
-								{sliceLongText(title)}
-							</h2>
+							<Link
+								href={{
+									pathname: "/workout-notes/[slug]",
+									query: { slug: id },
+								}}
+							>
+								<h2 className="text-sm font-medium text-white">
+									{sliceLongText(title)}
+								</h2>
+							</Link>
 						</div>
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
@@ -355,4 +363,4 @@ export const WorkoutCard = ({
 			</motion.div>
 		</>
 	);
-};
+});
