@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -26,6 +27,46 @@ export const noteRouter = router({
 				return mapNote(created);
 			} catch (error) {
 				console.log(error);
+			}
+		}),
+
+	updateNote: protectedProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				description: z.string(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			try {
+				const updated = await ctx.convex.mutation(api.notes.updateNote, {
+					id: input.id as Id<"notes">,
+					description: input.description,
+				});
+				return mapNote(updated);
+			} catch (error) {
+				console.log(error);
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Failed to update note",
+				});
+			}
+		}),
+
+	deleteNote: protectedProcedure
+		.input(z.object({ id: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			try {
+				await ctx.convex.mutation(api.notes.deleteNote, {
+					id: input.id as Id<"notes">,
+				});
+				return { success: true };
+			} catch (error) {
+				console.log(error);
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Failed to delete note",
+				});
 			}
 		}),
 

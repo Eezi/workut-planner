@@ -20,6 +20,27 @@ export const postNote = mutation({
 	},
 });
 
+export const updateNote = mutation({
+	args: {
+		id: v.id("notes"),
+		description: v.string(),
+	},
+	handler: async (ctx, args) => {
+		await ctx.db.patch(args.id, {
+			description: args.description,
+			updatedAt: Date.now(),
+		});
+		return await ctx.db.get(args.id);
+	},
+});
+
+export const deleteNote = mutation({
+	args: { id: v.id("notes") },
+	handler: async (ctx, { id }) => {
+		await ctx.db.delete(id);
+	},
+});
+
 export const getAllWorkoutNotes = query({
 	args: { workoutId: v.id("workouts") },
 	handler: async (ctx, { workoutId }) => {
